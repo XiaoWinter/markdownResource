@@ -105,10 +105,10 @@ state = {
 * 函数直接调用在严格模式下，this指向undefind
 
 * 组件内置的方法中的this为组件对象
-* 在组件类中自定义的方法中this为undefined
+* 在组件类中自定义的方法中this为undefined，如何改变this指向
     * 强制绑定this: 通过函数对象的bind()
     * 箭头函数(ES6模块化编码时才能使用)
-* 不要直接更新状态数据
+* 不要直接更新状态数据this.state
 
 ##### 3.3.2.props
 
@@ -252,8 +252,8 @@ const input = this.myRef.current
     <script src="./js/babel.min.js"></script>
     <script src="./js/prop-types.js"></script>
     <script type='text/babel'>
-    //定义组件，显示员工信息
-    //性别年龄有默认值
+    //定义组件
+    //父组件
     class App extends React.Component{
 
         constructor(props){
@@ -341,4 +341,3 @@ render(){
 ​```html
 <h1 style={{fontSize:'20px',color:'red'}} onClick={this.handle}>{ isLikeMe ? '你喜欢我':'我喜欢你'}</h1>
 ```
-
