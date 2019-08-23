@@ -1,7 +1,6 @@
 <h1 align='center'>VS快捷键</h1>
 
 
-
 ```
 alt + shift 竖向一条
 ctrl + o 打开项目所在目录
@@ -28,5 +27,7 @@ Ctrl+End          文件最后
 Ctrl+↑/ ↓        向前一行/向后一行
 Alt+PgUp/ PgDn      Scroll page up/down
 !+tab 快速生成h5模板网页
+ctrl+E 文件面板
+ctrl+shift+p 命令面板
 ```
 
