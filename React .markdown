@@ -232,7 +232,16 @@ const input = this.myRef.current
 	(1)那些组件需要使用?
 	放在共同的父组件上
 	(2)组件之间如何传递数据?
-	父组件定义一个改变数据的方法，将方法传给子组件（原理：闭包）
+
+​    三种方法
+
+​	父子
+
+​	订阅广播
+
+​	
+
+​	父组件定义一个改变数据的方法，将方法传给子组件（原理：闭包）
 
 ```html
 <!DOCTYPE html>
@@ -484,7 +493,7 @@ React事件
 
 #### 3.5 组件的生命周期
 
-react组件的生命周期
+react类组件的生命周期（函数组件没有状态，也没有生命周期）
 
 1.组件从创建到销毁会经历三个时期，初始化时期、运行时期、销毁时期
 
@@ -535,27 +544,398 @@ c.移除组件: ReactDOM.unmountComponentAtNode(containerDom)
       * componentWillUnmount() : 组件将要被移除回调
       
 ```
-key0
-
-```
- 
-   面试题:
-      1). react/vue中的key的作用/内部原理
-      2). 为什么列表的key尽量不要用index
-   1. 虚拟DOM的key的作用?
-      1). 简单的说: key是虚拟DOM对象的标识, 在更新显示时key起着极其重要的作用
-      2). 详细的说: 当列表数组中的数据发生变化生成新的虚拟DOM后, React进行新旧虚拟DOM的diff比较
-          a. key没有变
-              item数据没变, 直接使用原来的真实DOM
-              item数据变了, 对原来的真实DOM进行数据更新
-          b. key变了
-              销毁原来的真实DOM, 根据item数据创建新的真实DOM显示(即使item数据没有变)
-   2. key为index的问题
-      1). 添加/删除/排序 => 产生没有必要的真实DOM更新 ==> 界面效果没问题, 但效率低
-      2). 如果item界面还有输入框 => 产生错误的真实DOM更新 ==> 界面有问题
-      注意: 如果不存在添加/删除/排序操作, 用index没有问题
-   3. 解决:
-      使用item数据的标识数据作为key, 比如id属性值
+```javascript
+<body>
+    <div id="test"></div>
    
+    <script type='text/babel'>
+    //定义组件，显示员工信息，
+    //性别年龄有默认值
+    class LifeCycle extends React.Component{
+
+        constructor(props){
+            super(props);
+            console.log('constructor');
+        }
+   
+        //挂载完成
+       componentDidMount = ()=> {
+           console.log('componentDidMount');
+       }
+       //即将挂载
+       componentWillMount(){
+           console.log('componentWillMount')
+       }
+       //即将更新
+       componentWillUpdata(){
+           console.log('componentWillUpdata');
+       }
+       //即将卸载
+       componentWillUnmount(){
+           console.log('componentWillUnmount')
+       }
+       //这个是自定义方法
+       unMountComp(){
+            //卸载
+            ReactDOM.unmountcomponentAtNode(<LifeCycle/>,document.getElementById('test'))
+       }
+       handle = ()=>{
+           alert('🔟佳员工')
+       }
+        render(){
+           
+                console.log('render');
+            return <div>
+                <p>React学不会，怎么办</p>
+                <button onClick={this.handle}>慢慢学</button>
+            </div>
+        }
+    }
+    //数据
+
+
+    //渲染组件
+    ReactDOM.render(<LifeCycle/>,document.getElementById('test'))
+    
+    
+    </script>
+</body>
 ```
 
+### 4.react脚手架
+
+###### 谈谈你对脚手架的理解
+
+```
+脚手架: 用来帮助程序员快速创建一个基于xxx库的模板项目
+	* 包含了所有需要的配置
+	* 指定好了所有的依赖
+	* 可以直接安装/编译/运行一个简单效果
+```
+
+###### react脚手架简介
+
+```
+react提供了一个专门创建react项目的的脚手架库: create-react-app
+项目的整体技术架构为：react + webpack + es6+  + babel + eslint
+```
+
+###### 创建项目并启动
+
+```
+npm install -g create-react-app
+npx create-react-app react-app
+cd react-app
+开发环境运行: npm start
+生产环境打包并运行: npm run build--> serve build
+```
+
+###### 脚手架开发的特点
+
+```
+模块化: js是一个一个模块编写的
+组件化: 界面是由多个组件组合编写实现的
+工程化: 实现了自动化构建/运行/打包的项目
+```
+
+###### react脚手架结构
+
+```
+react项目
+	|--node_modules---第三方依赖模块文件夹
+	|-- public
+		|-- index.html-----------------主页面，index.js的插入页面（需要关注）
+	|-- src------------源码文件夹（需要关注）
+		|-- components----------------- react组件目录
+		|-- index.js------------------- 应用入口js
+	|--.gitignore------git版本管制忽略的配置
+	|--package.json----应用包配置文件 
+	|--README.md-------应用描述说明的readme文件
+```
+
+### 5.react axios
+
+###### 为什么需要axios
+
+* react 不包含可发送Ajax请求的代码
+* 前端请求后台数据需要发送Ajax请求
+* react应用中需集成第三方库或自己封装发送请求的代码
+
+#### 5.1常用的Ajax请求库
+
+* jQuery：比较重，包含dom操作和发送请求的代码
+* axios:轻量级，建议使用
+	* 封装XmlHttpRequest对象的ajax
+	* promise风格
+	* 可以用在浏览器端和服务端
+* fetch:原生函数，但老版本浏览器不支持
+
+  * 不使用XmlHttpRequest对象提交请求
+  * 为了兼容低版本的浏览器，可以引入兼容库fetch.js
+
+#### 5.2 axios API
+
+* GET请求
+
+```javascript
+axios.get('/user?ID=12345')
+  .then(function (response) {
+    console.log(response.data);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+  
+  
+  
+axios.get('/user', {
+    params: {
+      ID: 12345
+    }
+  })
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+```
+
+* POST请求
+
+```javascript
+axios.post('/user', {
+    firstName: 'Fred',
+    lastName: 'Flintstone'
+})
+.then(function (response) {
+  console.log(response);
+})
+.catch(function (error) {
+  console.log(error);
+});
+```
+
+#### 5.3 fetch API(不是重点)
+
+* GET
+
+```javascript
+fetch(url).then(function(response) {
+  return response.json()
+}).then(function(data) {
+  console.log(data)
+}).catch(function(e) {
+  console.log(e)
+});
+```
+
+* POST
+
+```javascript
+fetch(url, {
+  method: "POST",
+  body: JSON.stringify(data),
+}).then(function(data) {
+  console.log(data)
+}).catch(function(e) {
+  console.log(e)
+})
+```
+
+
+
+### * React组件间通信的方式
+
+####  方式一： 通过prop传递
+
+​	
+
+* 共同的数据放在父组件上，特有的数据放在自己组件内部
+* 通过props可以传递一般属性和函数属性，只能一层一层传递
+* 一般属性——>父组件传递数据给子组件——>子组件读取数据
+* 函数属性——>子组件传递数据给父组件——>子组件调用函数
+
+####  方式二：通过消息订阅(subscribe)-发布(publish)机制
+
+* 观察者模式
+
+观察者将自己的引用注册给被观察者，观察者发生相应的变化会通知观察者
+
+```javascript
+  // 2. 发布异步的消息
+  PubSub.publish = function (msgName, data) {
+    // 取出当前消息对应的callbacks
+      //被观察者通知对应的观察者（调用观察者的回掉函数）
+    let callbacks = callbacksObj[msgName]
+    // 如果有值
+    if (callbacks) {
+      // callbacks = Object.assign({}, callbacks)
+      // 启动定时器, 异步执行所有的回调函数
+      setTimeout(() => {
+        Object.values(callbacks).forEach(callback => {
+          callback(data)
+        })
+      }, 0)
+    }
+  }
+```
+
+使用方式
+
+```
+工具库: PubSubJS
+下载: npm install pubsub-js --save
+使用: 
+	  import PubSub from 'pubsub-js' //引入
+	  PubSub.subscribe('delete', function(data){ }); //订阅
+	  PubSub.publish('delete', data) //发布消息
+```
+
+
+
+####  方式三：redux
+
+
+
+#### 5.1 ES6常用新语法
+
+* 定义常量/变量
+* 解构赋值
+* 对象的简洁表达式
+* 箭头函数
+* 扩展运算符
+* 类
+* ES6模块化:export /export default
+* promise
+* async/await
+
+
+
+### 6.路由 react-router4
+
+###### 谈谈你对SPA的理解
+
+```
+SPA应用
+			单页Web应用（single page web application，SPA）
+			整个应用只有一个完整的页面
+			点击页面中的链接不会刷新页面, 本身也不会向服务器发请求
+			当点击链接时, 只会做页面的局部更新
+			数据都需要通过ajax请求获取, 并在前端异步展现
+```
+
+###### 谈谈你对路由的理解
+
+```
+1. 什么是路由?
+            一个路由就是一个映射关系(key:value)
+            key为路由路径, value可能是function/component
+            
+2. 路由分类
+			后台路由: node服务器端路由, value是function, 用来处理客户端提交的请求并返回一个响应数据
+			前台路由: 浏览器端路由, value是component, 当请求的是路由path时, 浏览器端前没有发送http请求, 但界面会更新显示对应的组件
+			
+3. 后台路由
+            注册路由: router.get(path, function(req, res))
+            当node接收到一个请求时, 根据请求路径找到匹配的路由, 调用路由中的函数来处理请求, 返回响应数据
+4. 前端路由
+            注册路由: <Route path="/about" component={About}>
+            当浏览器的hash变为#about时, 当前路由组件就会变为About组件
+```
+
+
+
+[官方文档](https://react-router.docschina.org/web/guides/quick-start)
+
+###### 快速开始
+
+```javascript
+//前提 ，已经安装了脚手架工具
+npm install -g create-react-app
+//安装react路由插件
+npm install react-router-dom
+
+import React from 'react'
+import { 
+    BrowserRouter as Router,
+    Route,
+    Link,
+    Switch,
+    NavLink,
+    Redirect}
+     from 'react-router-dom'
+//你需要随便定义个Home组件和About组件
+import Home from './pages/home'
+import About from './pages/about'
+/**
+ * 
+ * @param {object} props 
+ */
+export default function App(props) {
+    return (
+        <div>
+            <h1>Route Demo</h1>
+            <Router>
+    <div>
+      <ul>
+        <li><NavLink to="/home">Home</NavLink></li>
+        <li><NavLink to="/about">About</NavLink></li>
+        <li><NavLink to="/topics">Topics</NavLink></li>
+      </ul>
+
+      <hr/>
+
+        <Switch>
+        <Route exact path="/home" component={Home}/>
+        <Route path="/about" component={About}/>
+        {/* <Route path="/" component={Home}/> */}
+        <Route path="/topics" component={About}/>
+        <Redirect to='/about'></Redirect>
+        </Switch>
+ 
+      {/* <Route path="/topics" component={Topics}/> */}
+    </div>
+  </Router>
+        </div>
+    )
+}
+
+
+```
+
+### 最流行的开源React UI组件库  ant-design
+
+#### 如何按需加载需要的css样式
+
+##### 1. 下载依赖模块
+		npm install --save-dev react-app-rewired customize-cra babel-plugin-import
+		npm install --save-dev less less-loader
+
+##### 2. 添加配置:  config-overrides.js
+    const { override, fixBabelImports, addLessLoader } = require('customize-cra');
+    
+    module.exports = override(
+      // 配置babel-plugin-import: 
+      fixBabelImports('import', {
+        libraryName: 'antd', // 针对antd进行按需打包
+        libraryDirectory: 'es', // 去es文件夹对应的组件进行打包
+        // style: 'css',  // 自动打包组件对应的css样式
+        style: true,  // 加载less进行重新编译打包
+      }),
+    
+      // 添加less的配置
+      addLessLoader({
+        javascriptEnabled: true,
+        modifyVars: { '@primary-color': '#1DA57A' }, // 指定主体颜色为绿色
+      }),
+    );
+##### 3. 修改配置: package.json
+		"scripts": {
+			"start": "react-app-rewired start",
+			"build": "react-app-rewired build",
+			"test": "react-app-rewired test",
+			"eject": "react-scripts eject"
+		}
+##### 4. 去除样式引入
+    // import 'antd/dist/antd.css'; 

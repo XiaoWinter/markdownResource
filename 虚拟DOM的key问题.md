@@ -18,7 +18,7 @@
 |     1      | {name:jack} |  1<li>  |  <li>   |          |
 
 
-    当React删除第一个li时，jack的key变为了0，此时React会去内部的虚拟dom中寻找key为1的虚拟dom然后复用此DOM，更新此虚拟dom对应的真实dom,而真实的dom的是那个带a的li,因此React复用此li并且将数据更新，而其余部分不变
+    当React删除第一个li时，jack的key变为了0，此时React会去内部的虚拟dom中寻找key为0的虚拟dom然后复用此DOM，更新此虚拟dom对应的真实dom,而0对应的真实的dom的是那个带a的li,因此React复用此li并且将数据更新，而其余部分不变
       	
       	原本：两个li,以index作为key
        [
