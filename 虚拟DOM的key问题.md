@@ -7,7 +7,6 @@
 
 
 
-
 #### \<li> 使用index作为key的问题
 
 
@@ -18,7 +17,7 @@
 |     1      | {name:jack} |  1<li>  |  <li>   |          |
 
 
-    当React删除第一个li时，jack的key变为了0，此时React会去内部的虚拟dom中寻找key为0的虚拟dom然后复用此DOM，更新此虚拟dom对应的真实dom,而0对应的真实的dom的是那个带a的li,因此React复用此li并且将数据更新，而其余部分不变
+    当React删除第一个li时，虚拟DOM内部渲染后，jack的key变为了0，此时React会去内部的虚拟dom中寻找key为0的虚拟dom然后复用此DOM，更新此虚拟dom对应的真实dom,而0对应的真实的dom的是那个带a的li,因此React复用此li并且将数据更新，而其余部分不变
       	
       	原本：两个li,以index作为key
        [
@@ -26,7 +25,7 @@
         1--{name: Jack}  1<li>   <li>
       ]
       
-      删除一个li：虚拟dom中有key为0的li,所以React会复用key为0的虚拟dom，并更新变化的数据，而其余部分不变
+      删除一个li：Jack的key变为0，这时可以通过key为0的找到一个真实li,所以React会复用key为0的虚拟dom，并更新变化的数据，而其余部分不变
       [
             0--{name: Jack}  0<li>  <li>  a
        ]

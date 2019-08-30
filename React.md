@@ -938,4 +938,7 @@ export default function App(props) {
 			"eject": "react-scripts eject"
 		}
 ##### 4. 去除样式引入
-    // import 'antd/dist/antd.css'; 
+```javascript
+// import 'antd/dist/antd.css'; 
+```
+

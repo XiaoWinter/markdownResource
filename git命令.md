@@ -1,5 +1,4 @@
 <h1 align='center'>git命令</h1>
-
 #### 远程相关
 
 `git remote -v`
@@ -32,6 +31,14 @@
 
 `git fetch [remote-name]`
 
+##### 创建并切换分支
+
+`git checkout -b branchName`
+
+##### 根据远程分支生成的本地分支(拉取远程分支)
+
+`git checkout -b branchName  origin/branchName`
+
 ##### 查看拉取的分支
 
 `git log -p FETCH_HEAD`
@@ -47,6 +54,18 @@
 ##### 查看可合并的分支
 
 `git branch --no-merge `
+
+##### 查看两个版本的差异
+
+`git diff branch1 branch2 [-stat]`
+
+##### 查看本地的改动（还未提交）
+
+`git diff `
+
+##### 查看一个文件的改动
+
+`git log -p file`
 
 #### 本地相关
 
