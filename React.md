@@ -21,7 +21,7 @@ https://img.shields.io/badge/%E5%89%8D%E7%AB%AF-react-day1
  let ele = React.createElement('h1',{id:'xxx'},'大大');
     //方式二 JSX 需要Babel
  const jsx = <h1>Hello,World</h1>;
- //创建ul使用{变量}
+ //创建ul使用{变量}//以{[xxx,xxx]}会被自动添加
  const ul = (
       <ul>{
         names.map(item => <li key={item}>{item}</li>)
@@ -745,7 +745,7 @@ fetch(url, {
 
 
 
-### * React组件间通信的方式
+###  React组件间通信的方式
 
 ####  方式一： 通过prop传递
 

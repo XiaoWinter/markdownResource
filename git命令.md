@@ -1,6 +1,8 @@
 <h1 align='center'>git命令</h1>
 #### 远程相关
 
+##### 查看远程仓库
+
 `git remote -v`
 
 ##### 配置别名
@@ -17,7 +19,7 @@
 
 ##### 移除远程仓库
 
-`git remote rm [remote-name]`
+`git remote rm [remote-name]`--
 
 ##### 推送到远程仓库
 
@@ -34,6 +36,10 @@
 ##### 创建并切换分支
 
 `git checkout -b branchName`
+
+##### 重命名本地分支
+
+`git branch -m oldbranchname newbranchname`
 
 ##### 根据远程分支生成的本地分支(拉取远程分支)
 
