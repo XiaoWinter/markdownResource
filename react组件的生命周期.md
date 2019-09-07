@@ -1,5 +1,4 @@
 <h1 align='center'>react组件的生命周期</h1>
-
 react类组件的生命周期（函数组件没有状态，也没有生命周期）
 
 1.组件从创建到销毁会经历三个时期，初始化时期、运行时期、销毁时期
@@ -45,6 +44,10 @@ b.每次更新state: this.setState()
       * componentWillUpdate() : 将要更新回调
       * render() : 更新(重新渲染)
       * componentDidUpdate() : 已经更新回调
+b2.父组件解析,render(),prop改变
+	  * componendWillReceiveProps()
+b3.state改变，性能优化点
+	  * shouldComponendUpdate()  
 
 结束
 c.移除组件: ReactDOM.unmountComponentAtNode(containerDom)
