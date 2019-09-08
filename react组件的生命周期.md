@@ -45,9 +45,9 @@ b.每次更新state: this.setState()
       * render() : 更新(重新渲染)
       * componentDidUpdate() : 已经更新回调
 b2.父组件解析,render(),prop改变
-	  * componendWillReceiveProps()
+	  * componendWillReceiveProps(new=xtProps)
 b3.state改变，性能优化点
-	  * shouldComponendUpdate()  
+	  * shouldComponendUpdate(nextProps , nextState)  
 
 结束
 c.移除组件: ReactDOM.unmountComponentAtNode(containerDom)
