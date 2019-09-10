@@ -1,5 +1,7 @@
 ## redux
 
+[参考资料：完全理解redux](https://github.com/brickspert/blog/issues/22)
+
 
 
 ### 动机
@@ -70,6 +72,28 @@ let ab = Object.assign({}, a, b);
 
 
 
-##### 
+如果用户自定义的属性，放在扩展运算符后面，则扩展运算符内部的同名属性会被覆盖掉。
 
-##### 
+(后面的属性会覆盖前面，扩展运算符结构的对象)
+
+```javascript
+let aWithOverrides = { ...a, x: 1, y: 2 };
+// 等同于
+let aWithOverrides = { ...a, ...{ x: 1, y: 2 } };
+// 等同于
+let x = 1, y = 2, aWithOverrides = { ...a, x, y };
+// 等同于
+let aWithOverrides = Object.assign({}, a, { x: 1, y: 2 });
+```
+
+应用场景
+
+这用来修改现有对象部分的属性就很方便了。
+
+```javascript
+let newVersion = {
+  ...previousVersion,
+  name: 'New Name' // Override the name property
+};
+```
+
