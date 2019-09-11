@@ -85,6 +85,21 @@ computed ：一旦data发生改变，计算属性的函数应该绘制行,
 
 计算属性会缓存{方法名：计算的值}，减少计算的次数，优化性能呢 
 
+```
+computed:{
+	complete:{
+		get(){
+			//根据已有的数据得到生成的数据
+		},
+		set(val){
+			//自定义设置（比如，调用父组件的方法）
+		}
+	}
+}
+```
+
+
+
 
 
 
@@ -98,6 +113,12 @@ watch:{
 
 	firstName:function(newValue, oldValue){
 
+	},
+	todos:{
+		deep:true,
+		handler:(newVal,oldVal)=>{
+			
+		}
 	}
 
 }
@@ -124,7 +145,7 @@ vm.$watch('firstName',function(){})
 
 固定的类名
 
-直接加class-"xxx''
+直接加class="xxx''
 
 多个类名
 
@@ -186,9 +207,9 @@ vm.$watch('firstName',function(){})
 
 ```jsx
 <ul id="example-2">
-    //可以有index
-  <li v-for="(item, index) in items">
-    {{ parentMessage }} - {{ index }} - {{ item.message }}
+    //可以有index,遍历对象
+  <li v-for="(value, index) in items">
+    {{ value }}
   </li>
 </ul>
 
@@ -197,14 +218,22 @@ vm.$watch('firstName',function(){})
           el: '#example-2',
           data: {
             parentMessage: 'Parent',
-            items: [
-              { message: 'Foo' },
-              { message: 'Bar' }
-            ]
+            items: {
+                A:'a',
+                B:'b',
+                C:'c'
+            }
           }
         })
 </script>
 ```
+
+```vue
+//自定义组件进行循环复制时，需要指定key,key为item得来的
+<Item v-for="todo in todos" :key="todo.id" ></Item>
+```
+
+
 
 
 
@@ -290,7 +319,7 @@ Vue.config.xxxx
 
 ##### MVVM
 
-双向数据绑定
+##### v-model 双向数据绑定
 
 页面改变——>vue对象改变
 
@@ -362,10 +391,12 @@ v是你自己啊指定的
     <div id="test1">
         //竖杠的后面写过滤器的名字
         <div>{{time|myfileter}}</div>
+        <!-- 在 `v-bind` 中 -->
+		<div v-bind:id="rawId | formatId"></div>
     </div>
     <script>
         //定义过滤器
-        Vue.filter('myfileter',function(value){
+        Vue.filter('myfileter',function(value,option...){
             return moment(value).format('YYYY--MM--DD HH:mm:ss')
         })
 
@@ -382,6 +413,10 @@ v是你自己啊指定的
 
 
 ##### ref
+
+
+
+可以得到dom对象，也可以得到组件对象
 
 ```vue
  <div id="test1">
@@ -471,71 +506,173 @@ Vue.use(MyPlugin,options)
 
 
 
-组件
+##### v-text/v-html
 
-```
-
-```
+定义标签内容
 
 
+
+##### 桥接
+
+
+
+##### 编码规范检查
+
+
+
+
+
+##### xxxrc中rc的rc
 
 runtime control
 
 
 
+##### 组件
 
+```
+实现某个局部功能的所有代码的集合
+```
 
+组件的三部分
 
+```vue
+HTML//模板
+<template>
 
+</template>
 
 
+<script>
+    
+export default {	
+	xxx:'xxx',
+	data(){
+    return {
+        yyy:'yyy'
+    }
 
+}
+}
+</script>
+//样式局部启用
+<style scoped>
 
+</style>
 
+```
 
+##### 注册组件
 
+```
+import xxx from '../xxx/a'
+new Vue({
 
+    componends:{
+        xxx:xxx
+    }
+})
+```
 
 
 
+**组件是可复用的 Vue 实例**，且带有一个名字：在这个例子中是 `<button-counter>`。我们可以在一个通过 `new Vue` 创建的 Vue 根实例中，把这个组件作为自定义元素来使用：
 
+**我们所写的vue文件最终就转化为了下面这种定义组件的形式**
 
 
 
+###### 定义组件
 
+```vue
+// 定义一个名为 button-counter 的新组件
+Vue.component('button-counter', {
+  data: function () {
+    return {
+      count: 0
+    }
+  },
+  template: '<button v-on:click="count++">You clicked me {{ count }} times.</button>'
+})
+```
 
 
 
+模板（vue解析的代码块）
 
+```vue
+<div id="components-demo">
+  <button-counter></button-counter>
+</div>
+```
 
 
 
+###### 使用
 
+```vue
+new Vue({ el: '#components-demo' })
+```
 
 
 
+##### vue的数据传输方式
 
+###### [通过 Prop 向子组件传递数据](https://cn.vuejs.org/v2/guide/components.html#通过-Prop-向子组件传递数据)
 
+```vue
+<template>
+	<div>
+        <Son :todos="todos"></Son>
+    </div>
+</template>
 
+export default{
+//声明接收的树形
+	prps:['todos'],
+//或者
+	props:{
+	todo:Object
+}
+	componends:{
+	
+	}
+}
+```
 
 
 
+##### 组件间通信
 
+###### 原则一：子组件不要直接修改父组件的属性
 
 
 
+```
+<1> props  缺点：祖先后代通信需要逐层传递，兄弟组件通信需要借助父组件
+<2>自定义事件 ==> 事件总线  
+<3>消息订阅发布 pubsub库
+<4>slot插槽
+<5>vuex
+```
 
 
 
 
 
+组件对象（VueComponend）。他是VueComponend构造出的对象，VueComponend是以视图模型对象为原型的函数
 
+视图模型对象（ViewModel） ,他是以Vue函数构造出的对象
 
 
 
+##### 事件总线可行性基础
 
+组件对象的父类是ViewModel对象，但是每个ViewModel对象是不同的，
 
+组件对象的爷爷类是Vue的prototype,所有组件对象的爷爷类是同一个人
 
+![](http://47.103.65.182/markdown/010.png)
 
 
 
@@ -543,17 +680,364 @@ runtime control
 
 
 
+##### 自定义事件
 
+##### 子向父简单通信
 
+目的：进行子向父通信
 
+步骤
 
+```vue
+第一，父组件中给子组件绑定事件
 
+<Father>
+    <Son @myEvent="dosomething"></Son>
+</Father>
 
+<script>
+	new Vue({
+        methods:{
+            dosomething:(param)=>{
+                //todo
+            }
+        }
+    })
+</script>
 
+第二，子组件触发这个事件
 
+<Son>
+	xxx
+</Son>
+<script>
+	new Vue({
+        methods:{
+            letDo(){
+                this.$emit('myEvent',param)
+            }
+        }
+    })
+</script>
+```
 
 
 
+##### 跨越组件通信(使用事件总线)
+
+<a href="##### 事件总线可行性基础">事件总线可行性基础</a>
+
+```vue
+//定义一个Vue对象，总线对象
+Vue.prototype.$Bus = new Vue()
+
+组件A
+
+Mounted钩子中
+绑定事件
+this.$Bus.$on('事件名',callBack)
+
+beforeDestory钩子
+解除绑定
+this.$Bus.$off('事件名')
+
+组件B
+分发事件(触发事件
+)
+this.$Bus.$emit('事件名',参数)
+```
+
+
+
+#### slot
+
+```vue
+//子组件
+<template>
+	<div>
+        <slot name="A"></slot>
+        <p>
+            hahaha
+    	</p>
+        <slot name="B">
+    		设置默认值
+    	</slot>
+    </div>
+</template>
+
+
+//父组件中解析好了,这样就在相应位置传递了标签
+<Father>
+	<Son>
+    	<div slot="A">
+            slotA
+        </div>
+        <div slot="B">
+            slotB
+        </div>
+    </Son>
+</Father>
+```
+
+
+
+
+
+如何合并两个对象
+
+
+
+##### [快速上手@vue/cli](https://baijiahao.baidu.com/s?id=1628046958550495589&wfr=spider&for=pc)
+
+如果有2.x版本的vue-cli要卸载掉，否则3会出错
+
+
+
+```
+拆分为header，todos{item},footer
+```
+
+
+
+##### 初始化
+
+使用cli构建一个项目
+
+##### 编写
+
+###### 拆分
+
+书写组件，将整个页面拆分成几个部分，将样式文件分成几个部分，
+
+###### 静态页面
+
+将几个部分写成组件，引入到App
+
+```javascript
+<script>
+import Header from './components/Header.vue'
+import Footer from './components/Footer.vue'
+import Todos from './components/Todos.vue'
+
+export default {
+  name: 'app',
+  components: {
+    Header,
+    Footer,
+    Todos
+  }
+}
+</script>
+```
+
+
+
+动态效果
+
+1.初始化数据，
+
+数据结构为下
+
+```
+todos:[
+    {
+        id:Date.now(),
+        name:'吃饭',
+        complete:false
+    },
+    {
+        id:Date.now(),
+        name:'睡觉',
+        complete:false
+    },
+    {
+        id:Date.now(),
+        name:'休息',
+        complete:false
+    }
+]
+```
+
+2.数据的位置
+
+App中
+
+```javascript
+  data(){
+    return {
+      todos:[
+    {
+        id:Date.now(),
+        name:'吃饭',
+        complete:false
+    },
+    {
+        id:Date.now(),
+        name:'睡觉',
+        complete:false
+    },
+    {
+        id:Date.now(),
+        name:'休息',
+        complete:false
+    }
+]
+    }
+  },
+```
+
+
+
+3.传递数据
+
+
+
+```vue
+//父组件中向子组件传递数据
+<Todos :todos="todos"></Todos>
+//子组件声明这个数据
+export default {
+	props:{
+		todos:Array
+	}
+}
+//传递的数据怎么用，直接用，就当在data中定义的一样
+//
+<Item v-for="todo in todos" :key="todo.id" :todo="todo" ></Item>
+```
+
+##### 使用总线
+
+
+
+###### 给Vue的原型绑定事件的代理对象
+
+```javascript
+//main.js
+import Vue from 'vue'
+import App from './App.vue'
+
+Vue.config.productionTip = false
+//创建一个Vue实例作为事件代理对象
+Vue.prototype.$Bus = new Vue()
+
+
+new Vue({
+  render: h => h(App),
+}).$mount('#app')
+
+```
+
+###### 绑定事件
+
+
+
+```vue
+<template>
+  
+    
+     <div class="todo-container">
+       
+    
+    
+    <div class="todo-wrap">
+      <Header></Header>
+      <Todos :todos="todos"></Todos>
+      <Footer :completed="completed" :total="total"></Footer>
+      
+    </div>
+  </div>
+ 
+</template>
+
+<script>
+import Header from './components/Header.vue'
+import Footer from './components/Footer.vue'
+import Todos from './components/Todos.vue'
+
+export default {
+  name: 'app',
+    //设置数据
+  data(){
+    return {
+      todos:[]
+    }
+  },
+    //给footer传入计算属性
+  computed:{
+    completed(){
+      
+      return this.todos.reduce((pre,item)=> pre += item.complete,0)
+    },
+    total(){
+      return this.todos.length
+    }
+  },
+    //在挂载后，绑定自定以事件到总线上，以及从localStorage获取todos
+  mounted(){
+    //初始化todos
+    this.todos = JSON.parse(localStorage.getItem('todos')||'[]')
+    //添加一条记录
+    this.$Bus.$on('addTodo',this.addTodo)
+    //删除一条记录
+    this.$Bus.$on('delTodo',this.delTodo)
+    //修改完成
+    this.$Bus.$on('setCheck',this.setCheck)
+    //选则所有
+    this.$Bus.$on('checkAll',this.checkAll)
+    //清除选中的
+    this.$Bus.$on('delCompleted',this.delCompleted)
+  },
+    //定义总线绑定事件的回调
+   methods:{
+    addTodo(todo){
+      this.todos.unshift(todo)
+    },
+    delTodo(index){
+      this.todos.splice(index,1)
+    },
+    setCheck(index,isCheck){
+      this.todos[index].complete = !isCheck
+    },
+    checkAll(isCheck){
+      this.todos.forEach(todo => {
+        todo.complete = isCheck
+      });
+    },
+    delCompleted(){
+      this.todos = this.todos.filter(todo=>!todo.complete)
+    }
+  },
+    //组件销毁时解绑事件
+   beforeDestory(){
+    //解绑
+    this.$Bus.$off('addTodo')
+    this.$Bus.$off('delTodo')
+    this.$Bus.$off('setCheck')
+    this.$Bus.$off('checkAll')
+    this.$Bus.$off('delCompleted')
+  },
+    //监视todos 的变化实现数据驱动
+  watch:{
+    todos:{
+      deep:true,
+		  handler(newVal,oldVal){
+        // console.log('看到了')
+        this.todos = newVal
+        localStorage.setItem('todos',JSON.stringify(this.todos))
+		  }
+    }
+  },
+ 
+ 
+  components: {
+    Header,
+    Footer,
+    Todos
+  }
+}
+</script>
+```
 
 
 

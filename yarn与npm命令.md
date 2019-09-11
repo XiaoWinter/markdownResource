@@ -1,4 +1,7 @@
 # 1. 在线文档
+
+[yarn的命令](https://yarnpkg.com/zh-Hans/docs/cli/)
+
 	yarn: https://yarnpkg.com/zh-Hans/docs/cli
 	npm: https://www.npmjs.cn/
 
@@ -32,7 +35,7 @@
 ## 运行项目中配置的script: 
 	yarn run xxx
 	npm run xxx
-	
+
 ## 查看某个包的信息: 
 	yarn info xxx
 	npm info xxx

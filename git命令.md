@@ -94,7 +94,45 @@
 ——stdin: 从标准输入读取内容
 ```
 
+#### 查看版本
+
+##### 察看版本的详细信息
+
+`git log`
+
+##### 一行显示
+
+`git log --pretty=oneline`
+
+`git log --oneline`
+
+##### 查看所有的版本信息（简单显示）
+
+`git reflog`
 
 
 
+#### 切换版本
+
+##### 基于索引值切换版本
+
+`git reset [--hard|--soft] 8a58522`
+
+* --hard 回退了版本，工作区，暂存区
+
+* --mixed 回退了版本，暂存区（默认）
+
+* --soft 回退了版本
+
+##### 步进回退
+
+* 一个`^`代表回退一个版本
+
+`git reset [--hard|--soft] HEAD^^^ `
+
+##### 跨越回退
+
+* `~3`表示回退3个版本
+
+`git reset [--hard|--soft] HEAD~3`
 
