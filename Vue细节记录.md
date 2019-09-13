@@ -779,7 +779,7 @@ this.$Bus.$emit('事件名',参数)
 </Father>
 ```
 
-
+类似于React的children
 
 
 
@@ -1041,15 +1041,281 @@ export default {
 
 
 
+###### 触发总线的事件
+
+```javascript
+<template>
+        <li>
+          <label>
+    		
+            <input type="checkbox" :checked="todo.complete" @click="setCheck"/>
+            <span>{{todo.title}}</span>
+          </label>
+          <button class="btn btn-danger" @click="delTodo">删除</button>
+        </li>
+</template>
+
+<script>
+export default {
+    props:['todo','index'],
+    data(){
+        return{
+            check:false
+        }
+    },
+    mounted(){
+        this.check = this.todo.complete
+        // console.log('调用了mounted',this.check)
+
+    },
+    beforeUpdate(){
+       this.check = this.todo.complete
+    //    console.log('调用了beforeUpdate',this.check)
+    },
+	//在标签触发某些事件时触发总线事件（其实在任意合适的时机都可使用），并出入参数，以供自定义事件的回调使用，
+    methods:{
+        delTodo(){
+            this.$Bus.$emit('delTodo',this.index)
+        },
+        setCheck(){
+            this.$Bus.$emit('setCheck',this.index,this.check)
+        }
+    }
+}
+</script>
+```
+
+
+
+##### 组件什么时候销毁
+
+
+
+##### Vue发送请求
+
+###### 最最重要的发送请求的方式时axios
+
+
+
+##### 在Vue2中的配置
+
+代理设置
+
+config,baseconfig,
+
+```javascript
+//一般写法
+proxyTable:{
+    //路径
+	'/xxx':'url',
+      //替换
+    pathRewayte:{
+        '^/xxx':''
+        },
+     //可跨域
+	changeOrigin:true
+}
+
+//更具扩展性的写法
+proxyTable:{	
+	'xxx':{
+        target:'url,'
+         pathRewayte:{
+            '^/xxx':''
+            },
+        changeOrigin:true
+	}
+}
+
+
+
+```
+
+
+
+data中得数据会被添加到VM对象上
+
+
+
+#### Vue-Router
+
+路由就是转发（跳转）的规则，路由可以将组件渲染到页面的某些位置
+
+
+
+#### QuickStart
+
+#### 1.如何设置规则
+
+##### 定义路由
+
+路由是一个js对象，它通过VueRouter构造函数创建，
+
+他接受一个一个配置routes ，routes 是一个格式固定的数组，
+
+routes 维护路由路径与组件的映射关系`{ path: '/foo', component: ComponentA }`
+
+```javascript
+// 0. 如果使用模块化机制编程，导入Vue和VueRouter，要调用 Vue.use(VueRouter)
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+
+import ComponentA from '../xxxx'
+import ComponentB from '../xxxx'
+// 2. 定义路由
+// 每个路由应该映射一个组件。 其中"component" 可以是import xxx from '组件路径'
+// 我们晚点再讨论嵌套路由。
+const routes = [
+  { path: '/foo', component: ComponentA },
+  { path: '/bar', component: ComponentB }
+]
+
+// 3. 创建 router 实例，然后传 `routes` 配置
+// 你还可以传别的配置参数, 不过先这么简单着吧。
+const router = new VueRouter({
+  routes // (缩写) 相当于 routes: routes
+})
+```
+
+
+
+##### 注册路由
+
+在vue中路由是Vue实例的一个配置项(options)
+
+通过将router对象配置到vue根实例，从而使得，整个vue整个应用都有路由功能
+
+```javascript
+// 4. 创建和挂载根实例。
+
+const app = new Vue({
+  router：router
+}).$mount('#app')//$mount('app')等同于配置el:'#app'
+```
+
+
+
+#### 2.如何使用规则（路由）
+
+##### 使用路由
+
+使用路由至少包括两个要素，
+
+* 命令（要哪个组件`{ path: '/foo', component: ComponentA }`，vue中称之为**导航**）
+
+  > 命令这个操错有两种达成方式
+
+  <1>**声明式路由导航**
+
+  ```html
+  	<!-- 使用 router-link 组件来导航. -->
+      <!-- 通过传入 `to` 属性指定链接. -->
+      <!-- <router-link> 默认会被渲染成一个 `<a>` 标签 -->
+      <router-link to="/foo">Go to Foo</router-link>
+      <router-link to="/bar">Go to Bar</router-link>
+  	
+	<!-- repacle 在历史记录中，会替换当前的路由 -->
+  	<router-link :to="..." replace></router-link>
+```
+  
+
+  
+  <2>**[编程式路由导航](https://router.vuejs.org/zh/guide/essentials/navigation.html)**
+  
+  在根实例注册了路由之后，会在Vue的prototype上挂载一个$router对象，通过调用这个对象的一些方法，可以使路由跳转
+  
+  ```javascript
+  // 字符串
+  router.push('home')
+  // 对象
+  router.push({ path: 'home' })
+  
+  //这里可以携带参数
+  // 命名的路由
+  router.push({ name: 'user', params: { userId: '123' }})
+  // 带查询参数，变成 /register?plan=private
+  router.push({ path: 'register', query: { plan: 'private' }})
+  
+  
+  router.replace(location, onComplete?, onAbort?)
+                 
+  router.go(n)
+  ```
+  
+  
+
+##### 
+
+#### 编写HelloWorld
+
+##### 创建一个脚手架
+
+```
+vue create vue-router
+
+```
+
+建好后，按提示
+
+```
+cd vue-router
+yarn serve
+```
+
+
+
+##### 拆分页面
+
+根据HelloWorld拆分组件,可拆分成Header ,Sider,Show三个组件，放到App中，另外还有两个有声明式导航使用的路由组件About，Home
 
 
 
 
 
+![](http://47.103.65.182/markdown/011.png)
+
+![](http://47.103.65.182/markdown/013.png)
+
+##### 编写静态页面
+
+编写组件写上一点样式
+
+![](http://47.103.65.182/markdown/012.png)
 
 
 
-![](https://cn.vuejs.org/images/components.png)
+##### 使用路由
+
+要想使用路由，需要安装vue-router包
+
+`yarn add vue-router`
+
+在src下新建文件夹route,然后创建index.js文件,在这个文件中，我们编写路由的规则，暴露一个路由对象，然后导入到App中，让App配置这个Router对象，使我们的应用可以使用路由功能，
+
+eslint太烦了，所以在index.js的最上方加上忽略命令`/* eslint-disable */`
+
+```javascript
+/* eslint-disable */
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+
+//导入组件
+import About from '../page/About.vue'
+import Home from '../page/Home.vue'
+
+//定义一下路由的规则
+const routes = [
+    {path:'/About',componend:About},//path的'/'表示根路径（http://www.xx.com/）；整个path表示（http://www.xx.com/Aout）
+    {path:'/Home',componend:Home}
+]
+
+//创建一个路由对象，待会传给App
+const router = new VueRouter({
+    routes
+})
+
+export {router}
+```
 
 
 
