@@ -1216,6 +1216,7 @@ const app = new Vue({
   	
 	<!-- repacle 在历史记录中，会替换当前的路由 -->
   	<router-link :to="..." replace></router-link>
+  ```
 ```
   
 
@@ -1240,11 +1241,11 @@ const app = new Vue({
   router.replace(location, onComplete?, onAbort?)
                  
   router.go(n)
-  ```
-  
+```
+
   
 
-##### 
+
 
 #### 编写HelloWorld
 
@@ -1284,7 +1285,7 @@ yarn serve
 
 
 
-##### 使用路由
+##### 路由应用
 
 要想使用路由，需要安装vue-router包
 
@@ -1294,30 +1295,482 @@ yarn serve
 
 eslint太烦了，所以在index.js的最上方加上忽略命令`/* eslint-disable */`
 
+注意：这里有vue3的一个小坑
+
+```
+if you Vue-Router don't work when you use vue/cli3,you may need to change you 'import' from "import Vue from 'vue'" to "import Vue from 'vue/dist/vue.js'"
+如果你的vueRouter不工作了，在vue/cli3的环境下，你可能需要修改你的import，把"import Vue from 'vue'"
+改成"import Vue from 'vue/dist/vue.js'"
+```
+
+
+
+###### 定义路由的规则
+
 ```javascript
 /* eslint-disable */
-import Vue from 'vue'
+import Vue from 'vue/dist/vue.js'
 import VueRouter from 'vue-router'
 
 //导入组件
 import About from '../page/About.vue'
 import Home from '../page/Home.vue'
 
+//记得安装一下路由插件
+Vue.use(VueRouter)
 //定义一下路由的规则
+//component写成了componend，搞了好久，太艹了
 const routes = [
-    {path:'/About',componend:About},//path的'/'表示根路径（http://www.xx.com/）；整个path表示（http://www.xx.com/Aout）
-    {path:'/Home',componend:Home}
+    {path:'/About',component:About},//path的'/'表示根路径（http://www.xx.com/）；整个path表示（http://www.xx.com/Aout）
+    {path:'/Home',component:Home}
 ]
 
 //创建一个路由对象，待会传给App
 const router = new VueRouter({
+    mode: 'history', // 浏览器地址栏路径不带#
     routes
 })
 
 export {router}
 ```
 
+###### 注册给根组件
+
+```javascript
+import Vue from 'vue/dist/vue.js'
+import App from './App'
+import router from './router'
+
+Vue.config.productionTip = false
+
+new Vue({
+  render: h => h(App),
+  router,
+  components: { App }
+}).$mount('#app')
+```
 
 
 
+###### 使用路由
+
+* 声明路由
+
+```html
+<!--Sider组件编写路由声明,<router-link to="/about">...-->
+<template>
+  <div id="sider">
+    <ul>
+      <li><router-link to="/about">About</router-link></li>
+      <li><router-link to="/home">Home</router-link></li>     
+    </ul>
+  </div>
+</template>
+```
+
+* 路由视图
+
+```html
+<!-- Show组件中写一个路由出口，虽然路由和出口写在了不同的组件中，但是任然可以正常使用  -->
+<template>
+  <div id="show">
+  <!-- 目前来说所有的路由视图的渲染都会跳到这里   -->
+ <router-view></router-view>
+  </div>
+</template>
+```
+
+
+
+#### [嵌套路由](https://router.vuejs.org/zh/guide/essentials/nested-routes.html)
+
+###### 组件目前可以被分成两类
+
+* 普通组件：构成一开始页面的组件，如Header,Sider,Footer等
+
+* 路由组件：注册到路由规则中，通过`<router-link>`或者`$router`跳转,通过`<router-view>`渲染到页面中的组件
+
+目前的helloworld实现了一级路由的功能，一级路由的路由组件渲染会直接找到最顶层的出口（`<router-view/>`）,这个标签写在普通组件中，所以会被当作一级路由的渲染出口，如果我们想要在路由组件A中渲染一个组件B，则可以在该路由组件中定义`<router-link to='B'>` 和`<router-view>`,`<router-link to='B'>`对应的组件会被渲染到组件A中。这种路由组件中渲染路由组件就叫嵌套路由
+
+路由组件A中，编写路由组件B的声明和渲染
+
+```html
+//HOME组件中进行子组件的渲染
+<template>
+  <div>
+    <h1>Home</h1>
+    <ul>
+      <!-- 路由声明  -->  
+      <li><router-link to="/home/news">news</router-link></li>
+      <li><router-link to="/home/message">messages</router-link></li>
+    </ul>
+    <!-- 路由渲染  -->
+    <router-view/>
+    </div>
+</template>
+```
+
+
+
+###### 定义规则
+
+嵌套路由通过路由规则的children属性来表示，其值是路由规则的数组
+
+```javascript
+
+const routes = [
+    {
+        path:'/about',
+        component:About
+    },
+    {
+        path:'/home',
+        component:Home,
+        //嵌套路由
+        children:[
+            {	
+                //path:'/news',//这是个错误写法
+                //path:'/home/news',//这是该路由队则的完整写法
+                path:'news',//这是该路由规则的简要写法
+                component:News
+            },
+            {
+                path:'message',
+                component:Message
+
+            },
+            //给'/home'路由规则设置一个默认的跳转（重定向）
+            {
+                path:'',
+                redirect:'news'
+            }
+        ]
+    },
+]
+```
+
+
+
+#### 动态路由匹配
+
+如何向路由组件传递数据，对于那种页面结构一样，只是数据不同的页面，可以使用路径参数（params）来传递关键字数据，从而显示页面
+
+形如`/xxx/yyy/1`,`/xxx/yyy/2`,`/xxx/yyy/3`，这三个路径其实是同一个组件，通过最后的`/1` `/2` `/3`传递数据，显示不同的页面。
+
+###### 如何声明一个动态路由
+
+```javascript
+//动态路由配置
+routes=[
+	{path:'/:id',component:xxx}
+]
+```
+
+
+
+```javascript
+//helloworld项目的routes中声明动态路由
+const routes = [
+    {
+        path:'/about',
+        component:About,
+        children:[
+
+        ]
+    },
+    {
+        path:'/home',
+        component:Home,
+        children:[
+            {
+                path:'/home/news',
+                component:News
+            },
+            {
+                path:'message',
+                component:Message,
+                children:[
+                    {
+                        //在这里配置动态路由
+                        path:'detail/:id',
+                        component:MessageDetail
+                    }
+                ]
+            },
+            {
+                path:'',
+                redirect:'news'
+            }
+        ]
+    },
+]
+```
+
+
+
+###### 组件中动态路由的使用
+
+`router-link`的路径是动态生成的。并且可以匹配动态路由规则 
+
+```vue
+<template>
+  <div>
+      <ul>
+          <li v-for="msg in Msgs" :key='msg.id' >
+              <router-link :to="`/home/message/detail/${msg.id}`">{{msg.msg}}</router-link>
+              </li>
+      </ul>
+      <router-view/>
+  </div>
+</template>
+```
+
+###### 如何获取动态路由传递的数据
+
+原理：路由的params参数和query参数被存到了Vue原型对象的$route属性上了
+
+![](http://47.103.65.182/markdown/014.png)
+
+```vue
+<template>
+  <ul>
+      <li>ID:{{message.id}}</li>
+      <li>message:{{message.msg}}</li>
+      <li>Content:{{message.content}}</li>
+  </ul>
+</template>
+
+<script>
+export default {
+    data(){
+        return{
+            message:{},
+        }
+    },
+    //mounted是为了初始化显示
+    mounted(){
+        
+        //从$route中取得路径参数
+        const ID = this.$route.params.id
+        this.message = {
+            id:ID,
+            msg:'ID是'+ID,
+            content:'内容是'+ID
+        }
+    },
+    //由于这个组件不会销毁所以需要每次数据改变就修改页面数据，
+    //可以有两个方法，
+    //1.使用watch监视$route数据
+    //2.使用生命周期函数beforeUpdate
+    watch:{
+        $route:{
+            handler(newVal){
+                const ID = newVal.params.id
+                this.message = {
+                id:ID,
+                msg:'ID是'+ID,
+                content:'内容是'+ID
+        }
+            }
+        }
+    }
+}
+</script>
+
+<style>
+
+</style>
+```
+
+
+
+#### [编程式导航](https://router.vuejs.org/zh/guide/essentials/navigation.html)
+
+[API](https://router.vuejs.org/zh/api/#router-push)
+
+除了使用 `<router-link>` 创建 a 标签来定义导航链接，我们还可以借助 router 的实例方法，通过编写代码来实现。
+
+##### 编程式导航api
+
+###### push方法
+
+```
+想要导航到不同的 URL，则使用 router.push 方法。这个方法会向 history 栈添加一个新的记录，所以，当用户点击浏览器后退按钮时，则回到之前的 URL。
+
+
+router.push(location).then(onComplete).catch(onAbort)
+
+
+router.push(location, onComplete?, onAbort?)
+
+    location：同上
+    onComplete:同上
+    onAbout:同上
+    
+```
+
+
+
+```javascript
+// 字符串
+router.push('home')
+// 对象
+router.push({ path: 'home' })
+// 命名的路由
+router.push({ name: 'user', params: { userId: '123' }})
+// 带查询参数，变成 /register?plan=private
+router.push({ path: 'register', query: { plan: 'private' }})
+```
+
+
+
+
+
+
+
+###### replace方法
+
+```
+跟 router.push 很像，唯一的不同就是，它不会向 history 添加新记录，而是跟它的方法名一样 —— 替换掉当前的 history 记录。
+这两个方法的参数代表的含义与push相同
+router.replace(location).then(onComplete).catch(onAbort)
+   
+router.replace(location, onComplete?, onAbort?)
+
+```
+
+###### go方法
+
+```
+这个方法的参数是一个整数，意思是在 history 记录中向前或者后退多少步，类似 window.history.go(n)。
+```
+
+###### back方法
+
+略
+
+###### forward方法
+
+略
+
+##### 如何使用编程式路由导航
+
+通过$router的实例方法实现编程式导航
+
+```vue
+<template>
+  <div>
+      <ul>
+          <li v-for="msg in Msgs" :key='msg.id' >
+              <router-link :to="`/home/message/detail/${msg.id}`">{{msg.msg}}</router-link>
+              <button @click="push(`${msg.id}`)">push</button>
+              <button @click="replace(`${msg.id}`)">replace</button>
+              </li>
+      </ul>
+      <router-view/>
+  </div>
+</template>
+
+<script>
+export default {
+    data(){
+        return {
+            Msgs:[]
+        }
+    },
+    mounted(){
+        setTimeout(()=>{
+            this.Msgs = [
+                {id:1,msg:'aaaaa',key:'a'},
+                {id:2,msg:'bbbbb',key:'b'},
+                {id:3,msg:'ccccc',key:'c'},
+            ]
+        },1000)
+    },
+    //通过$router的实例方法实现编程式导航
+    methods:{
+        push(id){
+            this.$router.push('/home/message/detail/'+id)
+        },
+        replace(id){
+             this.$router.replace('/home/message/detail/'+id)
+        }
+    }
+
+}
+</script>
+```
+
+#### [命名路由](https://router.vuejs.org/zh/guide/essentials/named-routes.html)
+
+​	有时候，通过一个名称来标识一个路由显得更方便一些，特别是在链接一个路由，或者是执行一些跳转的时候。你可以在创建 Router 实例的时候，在 `routes` 配置中给某个路由设置名称。
+
+##### 给路由命名
+
+这里把MessageDetail的路由加上name属性
+
+```javascript
+{
+                path:'message',
+                component:Message,
+                children:[
+                    {
+                        name:'detail',
+                        path:'detail/:id',
+                        component:MessageDetail,
+
+                    }
+                ]
+            },
+```
+
+##### 使用命名路由
+
+###### 声明式导航使用命名路由
+
+```vue
+//写成一个对象的形式，name代表路由，params,query代表传递的参数
+<router-link :to="{ name: 'detail', params: { id: msg.id }}">{{msg.msg}}</router-link>
+```
+
+###### 编程式导航使用命名路由
+
+```javascript
+ //同样的传入一个对象，包括路径和参数，路径是name，参数是params或者是query
+methods:{
+        push(id){
+            // this.$router.push('/home/message/detail/'+id)
+            this.$router.push({ name: 'detail', params: { id: id }})
+        },
+        replace(id){
+            // this.$router.replace('/home/message/detail/'+id)
+            this.$router.replace({ name: 'detail', params: { id: id }})
+        }
+    }
+```
+
+
+
+#### 缓存路由组件
+
+组件创建时会从服务器获取数据，如果切换组件，该组件死亡，再次路由到该组件时会再次向服务器发起请求，所以我们需要缓存被切换的组件，让其不要死亡
+
+##### 解决办法
+
+
+
+使用`keep-alive`包裹最顶层出口`<router-view>`，可使所有组件缓存下来
+
+```html
+<template>
+  <div id="show">
+  <!-- 目前来说所有的路由视图的渲染都会跳到这个   -->
+  <keep-alive>
+    <router-view></router-view>
+  </keep-alive>
+  </div>
+</template>
+```
+
+![](http://47.103.65.182/markdown/015.png)
 
