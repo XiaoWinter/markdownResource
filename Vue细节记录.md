@@ -1782,13 +1782,19 @@ methods:{
 </template>
 ```
 
+
+
 ![](http://47.103.65.182/markdown/015.png)
 
 #### $Router和$Route的区别
 
 **$Router**:包含实现路由跳转的方法
 
+<a href='##### 编程式导航api'>$Router</a>
+
 $Route:包含路由传递的信息
+
+![](https://img2018.cnblogs.com/blog/1288536/201811/1288536-20181115132315183-218072593.png)
 
 
 
