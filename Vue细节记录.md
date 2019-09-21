@@ -85,17 +85,29 @@ computed ：一旦data发生改变，计算属性的函数应该绘制行,
 
 计算属性会缓存{方法名：计算的值}，减少计算的次数，优化性能呢 
 
-```
-computed:{
-	complete:{
-		get(){
-			//根据已有的数据得到生成的数据
-		},
-		set(val){
-			//自定义设置（比如，调用父组件的方法）
-		}
-	}
-}
+```javascript
+var vm = new Vue({
+  data: { a: 1 },
+  computed: {
+    // 仅读取
+    aDouble: function () {
+      return this.a * 2
+    },
+    // 读取和设置
+    aPlus: {
+      get: function () {
+        return this.a + 1
+      },
+      set: function (v) {
+        this.a = v - 1
+      }
+    }
+  }
+})
+vm.aPlus   // => 2
+vm.aPlus = 3
+vm.a       // => 2
+vm.aDouble // => 4
 ```
 
 
@@ -108,7 +120,7 @@ computed:{
 
 包括多个属性监视对象
 
-```
+```javascript
 watch:{
 
 	firstName:function(newValue, oldValue){
@@ -331,7 +343,7 @@ vue对象改变——>页面改变
 
 
 
-##### vue生命周期
+#### vue生命周期
 
 ```java
 初始化：
@@ -1821,7 +1833,7 @@ new Vue({
 
 
 
-#### Vuex
+#### [Vuex](https://vuex.vuejs.org/zh/guide/)
 
 ![](https://vuex.vuejs.org/flow.png)
 
@@ -1873,7 +1885,13 @@ store[API](https://vuex.vuejs.org/zh/api/#vuex-store)
 
 首先是一个构造函数，配置对象是，state，mutation，action，getter ...
 
- 
+ ```javascript
+import Vuex from 'vuex'
+
+const store = new Vuex.Store({ ...options })
+ ```
+
+
 
 配置store
 
@@ -1941,6 +1959,14 @@ computed: mapState([
   // 映射 this.count 为 store.state.count
   'count'
 ])
+
+computed: {
+  localComputed () { /* ... */ },
+  // 使用对象展开运算符将此对象混入到外部对象中
+  ...mapState({
+    // ...
+  })
+}
 ```
 
 

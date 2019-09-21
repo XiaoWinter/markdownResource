@@ -116,3 +116,13 @@ package操作的对象。
 
 `apt-cache show package `
 
+#### Windos命令
+
+ `netstat -aon|findstr “7000”` 找到PID
+
+`tasklist|findstr “PID”` 获取程序名
+
+`taskkill` 杀死程序
+
+`taskkill -pid PID -f`  PID 为进程ID
+
