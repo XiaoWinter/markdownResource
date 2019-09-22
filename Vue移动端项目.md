@@ -660,9 +660,144 @@ updateCaptcha(){
 
 
 
+##### 手机短信登陆
+
+设计state,把vuex写写
+
+设计请求接口，api写一下 `/login_sms`
+
+表单数据绑定，写一下v-modal
+
+前期验证一下validate
+
+发送登录请求
+
+存一下用户和token
+
+擦桌子
+
+跳转到我的
+
+##### 用户名密码登录
+
+与手机短信登陆差不多
 
 
 
+##### 引入Mint-UI
+
+`yarn add mint-ui`
+
+实现按需加载，需要使用bable
+
+`yarn add -D babel-plugin-component`
+
+babel.config.js
+
+```js
+module.exports = {
+  presets: [
+    '@vue/app'
+  ],
+  plugins:[
+    ['component',
+      {
+        "libraryName":"mint-ui",
+        "style":true
+      }
+    ]
+  ]
+}
+```
+
+使用
+
+```js
+//引入
+import { Toast , MessageBox} from 'mint-ui';
+
+
+if(result.code === 0){
+    Toast('短信发送成功')
+}else{
+    this.computedTime = 0
+    MessageBox('提示',result.msg)
+}
+```
+
+
+
+##### 实现自动登录
+
+从localStorage取得token，用户一进界面就直接登陆
+
+在APP的mounted里发送请求，保存状态
+
+编写API`auto_login`
+
+发请求时带上authorization
+
+在APP中发请求
+
+
+
+##### 错误处理
+
+```js
+if(!error.response){
+      messageBox(error.msg)
+      if(router.currentRoute.path !== '/login'){
+        router.replace('/login')
+      }
+    }else if(error.response.status == '404'){
+      messageBox('访问的资源不存在')
+      router.back() 
+    }else if(error.response.status == '401'){
+      messageBox('我们需要确认您的身份，请登录')
+      router.replace('/login')
+    }
+```
+
+##### 退出登录
+
+清一下内存中的user数据，local storage中的token数据
+
+
+
+##### 商家界面
+
+首先给每个商家<li>加点击监听，跳转到商店页
+
+```html
+<li class="shop_li border-1px" @click="$router.push('/shop')" v-for="(shop , index) in shops" :key="index">
+```
+
+编写商家的组件（Shop）,拆分整体页面，拆分成，Shop容器，ShopHeader,以及3个子路由组件Info,Goods,Rating.
+
+编写一个导航，以及路由出口
+
+```html
+<div class="tab">
+      <div class="tab-item">
+        <router-link to="/shop/goods" replace>点餐</router-link>
+      </div>
+      <div class="tab-item">
+        <router-link to="/shop/rating" replace>评价</router-link>
+      </div>
+      <div class="tab-item">
+        <router-link to="/shop/info" replace>商家</router-link>
+      </div>
+    </div>
+    <router-view/>
+```
+
+
+
+##### 设计json数据
+
+###### 设计准则
+
+设计数据应该依赖后台的实际数据，不能只看页面而设计，要达到从Mock数据切换到后台数据时不用修改代码，去掉mock直接使用，这要求mock数据的结构必须与后台数据的结构一致，类型一致
 
 ##### Mock数据
 
