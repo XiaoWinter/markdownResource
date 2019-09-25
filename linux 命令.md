@@ -118,7 +118,7 @@ package操作的对象。
 
 #### Windos命令
 
- `netstat -aon|findstr “7000”` 找到PID
+ `netstat -aon|findstr 4000` 找到PID
 
 `tasklist|findstr “PID”` 获取程序名
 

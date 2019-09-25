@@ -2,6 +2,14 @@
 
 (axios)[https://github.com/axios/axios]
 
+[中文文档](http://www.axios-js.com/zh-cn/docs/#%E5%8D%8F%E8%AE%AE)
+
+## 配置项
+
+
+
+
+
 ## 2. 是什么
 
     前端最流行的ajax请求库

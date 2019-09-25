@@ -802,3 +802,620 @@ if(!error.response){
 ##### Mock数据
 
 mock.js
+
+404错误，解决方法，使用完整的路径`http://localhost:8080/api/goods`
+
+```js
+import Mock from 'mockjs'
+import data from './data.json'
+
+Mock.mock('http://localhost:8080/api/goods',{code:0,data:data.goods})
+Mock.mock('http://localhost:8080/api/ratings',{code:0,data:data.ratings})
+Mock.mock('http://localhost:8080/api/info',{code:0,data:data.info})
+```
+
+##### shopHeader
+
+显示商家信息
+
+从mock中获取info数据，装配到页面上
+
+问题：不能显示
+
+```html
+<nav class="shop-nav"
+         :style="`backgroundImage: url(${info.bgImg})}`">
+```
+
+> 为什么刚开始会从空对象中读值，我不是用mapState获取了吗
+
+解决方法
+
+```html
+<nav class="shop-nav" v-if="info.bgImg"
+         :style="`backgroundImage: url(${info.bgImg})`">
+```
+
+
+
+##### css样式省略号
+
+```css
+.ellipsis{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+```
+
+
+
+##### 引入reset的问题
+
+要注意不要写成这种形式
+
+```html
+<link rel="stylesheet" href="./css/reset.css">
+会访问http://localhost:8080(/xxx)/css/reset.css
+```
+
+写成下面的这种形式
+
+```html
+<link rel="stylesheet" href="/css/reset.css">
+会访问http://localhost:8080/css/reset.css
+```
+
+
+
+
+##### v-if控制标签是否存在
+
+
+
+##### shop头部动画
+
+<transition>标签
+
+去vue细节记录找过渡与动画
+
+###### 获取经验：
+
+如何将某个逐渐显示的元素，改成立即消失
+
+解决：直接隐藏元素，display：none,height = 0,width = 0
+
+##### 图片和文字如何到一行
+
+放到一个span里就行了
+
+
+
+##### 滑动效果使用
+
+##### [better-scroll文档](https://ustbhuangyi.github.io/better-scroll/doc/zh-hans/)
+
+[betterScroll2.x](https://better-scroll.github.io/docs/zh-CN/guide/)
+
+##### [当 better-scroll 遇见 Vue](https://zhuanlan.zhihu.com/p/27407024)
+
+```
+这篇文章我不仅仅是要教会大家封装一个 scroll 组件，还想传递一些把第三方插件（原生 JS 实现）Vue 化的思考过程。很多学习 Vue.js 的同学可能还停留在 “XX 效果如何用 Vue.js 实现” 的程度，其实把插件 Vue 化有两点很关键，一个是对插件本身的实现原理很了解，另一个是对 Vue.js 的特性很了解。对插件本身的实现原理了解需要的是一个思考和钻研的过程，这个过程可能困难，但是收获也是巨大的；而对 Vue.js 的特性的了解，是需要大家对 Vue.js 多多使用，学会从平时的项目中积累和总结，也要善于查阅 Vue.js 的官方文档，关注一些 Vue.js 的升级等。
+```
+
+
+
+首先写了静态页面，然后去加js效果
+
+```js
+yarn add @better-scroll/core@next
+```
+
+```js
+import BScroll from '@better-scroll/core'
+
+```
+
+```js
+//要注意时机的问题，必须在DOM渲染完之后，执行BScroll
+
+watch:{
+    goods(){
+      this.$nextTick(()=>{
+          //this.$refs.left，这个是vue获取的dom元素的引用
+          new BScroll(this.$refs.left, {})
+          new BScroll(this.$refs.right, {})
+      })
+    }
+  }
+
+//这中构建的方法有问题，当在子路由切换时，goods的数据不会改变，但是每次组件都要再构建一次，所以以后都不会构建BScroll，解决办法是
+//1.  mounted(){
+    setTimeout(()=>{
+      console.log(this.goods)
+    },2000)
+    if(this.goods.length > 0){
+      this.$nextTick(()=>{
+          new BScroll(this.$refs.left, {})
+          new BScroll(this.$refs.right, {})
+      })
+    }
+  },
+      
+ //2.保存组件,(有效)
+      
+     <keep-alive>
+      <router-view/>
+    </keep-alive>
+```
+
+
+
+##### 高级功能
+
+better-scroll禁用了原生的dom事件，不支持分发
+
+##### 功能需求
+
+滑动右侧，左侧列表更新，
+
+原理
+
+![](http://47.103.65.182/markdown/025.png)
+
+现在要解决的问题就是，右侧部分的每小块高度是多少？（形成数组）
+
+```html
+<ul ref='rightUl'>
+    循环出了几个
+    <li v-for:"xxx"></li>
+</ul>
+
+<script>
+	const lis = this.$refs.rightUl.children(伪数组)
+    Array.from(lis).reduce((pre,item,index)=>{pre.push(pre[index]+item.offsetHeight) return pre},[0])
+</script>
+```
+
+
+
+解决：查看html结构可知，右侧的每一小块都是一个li，所以只要拿到li，再通过取得其高度，即可形成数组，而且应该需要使用reduce方法
+
+滚动了多少高度？（滑动的距离）
+
+
+
+#####  probeType
+
+派发[scroll 事件],不然的话，给betterscroll对象绑定的回调不会触发
+
+```
+- 类型：Number
+- 默认值：0
+- 可选值：1、2、3
+- 作用：有时候我们需要知道滚动的位置。当 probeType 为 1 的时候，会非实时（屏幕滑动超过一定时间后）派发[scroll 事件]；当 probeType 为 2 的时候，会在屏幕滑动的过程中实时的派发 scroll 事件；当 probeType 为 3 的时候，不仅在屏幕滑动的过程中，而且在 momentum 滚动动画运行过程中实时派发 scroll 事件。如果没有设置该值，其默认值为 0，即不派发 scroll 事件。
+```
+
+##### 绑定回调
+
+```js
+ //绑定滑动回调函数
+ this.scrollRight.on('scroll',({x,y})=>{//滑动事件
+ 	this.scrollY = -y
+ })
+ this.scrollRight.on('scrollEnd',({x,y})=>{//滑动结束事件
+ 	this.scrollY = -y
+ })
+```
+
+
+
+##### 计算出currentIndex
+
+这也达到了滑动rightScroll（右侧列表），leftScroll(左侧列表)更新的效果
+
+```js
+//计算出滑动到了哪个区间
+currentIndex(){
+      const {scrollY, tops} = this
+      return this.tops.findIndex((top,index)=> scrollY >= top && scrollY < tops[index+1])
+    }
+//通过currentIndex改变左侧小列表的样式
+:class="{'current':index === currentIndex}" 
+```
+
+
+
+##### 点击左侧分类，右侧滑动
+
+点击leftScroll（左侧列表），拿到index，通过index得到rightScroll(右侧列表)的高度应该是
+
+```js
+<li @click="selectItem(index)" >
+
+ selectItem(index){
+      //根据index，获得右侧列表应该的高度
+      const y = this.tops[index]
+      //设置scroll改变currentIndex
+      this.scrollY =  y
+      //调用scrollRight的方法将右侧列表滑动到相应的位置
+      this.scrollRight.scrollTo(0, -y, 500)
+   }
+```
+
+
+
+##### 左侧跟随右侧滑动
+
+
+
+目前在rightscroll（右侧列表）改变时,leftScroll(左侧列表)并不会跟着改变
+
+```js
+scrollToElement(el, time, offsetX, offsetY, easing)
+//作用：滚动到指定的目标元素。
+```
+
+
+
+```js
+//currentIndex变化时
+//让左侧列表滑动
+      const toTop = index - 3
+      if(toTop >= 0){
+          const li = Array.from(this.$refs.rightUl.children)[toTop]
+          this.scrollLeft.scrollToElement(li, 200)//滑动到li
+      } 
+
+```
+
+
+
+监视index的变化，可以再计算属性，可以在watch中获取
+
+scroll.scrollToElement(li)
+
+
+
+##### 多模块编程
+
+多module
+
+module是一个js对象
+
+```js
+const module = {
+	state:{},
+	mutations:{},
+	actions:{},
+	getters:{}
+}
+
+export default new Vuex.Store({
+   
+    modules:{
+        msite,
+        user,
+        shop
+    }
+})
+```
+
+
+
+
+
+
+
+##### 使用setInterval()的坑
+
+
+
+
+
+
+
+##### vuecli2 、3的坑
+
+- 2带编译器可以直接编译模板（template），3不带编译器，用render函数渲染组件（component）
+
+##### 在vuecli3中配置webpack
+
+vue.config.js ——>configureWebpack——>webpack的相关配置
+
+path.join方法的使用，获取文件的绝对路径
+
+###### path.join([...paths])
+
+`path.join()` 方法使用平台特定的分隔符作为定界符将所有给定的 `path` 片段连接在一起，然后规范化生成的路径。
+
+`..`代表跳出一层
+
+零长度的 `path` 片段会被忽略。 如果连接的路径字符串是**零长度**的字符串，则返回 `'.'`，表示当前工作目录。`
+
+- `...paths`<string> 路径片段的序列。
+- 返回: string
+
+```js
+path.join('/foo', 'bar', 'baz/asdf', 'quux', '..');
+// 返回: '/foo/bar/baz/asdf'
+```
+
+
+
+##### 配置了webpack配置项的vue.config.js
+
+```js
+import path from 'path'
+
+//工具方法，拼接路径
+function resolve(dir){
+    return path.join(__dirname,dir)
+}
+
+module.exports={
+    
+    configureWebpack:{
+        resolve: {
+            extensions:['.js','.vue','.json'],
+            alias:{
+                'vue$':'vue/dist/vue.esm.js',
+                '@':resolve('src'),
+                'components$':resolve('src/components')
+            }
+        }
+    }
+}
+```
+
+
+
+##### 无中生有的问题
+
+问题：axios发送POST请求，data携带请求参数，后台得不到
+
+原因：axios发送POST请求，一旦data指定为对象，axios使用json格式发送数据，而服务端支支持urlencoding格式，
+
+解决办法：使用axios的请求拦截器，将配置中的data对象转换为urlencodeed格式字符串
+
+
+
+##### 各种第三方库的失效问题
+
+绝大部分是使用时机的问题，在和使用虚拟dom的框架结合使用时，这种问题很容易发生，特别是第三方库需要的还是状态数据
+
+##### setInterval问题
+
+
+
+```js
+import  {setInterval} from 'timers'
+这个定时器也能用，那么问题是什么呢？
+问题：用原生的clearInterval（）方法不能清除这个vue的定时器
+```
+
+##### cartController
+
+创建一个cartController组件，理由是什么，我也不太清楚，这个组件对数据的操作还是很厉害的
+
+##### 要注意要操作数据的出处
+
+子组件不能直接更新父组件的数据，数据可能是vuex中的，如果是这样，只能在action里定义更新方法，所以定义action以改变food的count属性
+
+```js
+//action
+ //更新food数量的同步action
+        updateFoodCount({commit},{isAdd,food}){
+            if(isAdd){//add
+                commit(ADD_FOOD_COUNT,food)
+            }else{//reduce
+                commit(REDUCE_FOOD_COUNT,food)
+            }
+}
+
+
+//mutation//注意state没有用到
+[ADD_FOOD_COUNT](state,food){
+        if(food.count !== undefined){
+            food.count++
+          }else{
+            Vue.set(food,'count')
+            food.count = 1
+          }
+},
+[REDUCE_FOOD_COUNT](state,food){
+         if(food.count>0){
+                food.count --
+     }
+ }
+
+
+```
+
+
+
+##### 
+
+##### [Vue.set( target, propertyName/index, value )](https://cn.vuejs.org/v2/api/#Vue-set)) 给新加的属性，进行数据劫持
+
+**用法**：
+
+向响应式对象中添加一个属性，并确保这个新属性同样是响应式的，且触发视图更新。它必须用于向响应式对象上添加新属性，因为 Vue 无法探测普通的新增属性 (比如 `this.myObject.newProperty = 'hi'`)
+
+```js
+Vue.set(food,'count',1)
+```
+
+
+
+##### 父组件操作子组件的属性
+
+vue通过Ref可以得到的组件对象，同react中一样，直接调用子组件的方法
+
+```
+<template>
+	<father>
+		<son ref='sonComponent'></son>
+	</father>
+</template>
+
+<script>
+	methods:{
+	aaa(){
+		this.$refs.sonComponent.xxx()
+	}
+}
+</script>
+```
+
+
+
+##### 图片懒加载
+
+`vue-lazyload`
+
+安装
+
+`yarn add vue-lazyload`
+
+mint-UI已经引入了
+
+[文档](https://github.com/hilongjw/vue-lazyload)
+
+
+
+##### import 动态导入路由组件
+
+```js
+const msite = ()=>import('page/goods/goods.vue')
+```
+
+
+
+##### 简单用法
+
+main.js
+
+```js
+import Vue from 'vue'
+import App from './App.vue'
+import VueLazyload from 'vue-lazyload'
+
+Vue.use(VueLazyload)
+
+// or with options
+Vue.use(VueLazyload, {
+  preLoad: 1.3,
+  error: 'dist/error.png',
+  loading: 'dist/loading.gif',
+  attempt: 1
+})
+
+
+
+new Vue({
+  el: 'body',
+  components: {
+    App
+  }
+})
+```
+
+对上面的补充
+
+```js
+//图片的路径不清楚，就用这种方式
+import VueLazyload from 'vue-lazyload'
+import loading from '@/commons/img/loading.jpg'
+
+Vue.use(VueLazyload, {
+  loading
+})
+```
+
+template
+
+```vue
+<ul>
+  <li v-for="img in list">
+    <img v-lazy="img.src" >
+  </li>
+</ul>
+```
+
+
+
+解决图片会显示上一张图片的问题，隐藏foodShow时删除img
+
+```html
+<img v-if="isShowFood" v-lazy="food.image" ref='img'>
+```
+
+
+
+##### 购物车模块
+
+
+
+pre = [..pre,...xxxx]
+
+findIndex与indexOf的区别
+
+
+
+注意计算属性，如果页面显示多种情况，并且依赖已有状态，可以考虑使用计算属性
+
+
+
+toogle效果
+
+better-scroll只会在刚创建时给滑动dom加上控制滑动的style，所以不能换掉滑动dom
+
+
+
+##### 打包
+
+```sheel
+yarn run build
+```
+
+##### 配置反向代理
+
+使用nginx
+
+[nginx教学视频](https://www.bilibili.com/video/av68136734?from=search&seid=2114232868809176869)
+
+
+
+##### history的两个问题？
+
+###### 直接访问路由路径
+
+* 跨域的问题
+
+
+
+* 路由组件下刷新404问题
+
+  向后台发送了路由路径
+
+  访问不存在的`not`，路径成为`http://localhost/xxxx/route/not`这个路径的文件并不存在，所以会返回404
+
+##### 组件标签使用v-modal
+
+[v-model](https://www.jianshu.com/p/4147d3ed2e60)
+
+##### 组件标签的内容会放到哪里
+
+##### 作用域插槽
+
+##### 混合
+
+##### 动态组件，缓存组件，异步组件
+
+##### 事件（原生事件，自定义事件）
+
+原生事件：写到html元素中
+
+自定义事件，写到组件中，加上`.native`变为原生事件，或者子组件分发事件，实现回调的调用
+

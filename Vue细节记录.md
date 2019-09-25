@@ -384,6 +384,13 @@ vue对象改变——>页面改变
         xxxxx
     </p>
 </transition>
+
+》》非常重要《《转化为了
+<p class='fade-enter'>
+	xxxx
+</p>
+
+所以写样式表一定要注意
 ```
 
 
@@ -393,6 +400,8 @@ vue对象改变——>页面改变
 v是你自己啊指定的
 
 ![](https://cn.vuejs.org/images/transition.png)
+
+###### 动画运动的最终效果，就是元素原本的效果
 
 
 
@@ -1812,9 +1821,154 @@ $Route:包含路由传递的信息
 
 #### [路由组件传参](https://router.vuejs.org/zh/guide/essentials/passing-props.html#%E5%B8%83%E5%B0%94%E6%A8%A1%E5%BC%8F)
 
-##### render()
+
+
+#### 导航守卫
+
+##### 作用
+
+监视路由跳转
+
+控制路由跳转
+
+##### 分类
+
+1>.全局守卫
+
+* [全局前置守卫](https://router.vuejs.org/zh/guide/advanced/navigation-guards.html#%E5%85%A8%E5%B1%80%E5%89%8D%E7%BD%AE%E5%AE%88%E5%8D%AB)
+
+```js
+const router = new VueRouter({ ... })
+
+router.beforeEach((to, from, next) => {
+   //确保要调用 next 方法，否则钩子就不会被 resolved。
+  // next的调用形式
+    next()//放行
+    next(false)//不放行
+    next('/')//跳到‘/’
+    next({path:'/'})//跳到‘/’
+    next(error)//导航会被终止且该错误会被传递给 router.onError() 注册过的回调。
+})
+```
+
+当一个导航触发时，全局前置守卫按照创建顺序调用。守卫是异步解析执行，此时导航在所有守卫 resolve 完之前一直处于 **等待中**。
+
+**注意**：**确保要调用 next 方法，否则钩子就不会被 resolved。**
+
+
+
+每个守卫方法接收三个参数：
+
+- **to: Route**: 即将要进入的目标 [路由对象](https://router.vuejs.org/zh/api/#路由对象)
+- **from: Route**: 当前导航正要离开的路由
+- **next: Function**: 一定要调用该方法来 **resolve** 这个钩子。执行效果依赖 `next` 方法的调用参数。
+
+
+
+
+
+* 全局后置守卫
+
+```js
+router.afterEach((to, from) => {
+  // ...
+})
+```
+
+2>.组件守卫
+
+* 进入`beforeRouteEnter`
+* 更新`beforeRouteUpdate` (2.2 新增)
+* 离开`beforeRouteLeave`
+
+```js
+const Foo = {
+  template: `...`,
+  beforeRouteEnter (to, from, next) {
+    // 在渲染该组件的对应路由被 confirm 前调用
+    // 不！能！获取组件实例 `this`
+    // 因为当守卫执行前，组件实例还没被创建
+  },
+  beforeRouteUpdate (to, from, next) {
+    // 在当前路由改变，但是该组件被复用时调用
+    // 举例来说，对于一个带有动态参数的路径 /foo/:id，在 /foo/1 和 /foo/2 之间跳转的时候，
+    // 由于会渲染同样的 Foo 组件，因此组件实例会被复用。而这个钩子就会在这个情况下被调用。
+    // 可以访问组件实例 `this`
+  },
+  beforeRouteLeave (to, from, next) {
+    // 导航离开该组件的对应路由时调用
+    // 可以访问组件实例 `this`
+  }
+}
+```
+
+##### beforeRouteEnter坑
+
+控制用户是否能进入此组件
+
+`beforeRouteEnter` 守卫 **不能** 访问 `this`，因为守卫在导航确认前被调用,因此即将登场的新组件还没被创建。
+
+不过，你可以通过传一个回调给 `next`来访问组件实例。在导航被确认的时候执行回调，并且把组件实例作为回调方法的参数。
+
+```js
+beforeRouteEnter (to, from, next) {
+  next(vm => {
+    // 通过 `vm` 访问组件实例
+  })
+}
+```
+
+注意 `beforeRouteEnter` 是支持给 `next` 传递回调的唯一守卫。对于 `beforeRouteUpdate` 和 `beforeRouteLeave` 来说，`this` 已经可用了，所以**不支持**传递回调，因为没有必要了。
+
+
+
+##### beforeRouteLeave
+
+控制用户是否能离开此组件
+
+这个离开守卫通常用来禁止用户在还未保存修改前突然离开。该导航可以通过 `next(false)` 来取消。
+
+```js
+beforeRouteLeave (to, from , next) {
+  const answer = window.confirm('Do you really want to leave? you have unsaved changes!')
+  if (answer) {
+    next()
+  } else {
+    next(false)
+  }
+}
+```
+
+
+
+#### 路由独享守卫
+
+```js
+const router = new VueRouter({
+  routes: [
+    {
+      path: '/foo',
+      component: Foo,
+      beforeEnter: (to, from, next) => {
+        // ...
+      }
+    }
+  ]
+})
+```
+
+
+
+##### 导行解析流程
+
+![](http://47.103.65.182/markdown/026.png)
+
+
+
+#### vuecli 2 3 的render区别
 
 ```
+//vuecli3
 new Vue({
   render: h => h(App),
   router,
@@ -1822,6 +1976,7 @@ new Vue({
 }).$mount('#app')
 
 
+//vuecli2
 new Vue({
   components:{
   	App
@@ -1974,6 +2129,8 @@ computed: {
 
 
 ##### getter
+
+我认为文档对于getter的潜台词是，getter由state得到，不能改变state的值，（说是store的计算属性，非常的贴切）
 
 有时候我们需要从 store 中的 state 中派生出一些状态。
 
@@ -2296,4 +2453,8 @@ const moduleA = {
   }
 }
 ```
+
+
+
+**默认情况下，获取action，mutation，getter的方式没有变化**，因为默认情况下，模块内部的 action、mutation 和 getter 是注册在**全局命名空间**的——这样使得多个模块能够对同一 mutation 或 action 作出响应。
 
