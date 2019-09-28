@@ -145,11 +145,25 @@ vm.$watch('firstName',function(){})
 
 
 
-##### 绑定class属性
+#### 绑定class属性
 
-类名没有确定。从vm中获取
+##### 类名没有确定。可以以变量的形式书写
 
 :class ="myClass"
+
+###### 应用
+
+```js
+<div class="pay" :class="payClass">
+//类是计算属性的值
+payClass(){
+            const {totalPrice} = this
+            const {minPrice} = this.shopInfo
+            return totalPrice >= minPrice ? 'enough' : 'not-enough'
+        }
+```
+
+
 
 类名确定但是有没有没确定
 
@@ -549,6 +563,10 @@ runtime control
 
 
 
+
+
+
+
 ##### 组件
 
 ```
@@ -770,166 +788,11 @@ this.$Bus.$emit('事件名',参数)
 
 
 
-#### slot
 
-```vue
-//子组件
-<template>
-	<div>
-        <slot name="A"></slot>
-        <p>
-            hahaha
-    	</p>
-        <slot name="B">
-    		设置默认值
-    	</slot>
-    </div>
-</template>
-
-
-//父组件中解析好了,这样就在相应位置传递了标签
-<Father>
-	<Son>
-    	<div slot="A">
-            slotA
-        </div>
-        <div slot="B">
-            slotB
-        </div>
-    </Son>
-</Father>
-```
-
-类似于React的children
-
-
-
-如何合并两个对象
-
-
-
-##### [快速上手@vue/cli](https://baijiahao.baidu.com/s?id=1628046958550495589&wfr=spider&for=pc)
-
-如果有2.x版本的vue-cli要卸载掉，否则3会出错
-
-
-
-```
-拆分为header，todos{item},footer
-```
-
-
-
-##### 初始化
-
-使用cli构建一个项目
-
-##### 编写
-
-###### 拆分
-
-书写组件，将整个页面拆分成几个部分，将样式文件分成几个部分，
-
-###### 静态页面
-
-将几个部分写成组件，引入到App
-
-```javascript
-<script>
-import Header from './components/Header.vue'
-import Footer from './components/Footer.vue'
-import Todos from './components/Todos.vue'
-
-export default {
-  name: 'app',
-  components: {
-    Header,
-    Footer,
-    Todos
-  }
-}
-</script>
-```
-
-
-
-动态效果
-
-1.初始化数据，
-
-数据结构为下
-
-```
-todos:[
-    {
-        id:Date.now(),
-        name:'吃饭',
-        complete:false
-    },
-    {
-        id:Date.now(),
-        name:'睡觉',
-        complete:false
-    },
-    {
-        id:Date.now(),
-        name:'休息',
-        complete:false
-    }
-]
-```
-
-2.数据的位置
-
-App中
-
-```javascript
-  data(){
-    return {
-      todos:[
-    {
-        id:Date.now(),
-        name:'吃饭',
-        complete:false
-    },
-    {
-        id:Date.now(),
-        name:'睡觉',
-        complete:false
-    },
-    {
-        id:Date.now(),
-        name:'休息',
-        complete:false
-    }
-]
-    }
-  },
-```
-
-
-
-3.传递数据
-
-
-
-```vue
-//父组件中向子组件传递数据
-<Todos :todos="todos"></Todos>
-//子组件声明这个数据
-export default {
-	props:{
-		todos:Array
-	}
-}
-//传递的数据怎么用，直接用，就当在data中定义的一样
-//
-<Item v-for="todo in todos" :key="todo.id" :todo="todo" ></Item>
-```
 
 ##### 使用总线
 
-
+<a href="##### 事件总线可行性基础">总线可行性基础</a>
 
 ###### 给Vue的原型绑定事件的代理对象
 
@@ -1104,6 +967,169 @@ export default {
     }
 }
 </script>
+```
+
+
+
+
+
+
+
+#### slot
+
+```vue
+//子组件
+<template>
+	<div>
+        <slot name="A"></slot>
+        <p>
+            hahaha
+    	</p>
+        <slot name="B">
+    		设置默认值
+    	</slot>
+    </div>
+</template>
+
+
+//父组件中解析好了,这样就在相应位置传递了标签
+<Father>
+	<Son>
+    	<div slot="A">
+            slotA
+        </div>
+        <div slot="B">
+            slotB
+        </div>
+    </Son>
+</Father>
+```
+
+类似于React的children
+
+
+
+如何合并两个对象
+
+
+
+##### [快速上手@vue/cli](https://baijiahao.baidu.com/s?id=1628046958550495589&wfr=spider&for=pc)
+
+如果有2.x版本的vue-cli要卸载掉，否则3会出错
+
+
+
+```
+拆分为header，todos{item},footer
+```
+
+
+
+##### 初始化
+
+使用cli构建一个项目
+
+##### 编写
+
+###### 拆分
+
+书写组件，将整个页面拆分成几个部分，将样式文件分成几个部分，
+
+###### 静态页面
+
+将几个部分写成组件，引入到App
+
+```javascript
+<script>
+import Header from './components/Header.vue'
+import Footer from './components/Footer.vue'
+import Todos from './components/Todos.vue'
+
+export default {
+  name: 'app',
+  components: {
+    Header,
+    Footer,
+    Todos
+  }
+}
+</script>
+```
+
+
+
+动态效果
+
+1.初始化数据，
+
+数据结构为下
+
+```
+todos:[
+    {
+        id:Date.now(),
+        name:'吃饭',
+        complete:false
+    },
+    {
+        id:Date.now(),
+        name:'睡觉',
+        complete:false
+    },
+    {
+        id:Date.now(),
+        name:'休息',
+        complete:false
+    }
+]
+```
+
+2.数据的位置
+
+App中
+
+```javascript
+  data(){
+    return {
+      todos:[
+    {
+        id:Date.now(),
+        name:'吃饭',
+        complete:false
+    },
+    {
+        id:Date.now(),
+        name:'睡觉',
+        complete:false
+    },
+    {
+        id:Date.now(),
+        name:'休息',
+        complete:false
+    }
+]
+    }
+  },
+```
+
+
+
+3.传递数据
+
+
+
+```vue
+//父组件中向子组件传递数据
+<Todos :todos="todos"></Todos>
+//子组件声明这个数据
+export default {
+	props:{
+		todos:Array
+	}
+}
+//传递的数据怎么用，直接用，就当在data中定义的一样
+//
+<Item v-for="todo in todos" :key="todo.id" :todo="todo" ></Item>
 ```
 
 
@@ -1914,6 +1940,8 @@ const Foo = {
 beforeRouteEnter (to, from, next) {
   next(vm => {
     // 通过 `vm` 访问组件实例
+      //next()
+      //next(false)
   })
 }
 ```
@@ -1941,7 +1969,7 @@ beforeRouteLeave (to, from , next) {
 
 
 
-#### 路由独享守卫
+##### 路由独享守卫
 
 ```js
 const router = new VueRouter({

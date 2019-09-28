@@ -502,7 +502,7 @@ this.$store.state.状态名
 
 `import chunk from 'lodash/chunk'`
 
-##### [异步更新队列](https://cn.vuejs.org/v2/guide/reactivity.html#%E5%BC%82%E6%AD%A5%E6%9B%B4%E6%96%B0%E9%98%9F%E5%88%97)
+##### [NextTick异步更新队列](https://cn.vuejs.org/v2/guide/reactivity.html#%E5%BC%82%E6%AD%A5%E6%9B%B4%E6%96%B0%E9%98%9F%E5%88%97)
 
 对于数据的变化，Vue是这么处理的
 
@@ -542,7 +542,7 @@ watch:{
         console.log('DOM更新完成',somedata)
     })
  //这个改变数据的地方可以是很多地方
-    conputed中的set方法
+    computed中的set方法
     actions中的commit执行之后
 ```
 
@@ -1355,21 +1355,205 @@ template
 
 ##### 购物车模块
 
+购物车需要具备结算和修改的功能，所以在数据结构的设计上，需要有一个容器（购物车）对已选中的商品进行统一的管理，放入购物车的条件是商品的购买数量是否大于零，
+
+##### 购物车实现方式
+
+缺点：计算多次
+
+```js
+const getters = {
+    cartFoods(state){
+        return state.goods.reduce((pre,good)=>{
+            if(good.count&&good.count>0){
+                pre.push(good)
+            }
+            return pre
+        },[])
+    }
+}
+```
+
+使用state保存
+
+```js
+const state = {
+    ...
+    //设置为状态
+    cartFoods:[]
+} 
 
 
-pre = [..pre,...xxxx]
+[ADD_FOOD_COUNT](state,food){
+        if(food.count !== undefined){
+            food.count++
+          }else{
+            Vue.set(food,'count')
+            food.count = 1
+              //添加到购物车
+            state.cartFoods.push(food)
+          }
+    },
+[REDUCE_FOOD_COUNT](state,food){
+        if(food.count>0){
+            food.count --
+        }else{
+            //从购物车删除
+            state.cartFoods.splice(state.cartFoods.indexOf(food),1) 
+        }
+    },
+//购物车的必要信息     
+const getters = {
+   //计算属性
+    totalCount(state){
+        return state.cartFoods.reduce((pre,food)=> pre += food.count,0)
+    },
+    totalPrice(state){
+        return state.cartFoods.reduce((pre,food)=>pre += food.count*food.price,0)
+    },
+
+}        
+```
+
+##### 类名没有确定。可以以变量的形式书写
+
+###### 应用
+
+```js
+<div class="pay" :class="payClass">
+//类是计算属性的值
+payClass(){
+            const {totalPrice} = this
+            const {minPrice} = this.shopInfo
+            return totalPrice >= minPrice ? 'enough' : 'not-enough'
+        }
+```
+
+##### 文本值有多种情况，并且与数据相关，使用计算属性控制
+
+```js
+ payText(){
+            const {totalPrice} = this
+            const {minPrice} = this.shopInfo
+            if(totalPrice === 0){
+                return `${minPrice}元起送`
+            }else if(totalPrice > 0 && totalPrice < minPrice){
+                return `还差${minPrice - totalPrice}元起送`
+            }else if(totalPrice>minPrice){
+                return '去结算'
+            }
+        },
+```
+
+
+
+
+
+##### 使用路由守卫
+
+```js
+//Good组件中,解决由其他组件进入good组件没有滚动效果的问题
+export default {
+    ...
+    beforeRouteEnter (to, from, next){
+    next(vm => {
+      vm.$nextTick(()=>{
+          vm.scrollLeft =  new BScroll(vm.$refs.left, {
+             click:true
+          })
+          //配置
+          vm.scrollRight = new BScroll(vm.$refs.right, {
+            probeType:2,
+            click:true
+          })
+      })
+    })
+  },
+}
+
+//使用全局守卫，控制未登录用户只能进入，登陆界面
+router.beforeEach((to, from, next) => {
+  const topath = to.path
+  if(topath !== '/login' && !store.state.user.token){
+    next('/login')
+    
+
+  } else{
+    next()
+  }
+
+})
+
+//使用组件守卫控制，进入登陆界面的只有未登录用户
+   beforeRouteEnter(to, from, next){
+      
+      next(vm=>{
+        console.log('object');
+        console.log(vm.$store.state.user.token);
+        if(vm.$store.state.user.token){
+          console.log(1);
+          //阻止进入该路由
+          next('/profile') 
+        }else{
+          console.log(2);
+          //允许放行
+          next()
+        }
+      })
+    }
+```
+
+
+
+
 
 findIndex与indexOf的区别
 
+/****************************************************                      findIndex        ******************************************************************************************/
 
+`findIndex()`方法返回数组中满足提供的测试函数的第一个元素的**索引**。否则返回-1。
 
-注意计算属性，如果页面显示多种情况，并且依赖已有状态，可以考虑使用计算属性
+**callback**
+
+针对数组中的每个元素, 都会执行该回调函数, 执行时会自动传入下面三个参数:
+
+- `element`
+
+  当前元素。
+
+- `index`
+
+  当前元素的索引。
+
+- `array`
+
+  调用`findIndex`的数组。
+
+**thisArg**
+
+可选。执行`callback`时作为`this`对象的值.
+
+/*************************************************************               indexOf()         **********************************************************************************/
+
+`indexOf()`方法返回在数组中可以找到一个给定元素的第一个索引，如果不存在，则返回-1。
+
+语法
+
+`indexOf(searchElement)`
+
+**searchElement**要查找的元素
 
 
 
 toogle效果
 
-better-scroll只会在刚创建时给滑动dom加上控制滑动的style，所以不能换掉滑动dom
+better-scroll只会在刚创建时给滑动dom加上控制滑动的style，所以不能换掉滑动dom,所以只能用v-show不能用v-if
+
+
+
+##### `better-scroll`问题排除注意
+
+首先要观察容器尺寸是否大于滑动内容尺寸
 
 
 
@@ -1401,9 +1585,7 @@ yarn run build
 
   访问不存在的`not`，路径成为`http://localhost/xxxx/route/not`这个路径的文件并不存在，所以会返回404
 
-##### 组件标签使用v-modal
 
-[v-model](https://www.jianshu.com/p/4147d3ed2e60)
 
 ##### 组件标签的内容会放到哪里
 
@@ -1413,9 +1595,51 @@ yarn run build
 
 ##### 动态组件，缓存组件，异步组件
 
+```javascript
+//异步组件
+new Vue({
+  // ...
+  components: {
+    'my-component': () => import('./my-async-component')
+  }
+})
+```
+
+缓存组件
+
+```html
+<keep-alive>
+	<component>
+</keep-alive>
+```
+
+
+
+##### 组件标签使用v-modal
+
+[v-model详解](https://www.jianshu.com/p/4147d3ed2e60)
+
 ##### 事件（原生事件，自定义事件）
 
-原生事件：写到html元素中
+```html
+<input v-model="sth" />
+<input v-bind:value="sth" v-on:input="sth = $event.target.value" />
+```
 
-自定义事件，写到组件中，加上`.native`变为原生事件，或者子组件分发事件，实现回调的调用
+
+
+```html
+<currency-input v-model="price"></currentcy-input>
+<!--上行代码是下行的语法糖
+  <currency-input :value="price" @input="price = arguments[0]"></currency-input>
+-->
+在current-input里可能有这样的代码
+<input type="text" @input="this.$emit('input',$event.target.value)">
+```
+
+
+
+**原因：**组件没有原生事件，只有自定义事件，若想使用自定义事件，需要加上`.native`变为原生事件，
+
+除此之外，组件上的事件都是自定义事件，需要在组件里使用`this.$emit(自定义事件名，参数)`手动触发
 
