@@ -1,5 +1,11 @@
 
 
+<h1 align="center">TypeScript</h1>
+
+
+
+[入门教程](https://ts.xcatliu.com/)
+
 ##### 安装ts
 
 `yarn global add typescript`
@@ -11,3 +17,4 @@
 ##### 监视输入文件
 
 `tsc -w test.ts`
+
