@@ -22,6 +22,139 @@ yarn add vue-router
 
 #### 开发静态页面
 
+#### html注意点
+
+```html
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_518606_5kcf4pgw3tc.css">
+    <script src="https://as.alipayobjects.com/g/component/fastclick/1.0.6/fastclick.js"></script>
+    <title>giaowaimai</title>
+  </head>
+```
+
+##### fastClick的作用
+
+```
+FastClick是一个简单易用的库，用于消除物理点击和在移动浏览器上触发点击事件之间的300ms延迟。 目的是使您的应用程序感觉更轻松，响应更快，同时避免对当前逻辑的任何干扰。
+
+FastClick由英国《金融时报》旗下的FT Labs开发。
+
+注意：截至2015年末，大多数移动浏览器-特别是Chrome和Safari-不再具有300ms的触摸延迟，因此fastclick对较新的浏览器没有好处，并且存在将错误引入应用程序的风险。 请仔细考虑您是否真的需要使用它。
+```
+
+##### reset.css
+
+放到public文件夹下的css文件夹里
+
+```css
+/**
+ * Eric Meyer's Reset CSS v2.0 (http://meyerweb.com/eric/tools/css/reset/)
+ * http://cssreset.com
+ */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video, input {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font-weight: normal;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, menu, nav, section {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+blockquote, q {
+  quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* custom */
+a {
+  color: #7e8c8d;
+  text-decoration: none;
+  -webkit-backface-visibility: hidden;
+}
+
+li {
+  list-style: none;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track-piece {
+  background-color: rgba(0, 0, 0, 0.2);
+  -webkit-border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+  height: 5px;
+  background-color: rgba(125, 125, 125, 0.7);
+  -webkit-border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+  width: 5px;
+  background-color: rgba(125, 125, 125, 0.7);
+  -webkit-border-radius: 6px;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  -webkit-text-size-adjust: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.ellipsis{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+```
+
+
+
+
+
 ##### 拆分页面结构
 
 ```
@@ -101,7 +234,7 @@ export default [
     },
     {
         path:'/',
-        redirect:Msite
+        redirect:'/msite'
     },
 
     
@@ -160,6 +293,12 @@ new Vue({
 #### FooterGuide组件
 
 ##### 首先实现footer导航会根据当前路由，点亮不同的图标
+
+##### css代码
+
+* 如何快速布局，使用flex,
+* 如何缩小图片，background-size
+* 如何实现1px边框： 混合
 
 实现方法，加类：类名为on，条件为，当前路由与图标对应
 
@@ -290,6 +429,20 @@ clearFix()
     clear both
 ```
 
+less版
+
+```less
+//清除浮动
+.clearFix(){
+  *zoom: 1;
+  &::after{
+    content : '';
+    display : block;
+    clear : both;
+  }
+} 
+```
+
 
 
 ##### 根据像素比使用2x,3x图
@@ -318,6 +471,27 @@ bg-image($url)
       transform scaleY(.333333)
 ```
 
+less版
+
+```less
+//根据像素比缩放1px像素边框
+@media only screen and (-webkit-device-pixel-ratio:2 ){
+  .border-1px(){
+    &::before{
+      transform: scaleY(.5)
+    }
+  }
+}
+
+@media only screen and (-webkit-device-pixel-ratio:3 ){
+  .border-1px(){
+    &::before{
+      transform: scaleY(.333333)
+    }
+  }
+}
+```
+
 
 
 ##### 1像素边框
@@ -335,6 +509,42 @@ top-border-1px($color)
     width 100%
     height 1px
     background-color $color
+```
+
+less版
+
+```less
+  
+// 一像素上边框
+.top-border-1px($color){
+  position: relative;
+  &::before{
+
+    content: '';
+    position: absolute;
+    z-index: 200;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 1px;
+    background-color: $color;
+  }
+}
+// 一像素下边框
+.bottom-border-1px($color){
+  position: relative;
+  &::after{
+    content: '';
+    position: absolute;
+    z-index: 200;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 1px;
+    background-color: $color;
+  }
+}
+  
 ```
 
 
@@ -486,7 +696,7 @@ this.$store.state.状态名
 
 `yarn add swiper`
 
-再MSite引入js文件和css文件都在script里引
+在MSite引入js文件和css文件都在script里引
 
 ##### 如何查找文件
 

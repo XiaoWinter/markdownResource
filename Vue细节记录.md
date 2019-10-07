@@ -1,5 +1,7 @@
 ## Vue细节记录
 
+### [Vue](https://cn.vuejs.org/v2/guide/index.html)
+
 ##### 模板
 
 带有魔法的HTML
@@ -66,13 +68,18 @@ data(){
 ##### v-on 强制绑定事件
 
 ```javascript
+//可以获得原生的dom事件
 <button v-on:click="test($event,'abc')">按钮</button>
-
+//也可以通过只写方法名获得dom事件
+<ul class="nav-items" @click="headerNav">
 new Vue({
 	methons:{
 		test(event,msg){
 			alert('xxxx')
-		}
+		},
+        headerNav(event){
+         console.log(event)
+      }
 	}
 })
 ```
@@ -140,6 +147,8 @@ vm.$watch('firstName',function(){})
 
 
 ##### get()获取属性值
+
+
 
 ##### set()监听属性值
 
@@ -2485,4 +2494,6 @@ const moduleA = {
 
 
 **默认情况下，获取action，mutation，getter的方式没有变化**，因为默认情况下，模块内部的 action、mutation 和 getter 是注册在**全局命名空间**的——这样使得多个模块能够对同一 mutation 或 action 作出响应。
+
+
 
