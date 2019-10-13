@@ -858,6 +858,50 @@ store.dispatch('actionA').then(() => {
 
 
 
+
+
+##### 使用过滤器截断字符串
+
+```js
+//在main.js中过滤器，
+//value，传入的字符串，这个参数是自动传入的
+//lenght,多少个字符就截断
+Vue.filter('stringLimit',function(value,length){
+  // (value,length);
+    if(value.length > length){
+       return value.substring(0,length)+'...'
+    }else{
+       return value;
+    }
+ 
+})
+//使用方式，在需要截断字符串的地方
+ <div class="price">
+     //这里，value=item.name会自动传入，stringLimit(14)表示14个字符就截断
+    <span class="flash-price">{{item.name|stringLimit(14)}}	</span>
+    <span class="old-price">¥{{item.counterPrice}}</span>
+</div>
+
+//这么定义就不用传入length参数了，因为有默认值
+Vue.filter('stringLimit',function(value,length=14){
+  // (value,length);
+    if(value.length > length){
+       return value.substring(0,length)+'...'
+    }else{
+       return value;
+    }
+ 
+})
+//使用方式，在需要截断字符串的地方
+ <div class="price">
+     //这里，value=item.name会自动传入，stringLimit表示默认个字符就截断
+    <span class="flash-price">{{item.name|stringLimit}}	</span>
+    <span class="old-price">¥{{item.counterPrice}}</span>
+</div>
+```
+
+
+
 #### ShopList的编写
 
 ##### 抽取ShopList
