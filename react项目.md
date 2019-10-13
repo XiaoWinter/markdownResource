@@ -101,7 +101,11 @@
 
 1. 安装create-react-app
 
+   `yarn global add create-react-app`
+
    `npm install -g create-react-app` 全局下载工具
+
+   
 
 2. 创建项目 
 

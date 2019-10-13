@@ -53,6 +53,24 @@ data(){
 
 }
 
+##### 全局注册组件
+
+
+
+```js
+import CartControl from '$cps/cartControl/CartControl.vue'
+import Star from '$cps/star/Star.vue'
+import Split from '$cps/split/Split.vue'
+
+
+//添加全局组件
+Vue.component('CartControl',CartControl)
+Vue.component('Star',Star)
+Vue.component('Split',Split)
+```
+
+
+
 ##### 语句和表达式
 
 
@@ -827,11 +845,8 @@ new Vue({
 
 ```vue
 <template>
-  
     
      <div class="todo-container">
-       
-    
     
     <div class="todo-wrap">
       <Header></Header>
@@ -1427,7 +1442,8 @@ new Vue({
 <template>
   <div id="sider">
     <ul>
-      <li><router-link to="/about">About</router-link></li>
+        //默认为push
+      <li><router-link to="/about" push>About</router-link></li>
       <li><router-link to="/home">Home</router-link></li>     
     </ul>
   </div>
@@ -1953,6 +1969,22 @@ beforeRouteEnter (to, from, next) {
       //next(false)
   })
 }
+
+ beforeRouteEnter(to, from, next){
+      next(vm=>{
+        console.log('object');
+        console.log(vm.$store.state.user.token);
+        if(vm.$store.state.user.token){
+          console.log(1);
+          //阻止进入该路由
+          next('/profile') 
+        }else{
+          console.log(2);
+          //允许放行
+          next()
+        }
+      })
+    }
 ```
 
 注意 `beforeRouteEnter` 是支持给 `next` 传递回调的唯一守卫。对于 `beforeRouteUpdate` 和 `beforeRouteLeave` 来说，`this` 已经可用了，所以**不支持**传递回调，因为没有必要了。
@@ -2377,6 +2409,12 @@ const store = new Vuex.Store({
     }
   }
 })
+//第一个参数context解构出commit
+actions: {
+  increment ({ commit }) {
+    commit('increment')
+  }
+}
 ```
 
 ###### 分发action（调用action方法）

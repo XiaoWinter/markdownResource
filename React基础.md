@@ -41,6 +41,8 @@ ReactDOM.render(ele, document.getElementById('test'))
 * 本质是React.createElement(‘标签名’, props, ...children) 方法的语法糖
 * 作用: 用来创建react虚拟DOM(元素)对象
 
+
+
 ### 3.组件
 
 `组件（Component）是对数据和方法的简单封装。`
@@ -60,12 +62,22 @@ ReactDOM.render(ele, document.getElementById('test'))
 #### 3.2类组件
 
 ```javascript
- class Mycomponent2 extends React.Component{
+import React, { Component } from 'react'
+//可以引入样式文件，供组件使用
+import './home.less'
+
+class Mycomponent2 extends React.Component{
     render (){
       return <h1>类组件</h1>
     }
   }
 ```
+
+##### 普通语法
+
+
+
+
 
 #### 3.3类组件的三大属性
 
@@ -79,6 +91,7 @@ ReactDOM.render(ele, document.getElementById('test'))
 
 ```javascript
 //this的指向为组件实例
+//这是类的构造器
 // 1)初始化状态:
   constructor (props) {
     super(props)
@@ -88,6 +101,7 @@ ReactDOM.render(ele, document.getElementById('test'))
     }
   }
 //或者,以类的实例属性的写法
+//类的实例属性
 state = {
     stateProp1 : value1,
     stateProp2 : value2
@@ -341,9 +355,11 @@ render(){
 
 
 
+##### 3.4.JSX标签添加事件以及定义style
+
 ```
 
-#### 4.JSX标签添加事件以及定义style
+#### 
 
 `标签中的onClick 'C' 是大写的，其引用一个函数`
 ​```html

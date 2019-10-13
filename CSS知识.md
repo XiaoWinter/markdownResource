@@ -37,7 +37,7 @@ background-size:100%
 
 
 
-##### [深度选择器](https://www.cnblogs.com/CyLee/p/10006065.html)
+#### [深度选择器](https://www.cnblogs.com/CyLee/p/10006065.html)
 
 在scope的情况下，有可能控制不了第三方组件的样式，所以用深度选择器暴露出
 
@@ -49,3 +49,45 @@ background-size:100%
 .myclass /deep/ .disanfangde {
     // ...1111111
 ```
+
+
+
+#### betterscroll小坑
+
+```
+你需要一个纯粹的容器，不要有padding,margin,乱七八糟的东西，只要固定宽高，overflow : hodden 就够了
+
+最好把创建的动作放到$nextTick的回调里
+ this.$nextTick(()=>{
+
+         new BScroll(this.$refs.navscroll,{
+            scrollX: true,
+            click: true
+         })
+         new BScroll(this.$refs.contentScroll,{
+            scrollY: true,
+            click: true
+         })
+      })
+```
+
+
+
+#### 横向滚动如何撑开内容区
+
+
+
+![](http://47.103.65.182/markdown/030.png)
+
+```less
+.topic-box-scroll{//container
+    width: 100%;
+    display: flex;
+    .topic-goods{//ul
+    	display: flex;
+        li{
+            
+        }
+    }
+```
+

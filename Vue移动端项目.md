@@ -302,6 +302,14 @@ new Vue({
 
 实现方法，加类：类名为on，条件为，当前路由与图标对应
 
+```
+//表示当前的路由是msite就加上on
+:class="{on:$route.path === '/msite'}">
+
+```
+
+
+
 代码
 
 ```javascript
@@ -350,6 +358,55 @@ export default {
 }
 </script>
 ```
+
+##### 实现不同的路由footer有选择的显示
+
+```
+//App.vue中
+<FooterGuide v-show="$route.meta.isShowFooter"></FooterGuide>
+//routes.js中,要显示的都有这个属性  meta:{
+                                    isShowFooter:true
+                                }
+export default [
+    {
+        path:'/msite',
+        component:Msite,
+        meta:{
+            isShowFooter:true
+        }
+
+    },
+    {
+        path:'/search',
+        component:Search,
+        meta:{
+            isShowFooter:true
+        }
+    },
+    {
+        path:'/profile',
+        component:Profile,
+        meta:{
+            isShowFooter:true
+        }
+    },
+    {
+        path:'/order',
+        component:Order,
+        meta:{
+            isShowFooter:true
+        }
+    },
+    
+    {
+        path:'/login',
+        component:Login
+    }
+   ]
+
+```
+
+
 
 #### 登陆组件
 
@@ -696,6 +753,31 @@ this.$store.state.状态名
 
 `yarn add swiper`
 
+```js
+<!-- Slider main container -->
+<div class="swiper-container">
+    <!-- Additional required wrapper -->
+    <div class="swiper-wrapper">
+        <!-- Slides -->
+        <div class="swiper-slide">Slide 1</div>
+        <div class="swiper-slide">Slide 2</div>
+        <div class="swiper-slide">Slide 3</div>
+        ...
+    </div>
+    <!-- If we need pagination -->
+    <div class="swiper-pagination"></div>
+
+    <!-- If we need navigation buttons -->
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+
+    <!-- If we need scrollbar -->
+    <div class="swiper-scrollbar"></div>
+</div>
+```
+
+
+
 在MSite引入js文件和css文件都在script里引
 
 ##### 如何查找文件
@@ -705,6 +787,8 @@ this.$store.state.状态名
 然后`ctrl+shift+p`打开命令搜索，点击search node_modules,开始文件搜索
 
 ##### 获取category数据
+
+##### 引入lodash
 
 获取category的数据，然后用v-for渲染
 
@@ -1011,7 +1095,7 @@ if(!error.response){
 
 ##### Mock数据
 
-mock.js
+[mock.js](http://mockjs.com/)
 
 404错误，解决方法，使用完整的路径`http://localhost:8080/api/goods`
 
@@ -1111,6 +1195,25 @@ Mock.mock('http://localhost:8080/api/info',{code:0,data:data.info})
 
 ```
 这篇文章我不仅仅是要教会大家封装一个 scroll 组件，还想传递一些把第三方插件（原生 JS 实现）Vue 化的思考过程。很多学习 Vue.js 的同学可能还停留在 “XX 效果如何用 Vue.js 实现” 的程度，其实把插件 Vue 化有两点很关键，一个是对插件本身的实现原理很了解，另一个是对 Vue.js 的特性很了解。对插件本身的实现原理了解需要的是一个思考和钻研的过程，这个过程可能困难，但是收获也是巨大的；而对 Vue.js 的特性的了解，是需要大家对 Vue.js 多多使用，学会从平时的项目中积累和总结，也要善于查阅 Vue.js 的官方文档，关注一些 Vue.js 的升级等。
+```
+
+betterscroll小坑
+
+```
+你需要一个纯粹的容器，不要有padding,margin,乱七八糟的东西，只要固定宽高，overflow : hodden 就够了
+
+最好把创建的动作放到$nextTick的回调里
+ this.$nextTick(()=>{
+
+         new BScroll(this.$refs.navscroll,{
+            scrollX: true,
+            click: true
+         })
+         new BScroll(this.$refs.contentScroll,{
+            scrollY: true,
+            click: true
+         })
+      })
 ```
 
 
@@ -1853,3 +1956,44 @@ new Vue({
 
 除此之外，组件上的事件都是自定义事件，需要在组件里使用`this.$emit(自定义事件名，参数)`手动触发
 
+
+
+移动端适配
+
+[vuecli3使用进行适配](https://www.jianshu.com/p/0a584fa6708e)
+
+```shell
+npm install lib-flexible --save
+yarn add lib-flexible
+
+npm install postcss-px2rem --save-dev
+yarn add postcss-px2rem -D
+```
+
+vue.config.js
+
+```js
+module.exports = {
+  css: {
+      loaderOptions: {
+        css: {},
+        postcss: {
+          plugins: [
+            require('postcss-px2rem')({
+              remUnit: 75//改成你使用的设计稿的10分之一
+            })
+          ]
+        }
+      }
+  }
+}
+```
+
+
+
+网易严选
+
+| 状态                       | 耗时 |
+| -------------------------- | ---- |
+| 使用图片懒加载             | 18s  |
+| 原先基础上，使用路由懒加载 | 16s  |
