@@ -780,6 +780,36 @@ this.$store.state.状态名
 
 在MSite引入js文件和css文件都在script里引
 
+```js
+import Swiper from 'swiper'
+import 'swiper/css/swiper.min.css'
+```
+
+swiper对象的创建时机
+
+```js
+在watch数据中，nextTick的回调里构建对象
+ watch:{
+      data(){
+         this.$nextTick(()=>{
+        	var mySwiper = new Swiper('#headerswiper', {
+                     speed: 400,
+                     autoplay: {
+                        delay: 1000,
+                     },
+                     pagination: {
+                        el: '.swiper-pagination',
+                        type: 'bullets',
+                     },
+                     loop:true
+                     
+                }) 
+         })
+        }
+```
+
+
+
 ##### 如何查找文件
 
 首先需要安装插件 Search node_modules，
@@ -1140,6 +1170,8 @@ if(!error.response){
 ##### Mock数据
 
 [mock.js](http://mockjs.com/)
+
+`yarn add mockjs`
 
 404错误，解决方法，使用完整的路径`http://localhost:8080/api/goods`
 
@@ -2002,7 +2034,7 @@ new Vue({
 
 
 
-移动端适配
+##### 移动端适配
 
 [vuecli3使用进行适配](https://www.jianshu.com/p/0a584fa6708e)
 
@@ -2033,7 +2065,7 @@ module.exports = {
 }
 ```
 
-
+[react使用适配](https://blog.csdn.net/qq_43258252/article/details/87867560)
 
 网易严选
 
@@ -2041,3 +2073,8 @@ module.exports = {
 | -------------------------- | ---- |
 | 使用图片懒加载             | 18s  |
 | 原先基础上，使用路由懒加载 | 16s  |
+
+
+
+[动画效果](https://daneden.github.io/animate.css/)
+

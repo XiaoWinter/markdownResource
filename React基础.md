@@ -1,19 +1,55 @@
+<h1 align="center">React基础</h1>
 https://img.shields.io/badge/%E5%89%8D%E7%AB%AF-react-day1
 
 [徽章添加](https://shields.io/category/coverage/)
 
-## 1.git管理项目
+## 一、简介
 
-    1). 创建本地仓库
-    2). 创建远程仓库
-    3). 将本地仓库代码推到远程仓库
-    4). 如果本地代码有修改，推送到远程仓库
-    5). 如果远程有修改拉去到本地
-    6). 克隆远程到本地
+### 1.官方文档
 
-### 1.虚拟DOM对象
+1) 英文官网:[ https://reactjs.org/](https://reactjs.org/)
+
+2) 中文官网: https://doc.react-china.org/
+
+#### react的作用
+
+1) 用于动态构建用户界面的 **JavaScript 库**(只关注于View)
+
+2) 由Facebook开源
+
+#### React的特点
+
+1) Declarative(声明式编码)
+
+2) Component-Based(组件化编码)
+
+3) Learn Once, Write Anywhere(React Native/支持客户端与服务器渲染)
+
+4) 高效
+
+#### React高效的原因
+
+1) 虚拟(virtual)DOM, 不总是直接操作DOM  (文档/元素/属性/文本对象)
+
+2) DOM Diff算法, 最小化页面重绘
+
+##### 1.虚拟DOM对象
 
 > 虚拟DOM对象是一个轻量级对象，他是一个Object的一个实例
+
+
+
+1) React提供了一些API来创建一种 `特别` 的一般js对象
+
+* var element = React.createElement('h1', {id:'myTitle'},'hello')
+
+* 上面创建的就是一个简单的虚拟DOM对象
+
+2) 虚拟DOM对象最终都会被React转换为真实的DOM
+
+3) 我们编码时基本只需要操作react的虚拟DOM相关数据, react会转换为真实DOM变化而更新界面
+
+
 
 * 创建虚拟DOM对象：
 ```javascript 
@@ -30,20 +66,209 @@ https://img.shields.io/badge/%E5%89%8D%E7%AB%AF-react-day1
 
 ```
 * 渲染虚拟DOM
-```javascript
+```js
+//ele,虚拟dom对象
 ReactDOM.render(ele, document.getElementById('test'))
 ```
 
-### 2.JSX
+#### 使用react这个js库，直接在html里生撸，不用脚手架
 
-* 全称:  JavaScript XML
-* react定义的一种类似于XML的JS扩展语法: XML+JS
-* 本质是React.createElement(‘标签名’, props, ...children) 方法的语法糖
-* 作用: 用来创建react虚拟DOM(元素)对象
+##### 基本引入
+
+1) react.js: React的核心库
+
+2) react-dom.js: 提供操作DOM的react扩展库
+
+3) babel.min.js: 解析JSX语法代码转为纯JS语法代码的库
+
+##### 操作dom
+
+```html
+<body>
+    <div class="test">
+       
+    </div>
+    
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <script type="text/javascript" src="../js/react-dom.development.js"></script>
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+    <script type="text/babel"> //必须声明babel
+        // 创建虚拟DOM元素
+        const vDom = <h1>Hello React</h1> // 千万不要加引号
+        // 渲染虚拟DOM到页面真实DOM容器中
+        ReactDOM.render(vDom, document.getElementById('test'))
+      </script>
+</body>
+```
 
 
 
-### 3.组件
+#### React JSX
+
+**总结**：JSX是一种语法最终产生js对象，这个js对象就是**虚拟dom**
+
+##### 简述
+
+1) 全称:  JavaScript XML
+
+2) react定义的一种类似于XML的JS扩展语法: XML+JS
+
+3) 本质是React.createElement(‘标签名’, props, ...children) 方法的语法糖
+
+
+
+#####  作用: 用来创建react虚拟DOM(元素)对象
+
+a. var ele = <h1>Hello JSX!</h1>
+
+注意: 它不是字符串, 也不是HTML/XML标签
+
+注意: **它最终产生的就是一个JS对象**
+
+
+
+* 标签名任意: HTML标签或其它标签
+
+*  标签属性任意: HTML标签属性或其它
+
+#####  基本语法规则
+
+a. 遇到 <开头的代码, 以标签的语法解析: html同名标签转换为html同名元素, 其它标签需要特别解析
+
+b. 遇到以 { 开头的代码，以JS语法解析: 标签中的js代码必须用{ }包含
+
+#####  babel.js的作用
+
+a. 浏览器不能直接解析JSX代码, 需要babel转译为纯JS的代码才能运行
+
+b. 只要用了JSX，都要加上type="text/babel", 声明需要babel来处理
+
+##### JSX 中使用 JavaScript 表达式
+
+我们可以在 JSX 中使用 JavaScript 表达式。表达式写在花括号 **{}** 中。实例如下
+
+```jsx
+ReactDOM.render(
+    <div>
+      <h1>{1+1}</h1>
+    </div>
+    ,
+    document.getElementById('example')
+);
+```
+
+##### 三元运算
+
+在 JSX 中不能使用 **if else** 语句，但可以使用 **conditional (三元运算)** 表达式来替代。以下实例中如果变量 **i** 等于 **1** 浏览器将输出 **true**, 如果修改 i 的值，则会输出 **false**.
+
+```jsx
+ReactDOM.render(
+    <div>
+      <h1>{i == 1 ? 'True!' : 'False'}</h1>
+    </div>
+    ,
+    document.getElementById('example')
+);
+```
+
+
+
+##### 添加样式
+
+```jsx
+var myStyle = {
+    fontSize: 100,
+    color: '#FF0000'
+};
+ReactDOM.render(
+    <h1 style = {myStyle}>菜鸟教程</h1>,
+    document.getElementById('example')
+);
+```
+
+##### 注释
+
+```react
+ReactDOM.render(
+    <div>
+    <h1>菜鸟教程</h1>
+    {/*注释...*/}
+     </div>,
+    document.getElementById('example')
+);
+```
+
+##### 展开数组
+
+JSX 允许在模板中插入数组，数组会自动展开所有成员：
+
+```jsx
+var arr = [
+  <h1>菜鸟教程</h1>,
+  <h2>学的不仅是技术，更是梦想！</h2>,
+];
+ReactDOM.render(
+  <div>{arr}</div>,
+  document.getElementById('example')
+);
+```
+
+##### 设置style
+
+##### 注册事件
+
+```react
+
+//标签中的onClick 'C' 是大写的，handle是回调函数
+
+<h1 style={{fontSize:'20px',color:'red'}} onClick={this.handle}>{ isLikeMe ? '你喜欢我':'我喜欢你'}</h1>
+```
+
+
+
+#### 渲染虚拟dom
+
+目的：把虚拟dom转化为真实dom放到页面上
+
+
+
+**语法**:  `ReactDOM.render(virtualDOM, containerDOM)` 
+
+**作用**: 将虚拟DOM元素渲染到页面中的真实容器DOM中显示
+
+**参数说明**
+
+a. 参数一`virtualDOM`: 纯js或jsx创建的虚拟dom对象
+
+b. 参数二`containerDOM`: 用来包含虚拟DOM元素的真实dom元素对象(一般是一个div)
+
+#### 创建虚拟dom
+
+1) 纯JS(一般不用)
+
+`React.createElement('h1',  {id:'myTitle'},  title)`
+
+2) JSX:
+
+`<h1 id='myTitle'>{title}</h1>`
+
+
+
+
+
+## 组件
+
+##### 组件的本质
+
+组件的本质是构造虚拟dom的js代码。它可以是一个函数（简单组件：函数组件）也可以是一个类（复杂组件：类组件），那么使用组件也就是，执行组件，并将其产生的虚拟dom渲染到页面，即
+
+```jsx
+ReactDOM.render(<MyComponent />, document.getElementById('example1'))
+```
+
+使用`<>`包裹组件名，就是执行组件，生成虚拟dom，然后`ReactDOM.render`方法将虚拟dom渲染到页面指定位置
+
+
 
 `组件（Component）是对数据和方法的简单封装。`
 
@@ -51,37 +276,42 @@ ReactDOM.render(ele, document.getElementById('test'))
 
 `函数组件效率更高，但是有局限性`
 
-#### 3.1函数组件
+#### 1函数组件
+
+**方式1: 工厂函数组件(无状态/简单组件)**
 
 ```javascript
   function Mycomponent1() {
+      //return JSX
     return <h1>函数组件</h1>
   }
 ```
 
-#### 3.2类组件
+#### 2类组件
+
+**方式2:  ES6类组件(有状态/复杂组件)**
 
 ```javascript
 import React, { Component } from 'react'
 //可以引入样式文件，供组件使用
 import './home.less'
 
-class Mycomponent2 extends React.Component{
+export default class Mycomponent2 extends React.Component{
     render (){
       return <h1>类组件</h1>
     }
   }
 ```
 
-##### 普通语法
 
 
 
 
 
-#### 3.3类组件的三大属性
 
-##### 3.3.1.状态state
+#### 3类组件的三大属性
+
+##### 3.1.状态state
 ```
 1.state是组件对象最重要的属性, 值是对象(可以包含多个数据)
 2.组件被称为"状态机", 通过更新组件的state来更新对应的页面显示(重新渲染组件)
@@ -89,8 +319,11 @@ class Mycomponent2 extends React.Component{
 4.直接更新状态数据this.state，不会改变组件状态
 ```
 
+##### 定义state
+
 ```javascript
 //this的指向为组件实例
+//方法一
 //这是类的构造器
 // 1)初始化状态:
   constructor (props) {
@@ -100,6 +333,7 @@ class Mycomponent2 extends React.Component{
       stateProp2 : value2
     }
   }
+//方法二
 //或者,以类的实例属性的写法
 //类的实例属性
 state = {
@@ -107,8 +341,24 @@ state = {
     stateProp2 : value2
 }
 
+
+
+```
+
+
+
+##### 读取state
+
+```js
   // 2)读取某个状态值
   this.state.statePropertyName
+```
+
+
+
+##### 修改state
+
+```js
 // 3)更新状态---->组件界面更新
   this.setState({
     stateProp1 : value1,
@@ -117,7 +367,10 @@ state = {
 ```
 
 
-###### 3.3.1.1 this的指向
+
+
+
+###### 3.1.1 this的指向
 
 * 函数直接调用在严格模式下，this指向undefind
 
@@ -127,12 +380,23 @@ state = {
     * 箭头函数(ES6模块化编码时才能使用)
 * 不要直接更新状态数据this.state
 
-##### 3.3.2.属性props
+##### 3.2.属性props
 
-```
-1.props是外部数据，用以存储标签属性
-```
+* prop存储的是外部数据，用以存储标签属性
+  * 每个组件对象都会有props(properties的简写)属性
+  * 组件标签的所有属性都保存在props中
+
+注意：
+
+1) 通过标签属性从组件外向组件内传递变化的数据
+
+2) 注意: 组件内部不要修改props数据（通过父组件传来的函数修改）
+
 [propTypes进行类型检查](https://zh-hans.reactjs.org/docs/typechecking-with-proptypes.html#___gatsby)
+
+##### 声明props
+
+声明可有可无，但最好写上，不然都不知道组件有哪些props属性
 
 ```js
 //引入此js设置props相关属性
@@ -147,12 +411,16 @@ class Person extends React.Component{
       sex:PropTypes.string,
       age:PropTypes.string,
    }
-
    //指定属性的默认值
    static defaultProps = {
      name : 'yyyy'
    }
 
+```
+##### 读取props的属性值
+
+```react
+//this.props.propertyName
      render(){
        return  <ul>
         <li>姓名：{this.props.name}</li>
@@ -162,52 +430,62 @@ class Person extends React.Component{
      
      }
    }
-   
-    //数据
+
+```
+##### 传递数据给props
+
+```react
+      //数据
    const arg = {
      name : 'xxx',
      sex: '1',
      age: '12'
    }
-   
-   //将属性传入组件的props，通过标签
-   //标准写法，props,此时可以不限制类型
+   //将属性传入组件的props，通过标签,编写 属性名=属性值 传入props数据
+   //方式一：标准写法，props,此时可以不限制类型
    ReactDOM.render(<Person name={arg.name} sex = {arg.sex} age = {arg.age} />, document.getElementById('test'));
-  //有props默认值,默认值的哪一项可以不写
+  //方式二：有props默认值,默认值的哪一项可以不写
   //  ReactDOM.render(<Person  sex = {arg.sex} age = {arg.age} />, document.getElementById('test'));
-//方便写法
+//方式三：方便写法，会解构该对象传入所有属性
   //  ReactDOM.render(<Person  {...arg}/>, document.getElementById('test'));
 ```
 
 
 
-##### 3.3.3.(reference)引用refs
+##### 3.3.(reference)引用refs
 
-```
-目的：得到组件中的某个标签对象
-```
-```javascript
+**目的**：得到组件中的某个标签对象（js对象，如果是原生的就是dom对象，如果是组件，就是组件对象）
+
+##### refs老语法步骤
+
+```react
 //1.老版本语法
-//组件内的标签都可以定义ref属性来标识自己，组件会把这个标签放到refs属性中
+//（1）组件内的标签都可以定义ref属性来标识自己，组件会把这个标签放到refs属性中
 <input type="text" ref='content'/>
-//在组件中可以通过this.refs.content来得到对应的真实DOM元素
+//（2）在组件中可以通过this.refs.content来得到对应的真实DOM元素
     通过组件对象的refs属性获取ref标记的元素，this.refs.content
     
+```
+##### refs新语法步骤
+
+```react
     
 //2.新版本语法,一个容器只能保存一个对象
 // (1)  React.createRef() 创建用于保存dom元素的ref对象
-
+//方式一
 constructor(props) {
   super(props)
   this.myRef = React.createRef()
 }
+//或者，方式二，实例属性
+myRef = React.createRef()
 //(2)通过 ref 标签属性将DOM元素对象保存到ref对象的current属性上
 <input type="text" ref={this.myRef}/>
 //(3)获取指定了ref的dom元素对象
 const input = this.myRef.current
 ```
 
-###### react建议的方法
+##### react建议的方法(新语法)
 
 ```javascript
 1.创建一个ref容器，绑到组件实例上
@@ -218,20 +496,20 @@ this.myRef = React.createRef();
 const input = this.myRef.current
 ```
 
-##### 3.3.4 组件嵌套
+##### 3.4 组件嵌套
 
 ```
 组件可以套组件，渲染时只需要渲染根组件即可
 ```
 
-##### 3.3.5组件化编程的基本流程
+##### 3.5组件化编程的基本流程
 
 ```
 1.拆分组件
 2.实现静态组件（固定资源，没有交互）
 3.实现动态组件（动态数据的初始化，交互）
 ```
-###### 设计数据
+##### 设计数据
 
 1.类型
 	(1)何种数据结构?
@@ -251,13 +529,13 @@ const input = this.myRef.current
 
 ​	父子
 
-​	订阅广播
+​	发布订阅
 
-​	
+##### 组件间传递数据（父子）
 
 ​	父组件定义一个改变数据的方法，将方法传给子组件（原理：闭包）
 
-```html
+```react
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -287,8 +565,8 @@ const input = this.myRef.current
             'sleep',
             'play']
         }
-        //此箭头函数的this恰好指向组件对象，否则需要使用bind来指定this
-		//作为变量传递给子组件，子组件调用这个函数就形成了闭包
+        //此函数使用了箭头函数的写法，否则需要使用bind来指定this
+		//这个函数作为通过props传递给子组件，子组件调用这个函数操作state的数据，就形成了闭包
         addtodo = (todo)=>{
             let todos = this.state.todos;
             this.setState({
@@ -308,6 +586,9 @@ const input = this.myRef.current
         }
     }
 
+```
+```react
+//子组件        
 class Add extends React.Component{
 
 constructor(props){
@@ -326,6 +607,9 @@ render(){
     return (<div><input ref={this.myRef} type="text"/><button onClick={this.handle}>添加</button></div>)
 }
 }
+```
+```react
+//子组件        
 class Show extends React.Component{
 
 constructor(props){
@@ -355,20 +639,11 @@ render(){
 
 
 
-##### 3.4.JSX标签添加事件以及定义style
-
-```
-
-#### 
-
-`标签中的onClick 'C' 是大写的，其引用一个函数`
-​```html
-<h1 style={{fontSize:'20px',color:'red'}} onClick={this.handle}>{ isLikeMe ? '你喜欢我':'我喜欢你'}</h1>
-```
 
 
 
-#### 3.4受控组件和非受控组件
+
+#### 4受控组件和非受控组件
 
 ##### 前提
 
@@ -507,7 +782,7 @@ React事件
 
 
 
-#### 3.5 组件的生命周期
+#### 5 组件的生命周期
 
 react类组件的生命周期（函数组件没有状态，也没有生命周期）
 
@@ -761,7 +1036,7 @@ fetch(url, {
 
 
 
-###  React组件间通信的方式
+### React组件间通信的方式
 
 ####  方式一： 通过prop传递
 
@@ -776,7 +1051,7 @@ fetch(url, {
 
 * 观察者模式
 
-观察者将自己的引用注册给被观察者，观察者发生相应的变化会通知观察者
+观察者将自己的引用注册给被观察者，被观察者发生相应的变化会通知观察者
 
 ```javascript
   // 2. 发布异步的消息
@@ -814,21 +1089,11 @@ fetch(url, {
 
 
 
-#### 5.1 ES6常用新语法
-
-* 定义常量/变量
-* 解构赋值
-* 对象的简洁表达式
-* 箭头函数
-* 扩展运算符
-* 类
-* ES6模块化:export /export default
-* promise
-* async/await
 
 
 
-### 6.路由 react-router4
+
+### 5.路由 react-router4
 
 ###### 谈谈你对SPA的理解
 
@@ -866,11 +1131,134 @@ SPA应用
 
 ###### 快速开始
 
-```javascript
+安装依赖
+
+```shell
 //前提 ，已经安装了脚手架工具
+yarn global add create-react-app
 npm install -g create-react-app
 //安装react路由插件
+yarn add react-router-dom
 npm install react-router-dom
+
+```
+
+##### Router组件，简介
+
+每个 React Router 应用程序（App）的核心应该是一个 router 组件。对于 Web 项目，`react-router-dom` 提供了 `<BrowserRouter>` 和 `<HashRouter>` 路由。这两个路由都会为你创建一个专门的 `history` 对象。
+
+##### Router是用来包住App的
+
+`<BrowserRouter>`使用 HTML5 历史 API 记录（ `pushState`，`replaceState` 和 `popstate` 事件）的 [`<Route>`](https://react-router.docschina.org/core/api/Router) 使您的UI与URL保持同步。
+
+`<HashRouter>`使用 URL 的 hash 部分（即 window.location.hash ）的 `<Router>` 使您的 UI 与 URL 保持同步。
+
+##### 声明项目使用路由器组件
+
+```react
+import { BrowserRouter } from 'react-router-dom'
+
+<BrowserRouter
+  basename={optionalString}
+  forceRefresh={optionalBool}
+  getUserConfirmation={optionalFunc}
+  keyLength={optionalNumber}
+>
+  <App/>
+</BrowserRouter>
+```
+
+##### 路由匹配
+
+Route 匹配
+有两个路由匹配组件： <Route> 和 <Switch> 。
+
+**extra**属性，完全匹配
+
+路由匹配是通过比较 `<Route>` 的 `path` 属性和当前地址的 `pathname` 来实现的。
+
+**当一个 `<Route>` 匹配成功时，它将渲染其内容，当它不匹配时就会渲染 `null`。没有路径的 `<Route>` 将始终被匹配。**
+
+```react 
+// 当 location = { pathname: '/about' }
+<Route path='/about' component={About}/> // 渲染 <About/>
+<Route path='/contact' component={Contact}/> // 渲染 null
+<Route component={Always}/> // 直接渲染 <Always/>
+```
+
+`<Switch>` 不是分组 `<Route>` 所必须的，但他通常很有用。 一个 `<Switch>` 会遍历其所有的子 `<Route>` 元素，并**仅渲染与当前地址匹配的第一个元素**。这有助于多个路由的路径匹配相同的路径名，当动画在路由之间过渡，且没有路由与当前地址匹配（所以你可以渲染一个 “404” 组件）。
+
+```react
+<Switch>
+  <Route exact path="/" component={Home} />
+  <Route path="/about" component={About} />
+  <Route path="/contact" component={Contact} />
+  {/* 没有路径被匹配, <NoMatch> 将会渲染 */}
+  <Route component={NoMatch} />
+</Switch>
+```
+
+##### 路由渲染属性
+
+**作用**：用来决定渲染的内容
+
+你有三个属性来给 `<Route>` 渲染组件: `component` ，`render`，和 `children` 。
+
+**component**应该在你想渲染现存组件时使用 （ `React.Component` 或一个无状态组件）。
+
+**render**，只有在必须将范围内的变量传递给要渲染的组件时才能使用。你不应该使用具有内联函数的 `component` 属性来传递范围内的变量，因为你将要不必要的卸载/重载组件。
+
+```jsx
+const Home = () => <div>Home</div>;
+
+const App = () => {
+  const someVariable = true;
+
+  return (
+    <Switch>
+      {/* 这个是对的 */}
+      <Route exact path="/" component={Home} />
+      <Route
+        path="/about"
+        render={props => <About {...props} extra={someVariable} />}
+      />
+      {/* 不要这么做 */}
+      <Route
+        path="/contact"
+        component={props => <Contact {...props} extra={someVariable} />}
+      />
+    </Switch>
+  );
+};
+```
+
+##### 导航
+
+React Router 提供了一个 `<Link>` 组件来在你的应用程序中创建链接。无论你在何处渲染一个 `<Link>` ，都会在应用程序的 HTML 中渲染锚 （`<a>`）。
+
+`<NavLink>` 是一种特殊类型的 `<Link>` 当它的 `to` 属性与当前地址匹配时，可以将其定义为“活跃的”。
+
+`<Redirect>` ：当你想强制导航时，你可以渲染一个 `<Redirect>`。当一个 `<Redirect>` 渲染时，它将使用它的 `to` 属性进行定向。
+
+```react
+<Link to="/">Home</Link>
+// <a href='/'>Home</a>
+
+// location = { pathname: '/react' }
+<NavLink to="/react" activeClassName="hurray">
+  React
+</NavLink>
+// <a href='/react' className='hurray'>React</a>
+
+<Redirect to="/login" />
+```
+
+
+
+##### 使用路由组件
+
+```javascript
+
 
 import React from 'react'
 import { 
@@ -919,6 +1307,129 @@ export default function App(props) {
 
 
 ```
+
+
+
+#### React-Router 路由的三大属性
+
+##### `history` 对象通常会具有以下属性和方法：
+
+标签直接跳转
+
+```html
+<div className='search-input' onClick={()=>{this.props.history.push('/')}}> 
+```
+
+
+
+⭐重要的属性
+
+- push(path, [state])` - (function 类型) 在 history 堆栈添加一个新条目
+- `replace(path, [state])` - (function 类型) 替换在 history 堆栈中的当前条目
+- `go(n)` - (function 类型) 将 history 堆栈中的指针调整 `n`
+- `goBack()` - (function 类型) 等同于 `go(-1)`
+- `goForward()` - (function 类型) 等同于 `go(1)`
+- `block(prompt)` - (function 类型) 阻止跳转。(详见 [history 文档](https://github.com/ReactTraining/history#blocking-transitions))。
+
+💩不重要的属性
+
+- `length` - (number 类型) history 堆栈的条目数
+
+- `action` - (string 类型) 当前的操作(`PUSH`, `REPLACE`, `POP`)
+
+- location
+
+  \- (object 类型) 当前的位置。location 会具有以下属性：
+
+  - `pathname` - (string 类型) URL 路径
+  - `search` - (string 类型) URL 中的查询字符串
+  - `hash` - (string 类型) URL 的哈希片段
+  - `state` - (object 类型) 提供给例如使用 `push(path, state)` 操作将 location 放入堆栈时的特定 location 状态。只在浏览器和内存历史中可用。
+
+  
+
+##### location
+
+location 对象永远不会发生变化，因此你可以在生命周期钩子中使用它来确定何时导航，这对数据抓取和动画非常有用。
+
+```javascript
+pathname,search(保存的是queryString),hash比较重要
+
+{
+  key: 'ac3df4', // not with HashHistory!
+  pathname: '/somewhere'
+  search: '?some=search-string',
+  hash: '#howdy',
+  state: {
+    [userDefined]: true
+  }
+}
+```
+
+##### match
+
+一个 `match` 对象中包涵了有关如何匹配 URL 的信息。`match` 对象中包涵以下属性：
+
+- `params` - (object) key／value 与动态路径的 URL 对应解析
+- `isExact` - (boolean) `true` 如果匹配整个 URL （没有结尾字符）
+- `path` - (string) 用于匹配的路径模式。被嵌套在 `<Route>` 中使用
+- `url` - (string) 用于匹配部分的 URL 。被嵌套在 `<Link>` 中使用
+
+
+
+##### 为什么使用withRouter
+
+When you include a main page component in your app, it is often wrapped in a `<Route>` component like this:
+
+在你的app中包含的主要主要页面组件,会经常被<Router>组件包装,想下面这样
+
+```js
+<Route path="/movies" component={MoviesIndex} />
+```
+
+
+
+By doing this, the `MoviesIndex` component has access to `this.props.history` so it can redirect the user with `this.props.history.push`.
+
+通过这么做,<MoviesIndex>组件可以访问`this.props.history`(路由三大属性之一),因此你能用
+
+`this.props.history.push`将用户redirect(重定向) 
+
+
+
+Some components (commonly a header component) appear on every page, so are not wrapped in a `<Route>`:
+
+一些组件(通常是header 组件)出现在每个页面,所以不用<Router>包装
+
+```js
+render() {
+  return (<Header />);
+}
+```
+
+This means the header cannot redirect the user.
+
+这(没有被Router包装)意味着header不能将用户redirct
+
+
+
+To get around this problem, the header component can be wrapped in a [`withRouter`](https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/api/withRouter.md) function, either when it is exported:
+
+为了解决这个问题,头部组件可以用 [`withRouter`](https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/api/withRouter.md) 函数包装,或者在export(暴露)的时候包装
+
+```js
+export default withRouter(Header)
+```
+
+This gives the `Header` component access to `this.props.history`, which means the header can now redirect the user.
+
+这使得Header组件可以访问到`this.props.history`,所以也代表这个Header组件可将用户重定向了
+
+
+
+
+
+![](http://47.103.65.182/markdown/031.png)
 
 ### 最流行的开源React UI组件库  ant-design
 

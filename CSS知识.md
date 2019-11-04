@@ -91,3 +91,18 @@ background-size:100%
     }
 ```
 
+
+
+#### 判断是否是移动端的方法
+
+```javascript
+if(navigator.userAgent.includes("Android")||navigator.userAgent.includes("iPhone")){
+        console.log("移动端");
+        this.mobile=true
+}
+```
+
+#### white-space的用法
+
+![](http://47.103.65.182/markdown/032.png)
+

@@ -109,6 +109,8 @@
 
 2. 创建项目 
 
+   `cerate-react-app myapp`
+
    `npx create-react-app myApp`
 
 3. 测试
@@ -492,112 +494,6 @@ SelectedKeys 每次指定都生效
 this.props.location.pathname
 ```
 
-React-Router 路由的三大属性
-
-##### `history` 对象通常会具有以下属性和方法：
-
-⭐重要的属性
-
-- push(path, [state])` - (function 类型) 在 history 堆栈添加一个新条目
-- `replace(path, [state])` - (function 类型) 替换在 history 堆栈中的当前条目
-- `go(n)` - (function 类型) 将 history 堆栈中的指针调整 `n`
-- `goBack()` - (function 类型) 等同于 `go(-1)`
-- `goForward()` - (function 类型) 等同于 `go(1)`
-- `block(prompt)` - (function 类型) 阻止跳转。(详见 [history 文档](https://github.com/ReactTraining/history#blocking-transitions))。
-
-💩不重要的属性
-
-- `length` - (number 类型) history 堆栈的条目数
-
-- `action` - (string 类型) 当前的操作(`PUSH`, `REPLACE`, `POP`)
-
-- location
-
-  \- (object 类型) 当前的位置。location 会具有以下属性：
-
-  - `pathname` - (string 类型) URL 路径
-  - `search` - (string 类型) URL 中的查询字符串
-  - `hash` - (string 类型) URL 的哈希片段
-  - `state` - (object 类型) 提供给例如使用 `push(path, state)` 操作将 location 放入堆栈时的特定 location 状态。只在浏览器和内存历史中可用。
-
-  
-
-##### location
-
-location 对象永远不会发生变化，因此你可以在生命周期钩子中使用它来确定何时导航，这对数据抓取和动画非常有用。
-
-```javascript
-pathname,search(保存的是queryString),hash比较重要
-
-{
-  key: 'ac3df4', // not with HashHistory!
-  pathname: '/somewhere'
-  search: '?some=search-string',
-  hash: '#howdy',
-  state: {
-    [userDefined]: true
-  }
-}
-```
-
-##### match
-
-一个 `match` 对象中包涵了有关如何匹配 URL 的信息。`match` 对象中包涵以下属性：
-
-- `params` - (object) key／value 与动态路径的 URL 对应解析
-- `isExact` - (boolean) `true` 如果匹配整个 URL （没有结尾字符）
-- `path` - (string) 用于匹配的路径模式。被嵌套在 `<Route>` 中使用
-- `url` - (string) 用于匹配部分的 URL 。被嵌套在 `<Link>` 中使用
-
-
-
-##### 为什么使用withRouter
-
-When you include a main page component in your app, it is often wrapped in a `<Route>` component like this:
-
-在你的app中包含的主要主要页面组件,会经常被<Router>组件包装,想下面这样
-
-```js
-<Route path="/movies" component={MoviesIndex} />
-```
-
-
-
-By doing this, the `MoviesIndex` component has access to `this.props.history` so it can redirect the user with `this.props.history.push`.
-
-通过这么做,<MoviesIndex>组件可以访问`this.props.history`(路由三大属性之一),因此你能用
-
-`this.props.history.push`将用户redirect(重定向) 
-
-
-
-Some components (commonly a header component) appear on every page, so are not wrapped in a `<Route>`:
-
-一些组件(通常是header 组件)出现在每个页面,所以不用<Router>包装
-
-```js
-render() {
-  return (<Header />);
-}
-```
-
-This means the header cannot redirect the user.
-
-这(没有被Router包装)意味着header不能将用户redirct
-
-
-
-To get around this problem, the header component can be wrapped in a [`withRouter`](https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/api/withRouter.md) function, either when it is exported:
-
-为了解决这个问题,头部组件可以用 [`withRouter`](https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/api/withRouter.md) 函数包装,或者在export(暴露)的时候包装
-
-```js
-export default withRouter(Header)
-```
-
-This gives the `Header` component access to `this.props.history`, which means the header can now redirect the user.
-
-这使得Header组件可以访问到`this.props.history`,所以也代表这个Header组件可将用户重定向了
 
 
 

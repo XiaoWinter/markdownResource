@@ -116,6 +116,14 @@ package操作的对象。
 
 `apt-cache show package `
 
+查看软件的安装位置
+
+`whereis ${软件名}`
+
+`which ${软件名}`
+
+
+
 #### Windos命令
 
  `netstat -aon|findstr 4000` 找到PID

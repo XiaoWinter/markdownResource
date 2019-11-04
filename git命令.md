@@ -37,6 +37,10 @@
 
 `git checkout -b branchName`
 
+##### 切换分支
+
+`git checkout branchName`
+
 ##### 重命名本地分支
 
 `git branch -m oldbranchname newbranchname`
@@ -53,6 +57,10 @@
 
 `git pull [remote-name] [branch-name]`
 
+##### 删除分支
+
+`git branch -d`
+
 ##### 查看已合并的分支
 
 `git branch --merge `
@@ -60,6 +68,10 @@
 ##### 查看可合并的分支
 
 `git branch --no-merge `
+
+##### 合并分支(在主分支合并其他分支)
+
+`git merge`
 
 ##### 查看两个版本的差异
 

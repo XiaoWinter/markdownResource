@@ -116,21 +116,7 @@ DocumentFragment只存在于内存中的节点
 被代理对象:data
 
 ```javascript
-MVVM.prototype = {
-    _proxy: function(key) {
-        var me = this; 
-        object. defineProperty(me, key, {
-            configurable: false,
-            enumerable: true ,
-            get: function proxyGetter() {
-                return me._ data[key];
-            },
-            set: function proxySetter(newVal) {
-                me._ data[key]I= newVal;
-            }
-          });
-    };
-}
+
 	
 ```
 
@@ -219,6 +205,22 @@ function MVVM(options) {
     // 创建编译对象
     this.$compile = new Compile(options.el || document.body, this)
 }
+
+MVVM.prototype = {
+    _proxy: function(key) {
+        var me = this; 
+        object. defineProperty(me, key, {
+            configurable: false,
+            enumerable: true ,
+            get: function proxyGetter() {
+                return me._ data[key];
+            },
+            set: function proxySetter(newVal) {
+                me._ data[key]= newVal;
+            }
+          });
+    };
+}
 ```
 
 数据代理前面已经写过了，下面讲讲数据劫持和更新编译（更新页面）
@@ -280,7 +282,7 @@ Observer.prototype = {
 				//间里dep与watcher 的关系
                 if (Dep.target) {
                     dep.depend();
-                }
+                }，+ -
                 return val;
             },
             set: function(newVal) {//监视数据变化更新界面
@@ -994,4 +996,4 @@ var updater = {
 
 `var reg = /\{\{(.*)\}\}/;`
 
-正则表达式被小括号包起来的匹配是子匹配，取得子匹配$1
+正则表达式被小括号包起来的匹配是子匹配，取得子匹配$100000
