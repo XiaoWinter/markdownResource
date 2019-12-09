@@ -171,3 +171,33 @@ vue-cli-service build --mode development
 运行 yarn build
 
 ![](http://47.103.65.182/markdown/034.png)
+
+
+
+
+
+#### 保存组件中滚动区域的位置
+
+##### 需求
+
+```
+一个keepalive的组件，页面中有一个滚动区域（滚动区域渲染了列表），我们需要从此页面跳到其他页面上，然后再回到这个页面时，滚动条任然在先前的位置
+```
+
+##### 问题
+
+```
+缓存组件会变成js对象被存储，此时他的滚动条高度信息消失，js的路由守卫配置方法只能设置页面滚动条，
+```
+
+
+
+##### 思路
+
+```
+给滚动列表的项唯一标识符，记录离滚动视口最近的哪一项与滚动视口的相对高度top，以及这一项的id属性，回到keepalive页面时，根据top和id计算滚动区域应该滚动的高度
+```
+
+![]( http://47.103.65.182/markdown/036.png )
+
+##### 代码实现及示例 [SaveScrollInfoInKeepAliveComponent](https://github.com/XiaoWinter/SaveScrollInfoInKeepAliveComponent)
