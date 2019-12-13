@@ -39,9 +39,15 @@
 
 ##### 切换分支
 
-
-
 `git checkout branchName`
+
+##### 删除分支
+
+ `git branch -d branchName`
+
+##### 强行删除分支
+
+`git branch -D branchName`
 
 ##### 重命名本地分支
 
