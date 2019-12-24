@@ -160,3 +160,19 @@ div {
 }
 ```
 
+#### sass中使用css的方法时使用sass的变量
+
+```css
+height: calc(100% - #{$height});
+```
+
+#### css3的选择器nth-of-type
+
+ 选择器匹配属于父元素的特定类型的第 N 个子元素的每个元素 
+
+```css
+:nth-of-type(n)
+使用
+span:nth-of-type(3)
+```
+

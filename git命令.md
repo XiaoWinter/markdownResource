@@ -19,7 +19,7 @@
 
 ##### 移除远程仓库
 
-`git remote rm [remote-name]`--
+`git remote rm [remote-name]`
 
 ##### 推送到远程仓库
 
