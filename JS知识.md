@@ -34,3 +34,10 @@
 new Date().setHours(0, 0, 0, 0)
 ```
 
+
+
+ [**`Uint8Array`**](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array) 数组类型表示一个8位无符号整型数组，创建时内容被初始化为0。创建完后，可以以对象的方式或使用数组下标索引的方式引用数组中的元素。 
+
+格式化
+
+`JSON.parse(data)`
