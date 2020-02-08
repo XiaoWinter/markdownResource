@@ -75,7 +75,7 @@ function substitute(data) {//
 String.prototype.substitute = substitute
 ```
 
-##### js文件上传基础知识
+#### js文件上传基础知识
 
 ##### :star:[表单对象](https://developer.mozilla.org/zh-CN/docs/Web/API/FormData)FormData（POST请求）
 
@@ -298,4 +298,87 @@ function selectFile() {
 ```
 
 
+
+#### js读取文件以二进制上传
+
+原理：XMLHttpRequest的send方法可以上传二进制
+
+从polyfill中我们可以看出如何使用js读取文件发送二进制数据
+
+`sendAsBinary(binaryString);`
+`binaryString`
+A DOMString which encodes the binary content to be sent. You can create the binary string using the **FileReader** method **readAsArrayBuffer**(). The string is converted to binary for transfer by removing the high-order byte of each character.
+
+
+
+ [`FileReader`](https://developer.mozilla.org/zh-CN/docs/Web/API/FileReader) 接口提供的 **`readAsArrayBuffer()`** 方法用于启动读取指定的 [`Blob`](https://developer.mozilla.org/zh-CN/docs/Web/API/Blob) 或 [`File`](https://developer.mozilla.org/zh-CN/docs/Web/API/File) 内容。当读取操作完成时，[`readyState`](https://developer.mozilla.org/zh-CN/docs/Web/API/FileReader/readyState) 变成 `DONE`（已完成），并触发 `loadend` 事件，同时 [`result`](https://developer.mozilla.org/zh-CN/docs/Web/API/FileReader/result) 属性中将包含一个 [`ArrayBuffer`](https://developer.mozilla.org/zh-CN/docs/Web/API/ArrayBuffer) 对象以表示所读取文件的数据。 
+
+用法 `instanceOfFileReader.readAsArrayBuffer(blob);`
+
+:star: Polyfill
+
+```js
+/*\
+|*|
+|*|  :: XMLHttpRequest.prototype.sendAsBinary() Polyfill ::
+|*|
+|*|  https://developer.mozilla.org/en-US/docs/DOM/XMLHttpRequest#sendAsBinary()
+|*|
+\*/
+
+
+if (!XMLHttpRequest.prototype.sendAsBinary) {
+  XMLHttpRequest.prototype.sendAsBinary = function(sData) {
+    var nBytes = sData.length, ui8Data = new Uint8Array(nBytes);
+    for (var nIdx = 0; nIdx < nBytes; nIdx++) {
+      ui8Data[nIdx] = sData.charCodeAt(nIdx) & 0xff;
+    }
+    /* send as ArrayBufferView...: */
+    this.send(ui8Data);
+    /* ...or as ArrayBuffer (legacy)...: this.send(ui8Data.buffer); */
+  };
+}
+```
+
+关键步骤
+
+```js
+var file = document.getElementById("myFile");//file对象var reader = new FileReader();
+      //读取器
+	var reader = new FileReader();
+    //读取为二进制
+      reader.readAsArrayBuffer(file)
+      reader.onload=function(){
+            //二进制
+            var sDate = reader.result
+            //二进制数组长度
+             var nBytes = file.length;
+            //二进制数组
+            var ui8Data = new Uint8Array(nBytes);
+            //填充
+                for (var nIdx = 0; nIdx < nBytes; nIdx++) {
+                  ui8Data[nIdx] = sData.charCodeAt(nIdx) & 0xff;
+                }
+            //发送
+            xhr.send(ui8Data)
+    }
+```
+
+
+
+#### 大文件上传的方式
+
+**方式一**
+
+购买服务：使用购买的服务，根据其封装的方法进行上传，如七牛，阿里等
+
+**方式二**
+
+ 编码上传，我们可以比较灵活地控制上传的内容 
+
+前提条件
+
+- 支持拆分上传请求(即切片)
+- 支持断点续传
+- 支持显示上传进度和暂停上传
 
