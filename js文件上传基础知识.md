@@ -1,5 +1,11 @@
 # js文件上传基础知识
 
+参考：
+
+​	[前端大文件上传](https://juejin.im/post/5cf765275188257c6b51775f)
+
+​	[前端通过spark-md5.js计算本地文件md5](https://juejin.im/post/5b52a7535188251b381270a4)
+
 ##### :star:[表单对象](https://developer.mozilla.org/zh-CN/docs/Web/API/FormData)FormData（POST请求）
 
 [使用FormData](https://developer.mozilla.org/zh-CN/docs/Web/API/FormData/Using_FormData_Objects)
