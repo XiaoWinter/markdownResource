@@ -368,20 +368,20 @@ let file = document.querySelector("[name=file]").files[0];
 const LENGTH = 1024 * 1024 * 0.1;
 let chunks = slice(file, LENGTH);
 
-// 获取对于同一个文件，获取其的context
-let context = createContext(file);
+// 获取对于同一个文件，获取其的fileID
+let fileID = createContext(file);
 
 let tasks = [];
 chunks.forEach((chunk, index) => {
   let fd = new FormData();
    //这里可以增加文章的hash信息以供后台进行文件完整校验
-    let fhash = createHash(chunk)
-    fd.append('fhash',fhash)
-  fd.append("file", chunk);
+    let chunkhash = createHash(chunk)
+    fd.append('chunkhash',chunkhash)
+  fd.append("chunk", chunk);
   // 传递context
-  fd.append("context", context);
+  fd.append("fileID", fileID);
   // 传递切片索引值
-  fd.append("chunk", index + 1);
+  fd.append("chunkIndex", index + 1);
 	
   tasks.push(post("/mkblk.php", fd));
 });
@@ -389,8 +389,8 @@ chunks.forEach((chunk, index) => {
 // 所有切片上传完毕后，调用mkfile接口
 Promise.all(tasks).then(res => {
   let fd = new FormData();
-  fd.append("context", context);
-  fd.append("chunks", chunks.length);
+  fd.append("fileID", fileID);
+  fd.append("chunksLength", chunks.length);
   post("/mkfile.php", fd).then(res => {
     console.log(res);
   });
@@ -434,8 +434,8 @@ function savaBigFile(formData){
 // 所有切片上传完毕后，调用mkfile接口
 Promise.all(tasks).then(res => {
   let fd = new FormData();
-  fd.append("context", context);
-  fd.append("chunks", chunks.length);
+  fd.append("fileID", fileID);
+  fd.append("chunksLength", chunks.length);
   post("/mkfile.php", fd).then(res => {
     console.log(res);
   });
@@ -449,7 +449,7 @@ function makeFile(formData){
     //检查文件是否已经上传
     isFileExist(formData.fileID)
     //检查文件切片数量,通过就进行合并，不通过就返回缺少的切片Index
-    isFileChunkReady(formData.chunklenght)
+    isFileChunkReady(formData.chunksLength)
     //合并文件，删除切片
     pinjie(formData.fileID)
     //返回状态信息，成功？失败？
@@ -470,9 +470,9 @@ function makeFile(formData){
 后端接口
 
 ```js
-function getFileInfo(formData){
+function getFileInfo(fileHash){
     //检查文件是否已经上传,如果上传了并且没有上传完就返回上传了文件切片的fileID,如果没有上传，就不在响应里返回fileID
-	let fileID =  isFileRepeat(formData.hash)
+	let fileID =  isFileRepeat(fileHash)
     //返回缺少的文件分片
     getMissingChunk()
     //对于已经上传过的文件，数据库里会保存文件的ID，我们因该将此ID返回，并要求上传时携带此ID，因此前端需要在每次上传大文件之前进行上传情况的判断
