@@ -93,6 +93,12 @@
 
 `git log -p file`
 
+`git log --pretty=oneline 文件名`
+
+##### 查看某条改动
+
+`git show 356f6def9d3fb7f3b9032ff5aa4b9110d4cca87e`
+
 #### 本地相关
 
 ##### 查看所有已跟踪的文件
