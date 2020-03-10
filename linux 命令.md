@@ -122,7 +122,12 @@ package操作的对象。
 
 `which ${软件名}`
 
+安装10版本的node
 
+```csharp
+curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+    sudo apt-get install -y nodejs
+```
 
 #### Windos命令
 

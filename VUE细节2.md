@@ -201,3 +201,57 @@ vue-cli-service build --mode development
 ![]( http://47.103.65.182/markdown/036.png )
 
 ##### 代码实现及示例 [SaveScrollInfoInKeepAliveComponent](https://github.com/XiaoWinter/SaveScrollInfoInKeepAliveComponent)
+
+
+
+#### 一个层次较多的组件，内部的数据还是异步的，在不去改动获取数据的方法的情况下，怎么判断数据已经到了，并已经渲染到了页面上
+
+![]( http://47.103.65.182/markdown/038.png )
+
+##### 需求 点击按钮传入楼层，呼出一个dialog，dialog中有一个列表，让列表到指定的楼层
+
+##### 列表是动态获取的，是一个更深层的组件的内容
+
+#### 问题
+
+`this.$nextTick(fn)`和`setTimeout(fn,0)`不能保证执行的时候数据已经获得，并且页面已经渲染完成
+
+#### 解决方法
+
+[MutationObserver](https://blog.csdn.net/u010419337/article/details/81474311)
+
+使用`MutationObserver`监视dom的变化，从而判断市局是否加载完毕
+
+
+
+```js
+updatePostComment(row){
+            // diglog的初始化，此时还未完成对comment组件的构建
+            this.see_comments = true
+            this.post_detail_postId = row.post_id
+            this.post_detail_title = row.name
+    		//记录楼层
+            const floor = row.floor
+            this.$nextTick(()=>{
+                //一层组件，comment组件初步构建，数据未渲染
+                const el = this.$refs.comment.$el
+                const pel = this.$refs.comment.$el.parentElement
+				//构建
+                let MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver
+                let observer = new MutationObserver((changeObj)=>{
+                    const isLoad = changeObj.some(change=>{
+                        return Array.prototype.slice.call(change.addedNodes).some(node=>node.classList.contains('pl-lier'))
+                    })
+                    if(isLoad){
+                        const floorEle = $(el).find('.pl-lier').get().find(ele=>{
+                                    const obj =  $(ele).find('.infos >span:first').text().match(/(\d+).*/)
+                                    return obj[1] == floor
+                            })
+                            $(pel).animate({scrollTop:floorEle.offsetTop},300)
+                    }
+                })
+                observer.observe(el, {childList:true})
+            })
+        },
+```
+

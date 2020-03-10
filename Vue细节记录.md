@@ -153,6 +153,7 @@ watch:{
 	},
 	todos:{
 		deep:true,
+        immediate: true,
 		handler:(newVal,oldVal)=>{
 			
 		}
