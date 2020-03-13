@@ -258,3 +258,19 @@ if(fs.existsSync(filepath)){
 }
 ```
 
+##### 为什么URL需要编码
+
+ URL就是网址，只要上网，就一定会用到。 
+
+ 一般来说，URL只能使用英文字母、阿拉伯数字和某些标点符号，不能使用其他文字和符号。比如，世界上有英文字母的网址"http://www.abc.com"，但是没有希腊字母的网址"http://www.aβγ.com"（读作阿尔法-贝塔-伽玛.com）。这是因为网络标准[RFC 1738](http://www.ietf.org/rfc/rfc1738.txt)做了硬性规定： 
+
+```
+"...Only alphanumerics [0-9a-zA-Z], the special characters "$-_.+!*'()," [not including the quotes - ed], and reserved characters used for their reserved purposes may be used unencoded within a URL."
+
+"只有字母和数字[0-9a-zA-Z]、一些特殊符号"$-_.+!*'(),"[不包括双引号]、以及某些保留字，才可以不经过编码直接用于URL。"
+```
+
+
+
+ https://www.ruanyifeng.com/blog/2010/02/url_encoding.html 
+
