@@ -1,6 +1,6 @@
 ## JS知识
 
-##### 如何自定义一个事件
+### 如何自定义一个事件
 
 ```html
 <!DOCTYPE html>
@@ -28,7 +28,7 @@
 </html>
 ```
 
-##### 获取当天凌晨
+#### 获取当天凌晨
 
 ```js
 new Date().setHours(0, 0, 0, 0)
@@ -38,11 +38,11 @@ new Date().setHours(0, 0, 0, 0)
 
  [**`Uint8Array`**](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array) 数组类型表示一个8位无符号整型数组，创建时内容被初始化为0。创建完后，可以以对象的方式或使用数组下标索引的方式引用数组中的元素。 
 
-##### 格式化
+#### 格式化
 
 `JSON.parse(data)`
 
-##### 实现模板替换
+#### 实现模板替换
 
 方式一（工具方法）
 
@@ -75,7 +75,7 @@ function substitute(data) {//
 String.prototype.substitute = substitute
 ```
 
-##### 如何平滑滚动到页面顶部
+#### 如何平滑滚动到页面顶部
 
 ###### window.requestAnimationFrame
 
@@ -142,7 +142,7 @@ element.scrollIntoView({behavior: "instant", block: "end", inline: "nearest"});
 
 
 
-##### 如何检查指定的元素在视口中是否可见？
+### 如何检查指定的元素在视口中是否可见？
 
 ```
 const elementIsVisibleInViewport = (el, partiallyVisible = false) => {
@@ -160,7 +160,7 @@ elementIsVisibleInViewport(el, true); // 需要全屏(上下左右)可以见
 
 ```
 
-##### 如何获取元素中的所有图像？
+### 如何获取元素中的所有图像？
 
 ```js
 const getImages = (el, includeDuplicates = false) => {
@@ -175,7 +175,7 @@ getImages(document, false); // ['image1.jpg', 'image2.png', '...']
 
 ```
 
-##### 如何确定设备是移动设备还是台式机/笔记本电脑？
+### 如何确定设备是移动设备还是台式机/笔记本电脑？
 
 ```js
 const detectDeviceType = () =>
@@ -189,7 +189,7 @@ detectDeviceType(); // "Mobile" or "Desktop"
 
 ```
 
-##### 如何创建一个包含当前URL参数的对象？
+### 如何创建一个包含当前URL参数的对象？
 
 ```js
 const getURLParameters = url =>
@@ -204,7 +204,7 @@ getURLParameters('google.com'); // {}
 
 ```
 
-##### 如何将一组表单元素转化为对象？
+### 如何将一组表单元素转化为对象？
 
 ```js
 const formToObject = form =>
@@ -222,7 +222,7 @@ formToObject(document.querySelector('#form'));
 
 ```
 
-##### 如何获取给定毫秒的可读格式
+### 如何获取给定毫秒的可读格式
 
 ```js
 const formatDuration = ms => {
@@ -247,7 +247,7 @@ formatDuration(34325055574);
 
 ```
 
-##### node判断文件是否存在
+### node判断文件是否存在
 
 ```js
 var fs = require('fs');
@@ -258,7 +258,7 @@ if(fs.existsSync(filepath)){
 }
 ```
 
-##### 为什么URL需要编码
+### 为什么URL需要编码
 
  URL就是网址，只要上网，就一定会用到。 
 
@@ -273,4 +273,83 @@ if(fs.existsSync(filepath)){
 
 
  https://www.ruanyifeng.com/blog/2010/02/url_encoding.html 
+
+
+
+### [Number类型](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Data_structures)
+
+根据 ECMAScript 标准，JavaScript 中只有一种数字类型：基于 IEEE 754 标准的双精度 64 位二进制格式的值 **[-2^53^, 2^53^]** 。**它并没有为整数给出一种特定的类型**。除了能够表示浮点数外，还有一些带符号的值：`+Infinity`，`-Infinity` 和 `NaN` (非数值，Not-a-Number)。
+
+#### 浮点数
+
+<img src="http://47.103.65.182/markdown/095.png" />
+
+#### [IEEE 754是什么](https://mp.weixin.qq.com/s/mf1mH-aGWgcC6v2R8ijE8A)
+
+#### [wiki](https://zh.wikipedia.org/wiki/IEEE_754#64%E4%BD%8D%E9%9B%99%E7%B2%BE%E5%BA%A6)
+
+#### [js的连续整数区间](https://blog.csdn.net/qizhiqq/article/details/78914523)
+
+#### [为什么js的连续整数区间在[-2^53^, 2^53^]](https://blog.csdn.net/seizef/article/details/5571783)
+
+<img src="http://47.103.65.182/markdown/094.png" />
+
+js可以取到的连续的整数范围，并不是可以表示的最大整数范围，连续的整数范围是取决于尾数的精度  
+
+ **[-2^53^, 2^53^]** 
+
+
+
+18！=      6,402,373,705,728,000
+
+2^53^   =      9,007,199,254,740,992‬
+
+19！ = 121,645,100,408,832,000
+
+[英文资料](https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html)
+
+js的连续整数没有达到19的阶乘，因此在超出2^54^时不能安心使用Number类型来进行排列组合计算,可能会出现数字落不到浮点数的表示上，会损失精度，但是经过测试，19，20，21...的阶乘可以被算出来,乘除法好像也没有问题，加减法可以明显看到损失精度
+
+### [BigInt类型](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/BigInt)
+
+**BigInt** 是一种内置对象，它提供了一种方法来表示大于 `253 - 1` 的整数。这原本是 Javascript中可以用 [`Number`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Number) 表示的最大数字。**BigInt** 可以表示**任意大的整数**。
+
+###### 使用方式
+
+可以用在一个整数字面量后面加 `n` 的方式定义一个 `BigInt` ，如：`10n`，或者调用函数`BigInt()`。
+
+```js
+const theBiggestInt = 9007199254740991n;
+
+const alsoHuge = BigInt(9007199254740991);
+// ↪ 9007199254740991n
+```
+
+
+
+###### 注意：
+
+* 不能用于 [`Math`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Math) 对象中的方法；
+* **不能和任何 [`Number`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Number) 实例混合运算，两者必须转换成同一种类型**。
+* `BigInt` 变量在转换成 [`Number`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Number) 变量时可能会丢失精度
+* 使用 `typeof` 测试时， `BigInt` 对象返回 "bigint" ：
+* **BigInt可以使用的操作符有** `+`、``*``、``-``、``**``、``%`` 。
+* `/` **操作符对于整数的运算也没问题**。可是因为这些变量是 `BigInt` 而不是 `BigDecimal` ，**该操作符结果会向零取整**，也就是说不会返回小数部分。
+* 除 `>>>` （无符号右移）之外的 [位操作](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_Operators) 也可以支持。
+* `BigInt` 不支持单目 (`+`) 运算符
+
+
+
+
+
+由于对 `BigInt` 的操作不是常数时间的，因而 `BigInt` [不适合用于密码学](https://www.chosenplaintext.ca/articles/beginners-guide-constant-time-cryptography.html)。因为会受到时序攻击
+
+```
+举一个最简单的计时攻击的例子，某个函数负责比较用户输入的密码和存放在系统内密码是否相同，如果该函数是从第一位开始比较，发现不同就立即返回，那么通过计算返回的速度就知道了大概是哪一位开始不同的，这样就实现了电影中经常出现的按位破解密码的场景。密码破解复杂度成千上万倍甚至百万千万倍的下降。
+
+作者：shotgun
+链接：https://www.zhihu.com/question/20156213/answer/43377769
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+```
 
