@@ -353,3 +353,47 @@ const alsoHuge = BigInt(9007199254740991);
 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 ```
 
+
+
+### 阶乘
+
+```js
+//阶乘
+function fact(n) {
+    let result = 1n
+    for(let i=0; i<n; i++){
+        result *= BigInt(i+1)
+    }
+    return result
+}
+```
+
+
+
+
+
+### 排列A^m^ ~n~
+
+```js
+//排列的算法 n 底数 m 指数
+function A(n,m) {
+    let result = 1n
+    for(let i=0;i<m;i++){
+        result *= BigInt(n-i)
+    }
+    return result
+}
+```
+
+
+
+### 组合C^m^ ~n~
+
+```js
+
+//组合的算法 n 底数 m 指数
+function C(n,m) {
+    return A(n,m)/fact(m)
+}
+```
+
