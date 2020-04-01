@@ -160,7 +160,7 @@ div {
 }
 ```
 
-<<<<<<< HEAD
+
 
 
 #### less监视
@@ -170,7 +170,7 @@ less-watch-compiler
 =======
 #### sass中使用css的方法时使用sass的变量
 
-```css
+​```css
 height: calc(100% - #{$height});
 ```
 
@@ -182,6 +182,17 @@ height: calc(100% - #{$height});
 :nth-of-type(n)
 使用
 span:nth-of-type(3)
->>>>>>> 224a0b0f3666b943305ee4909eb533ef1bc07cc3
+
+```
+
+#### 如何搞掉css的hover
+
+干掉闪瞎狗眼的hover的，最狠的方式，连点都不能点，js的不行
+
+```css
+*{
+	pointer-events: none;
+    cursor: default;
+}
 ```
 

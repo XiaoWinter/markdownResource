@@ -312,7 +312,7 @@ js的连续整数没有达到19的阶乘，因此在超出2^54^时不能安心�
 
 ### [BigInt类型](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/BigInt)
 
-**BigInt** 是一种内置对象，它提供了一种方法来表示大于 `253 - 1` 的整数。这原本是 Javascript中可以用 [`Number`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Number) 表示的最大数字。**BigInt** 可以表示**任意大的整数**。
+**BigInt** 是一种内置对象，它提供了一种方法来表示大于 2^53^ - 1 的整数。这原本是 Javascript中可以用 [`Number`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Number) 表示的最大数字。**BigInt** 可以表示**任意大的整数**。
 
 ###### 使用方式
 
@@ -396,4 +396,53 @@ function C(n,m) {
     return A(n,m)/fact(m)
 }
 ```
+
+
+
+### 提升服务器的响应能力
+
+作者：神三元链接：https://juejin.im/post/5e76bd516fb9a07cce750746来源：掘金著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+#### 什么是 HTTP 队头阻塞？
+
+HTTP 传输是基于`请求-应答`的模式进行的，报文必须是一发一收，但值得注意的是，里面的任务被放在一个任务队列中串行执行，一旦队首的请求处理太慢，就会阻塞后面请求的处理。这就是著名的`HTTP队头阻塞`问题。 
+
+#### 并发连接
+
+对于一个域名允许分配多个长连接，那么相当于增加了任务队列，不至于一个队伍的任务阻塞其它所有任务。在RFC2616规定过客户端最多并发 2 个连接，不过事实上在现在的浏览器标准中，这个上限要多很多，Chrome 中是 6 个。
+
+但其实，即使是提高了并发连接，还是不能满足人们对性能的需求。
+
+#### 域名分片
+
+一个域名不是可以并发 6 个长连接吗？那我就多分几个域名。
+
+比如 content1.sanyuan.com 、content2.sanyuan.com。
+
+这样一个`sanyuan.com`域名下可以分出非常多的二级域名，而它们都指向同样的一台服务器，能够并发的长连接数更多了，事实上也更好地解决了队头阻塞的问题。
+
+
+<img src="http://47.103.65.182/markdown/099.png">
+
+### 为什么产生代理缓存？
+
+作者：神三元链接：https://juejin.im/post/5e76bd516fb9a07cce750746来源：掘金著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+
+
+对于源服务器来说，它也是有缓存的，比如**Redis, Memcache**，但对于 HTTP 缓存来说，如果每次客户端缓存失效都要到源服务器获取，那给源服务器的压力是很大的。
+
+由此引入了**缓存代理**的机制。让`代理服务器`接管一部分的服务端HTTP缓存，客户端缓存过期后**就近**到代理缓存中获取，代理缓存过期了才请求源服务器，这样流量巨大的时候能明显降低源服务器的压力。
+
+那缓存代理究竟是如何做到的呢？
+
+总的来说，缓存代理的控制分为两部分，一部分是**源服务器**端的控制，一部分是**客户端**的控制。
+
+### 进程间通讯（Unix domain socket）
+
+作者 https://www.cnblogs.com/sparkdev/p/8359028.html 
+
+ **Unix domain socket 又叫 IPC(inter-process communication 进程间通信) socket，用于实现同一主机上的进程间通信。**socket 原本是为网络通讯设计的，但后来在 socket 的框架上发展出一种 IPC 机制，就是 UNIX domain socket。虽然网络 socket 也可用于同一台主机的进程间通讯(通过 loopback 地址 127.0.0.1)，但是 UNIX domain socket 用于 IPC 更有效率：不需要经过网络协议栈，不需要打包拆包、计算校验和、维护序号和应答等，只是将应用层数据从一个进程拷贝到另一个进程。这是因为，IPC 机制本质上是可靠的通讯，而网络协议是为不可靠的通讯设计的。
+UNIX domain socket 是全双工的，API 接口语义丰富，相比其它 IPC 机制有明显的优越性，目前已成为使用最广泛的 IPC 机制，比如 X Window 服务器和 GUI 程序之间就是通过 UNIX domain socket 通讯的。
+Unix domain socket 是 POSIX 标准中的一个组件，所以不要被名字迷惑，linux 系统也是支持它的。 
 
