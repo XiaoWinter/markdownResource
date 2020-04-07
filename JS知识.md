@@ -247,16 +247,7 @@ formatDuration(34325055574);
 
 ```
 
-### node判断文件是否存在
 
-```js
-var fs = require('fs');
-if(fs.existsSync(filepath)){
-	//存在
-}else{
-	//不存在
-}
-```
 
 ### 为什么URL需要编码
 
