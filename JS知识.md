@@ -508,3 +508,13 @@ HPACK 算法是专门为 HTTP/2 服务的，它主要的亮点有两个：
 ### 帧结构
 
 <img src=" https://user-gold-cdn.xitu.io/2020/3/22/170ffdc9e9c25e93?imageView2/0/w/1280/h/960/format/webp/ignore-error/1 ">
+
+### blob和stream的区别
+
+[二进制数据结构的区别](https://www.cnblogs.com/youhong/p/10875190.html)
+
+- 相同点： Blob和ArrayBuffer都是二进制的容器；
+- ArrayBuffer：ArrayBuffer更底层，就是一段纯粹的内存上的二进制数据，我们可以对其任何一个字节进行单独的修改，也可以根据我们的需要以我们指定的形式读取指定范围的数据
+- Blob：Blob就是将一段二进制数据做了一个封装，我们拿到的就是一个整体，可以看到它的整体属性大小、类型；可以对其分割，但不能了解到它的细节
+- 联系：Blob可以接受一个ArrayBuffer作为参数生成一个Blob对象，此行为就相当于对ArrayBuffer数据做一个封装，之后就是以整体的形式展现了
+- 应用上的区别：由于ArrayBuffer和Blob的特性，Blo作为一个整体文件，适合用于传输；而只有需要关注细节（比如要修改某一段数据时），才需要用到ArrayBuffer
