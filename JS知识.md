@@ -518,3 +518,20 @@ HPACK 算法是专门为 HTTP/2 服务的，它主要的亮点有两个：
 - Blob：Blob就是将一段二进制数据做了一个封装，我们拿到的就是一个整体，可以看到它的整体属性大小、类型；可以对其分割，但不能了解到它的细节
 - 联系：Blob可以接受一个ArrayBuffer作为参数生成一个Blob对象，此行为就相当于对ArrayBuffer数据做一个封装，之后就是以整体的形式展现了
 - 应用上的区别：由于ArrayBuffer和Blob的特性，Blo作为一个整体文件，适合用于传输；而只有需要关注细节（比如要修改某一段数据时），才需要用到ArrayBuffer
+
+### 如何优雅地给函数对象加属性
+
+```js
+var rootPath = "xxx"
+var config = {
+    home:req=>rootPath+"/index.html"
+    database:(args=>{
+        var func = req=>rootPath+"/data"+req.query.id+".html"
+        for (const [file,path] of Object.entries(args))  func[file] = path
+        return func
+    })({
+        catelog:req=>rootPath+"/database/catelog-create.html",
+    })
+}
+```
+
