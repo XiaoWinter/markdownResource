@@ -196,3 +196,17 @@ span:nth-of-type(3)
 }
 ```
 
+#### 禁止选中文字
+
+```
+// 禁止文字被鼠标选中
+moz-user-select: -moz-none;
+-moz-user-select: none;
+-o-user-select:none;
+-khtml-user-select:none;
+-webkit-user-select:none;
+-ms-user-select:none;
+user-select:none;
+
+```
+
