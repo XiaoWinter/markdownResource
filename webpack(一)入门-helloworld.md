@@ -6,15 +6,34 @@
 # npm i -D 是 npm install --save-dev 的简写，是指安装模块并保存到 package.json 的 devDependencies
 # 安装最新稳定版
 npm i -D webpack
+npm i -D webpack-cli
 
+#安装开发环境
+npm install --save-dev webpack-dev-server
+
+#安装sass环境
+npm i  node-sass -D  --sass_binary_site=https://npm.taobao.org/mirrors/node-sass/
+```
+```bash
 # 安装指定版本
 npm i -D webpack@<version>
 
 # 安装最新体验版本
 npm i -D webpack@beta
+
 ```
 
 ## 使用 Loader
+
+```
+npm install --save-dev style-loader css-loader
+```
+
+```
+npm install --save-dev file-loader
+```
+
+
 
 ```js
 const path = require('path');
@@ -41,6 +60,13 @@ module.exports = {
 ```
 
 ## 使用 Plugin
+
+```
+npm install --save-dev html-webpack-plugin
+npm install --save-dev clean-webpack-plugin
+```
+
+
 
 ```js
 const path = require('path');
@@ -91,7 +117,7 @@ npm i -D webpack-dev-server
 ```json
 //package.json
 "scripts": {
-    "start": "webpack-dev-server --open",
+    "start": "webpack-dev-server --open -hot",
     "watch": "webpack --watch"
   },
 ```

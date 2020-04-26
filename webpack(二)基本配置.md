@@ -594,3 +594,218 @@ Conditions can be one of these:（条件可以是以下之一）
 `{ or: [Condition] }`: Any Condition must match.（||）
 
 `{ not: [Condition] }`: All Conditions must NOT match.（！）
+
+##### Rule.use
+
+`list`
+
+`Rule.use` 可以是一个应用于模块的 [UseEntries](https://webpack.docschina.org/configuration/module/#useentry) 数组。每个入口(entry)指定使用一个 loader。
+
+传递字符串（如：`use: [ 'style-loader' ]`）是 loader 属性的简写方式（如：`use: [ { loader: 'style-loader'} ]`）。
+
+ Loaders can be chained by passing multiple loaders, which will be applied from right to left (last to first configured). 
+
+##### UseEntry
+
+`object`
+
+必须有一个 `loader` 属性是字符串。它使用 loader 解析选项（[resolveLoader](https://www.webpackjs.com/configuration/resolve#resolveloader)），相对于配置中的 [`context`](https://www.webpackjs.com/configuration/entry-context#context) 来解析。
+
+可以有一个 `options` 属性为字符串或对象。值可以传递到 loader 中，将其理解为 loader 选项。
+
+由于兼容性原因，也可能有 `query` 属性，它是 `options` 属性的别名。使用 `options` 属性替代。
+
+**Example:**
+
+```js
+{
+  loader: "css-loader",//type must string
+  options: {
+    modules: true
+  }
+}
+```
+
+##### Rule.parse
+
+ 因为 Webpack 是以模块化的 JavaScript 文件为入口，所以内置了对模块化 JavaScript 的解析功能，支持 AMD、CommonJS、SystemJS、ES6。 `parser` 属性可以更细粒度的配置哪些模块语法要解析哪些不解析，和 `noParse` 配置项的区别在于 `parser` 可以精确到语法层面， 而 `noParse` 只能控制哪些文件不被解析。 `parser` 使用如下： 
+
+```js
+module.exports = {
+  //...
+  module: {
+    rules: [
+      {
+        //...
+        parser: {
+          amd: false, // disable AMD
+          commonjs: false, // disable CommonJS
+          system: false, // disable SystemJS
+          harmony: false, // disable ES2015 Harmony import/export
+          requireInclude: false, // disable require.include
+          requireEnsure: false, // disable require.ensure
+          requireContext: false, // disable require.context
+          browserify: false, // disable special handling of Browserify bundles
+          requireJs: false, // disable requirejs.*
+          node: false, // disable dirname, filename, module, require.extensions, require.main, etc.
+          node: {...} // reconfigure node layer on module level
+        }
+      }
+    ]
+  }
+}
+```
+
+ If `Rule.type` is an `asset` then `Rules.parser` option may be an object or a function that describes a condition whether to encode file contents to Base64 or emit it as a separate file into the output directory. 
+
+
+
+##### Rule.type
+
+webpack 4之前，js 是 webpack 中的唯一模块类型，因而不能有效地打包其它类型的文件。而 webpack 4 则提供了 5 种模块类型：
+
+- `javascript/auto`: (webpack 3中的默认类型)支持所有的JS模块系统：CommonJS、AMD、ESM
+- `javascript/esm`: EcmaScript 模块，在其他的模块系统中不可用（默认 `.mjs` 文件）
+- `javascript/dynamic`: 仅支持 CommonJS & AMD，EcmaScript 模块不可用
+- `json`: 可通过 `require` 和 `import` 导入的 JSON 格式的数据(默认为 `.json` 的文件)
+- `webassembly/experimental`: WebAssembly 模块(处于试验阶段，默认为 `.wasm` 的文件)
+
+在对应文件的 loader 配置，需要增加 `type` 字段来指定模块类型：
+
+```
+ module: {
+    rules: [{
+        test: /\.special\.json$/,
+        type: "javascript/auto",
+        use: "special-loader"
+    }]
+ }
+```
+
+### Resolve
+
+ 这些选项能设置模块如何被解析。webpack 提供合理的默认值，但是还是可能会修改一些解析的细节。关于 resolver 具体如何工作的更多解释说明 :
+
+resolver 是一个库(library)，用于帮助找到模块的绝对路径。 一个模块可以作为另一个模块的依赖模块，然后被后者引用，如下：
+
+```js
+import foo from 'path/to/module';
+// 或者
+require('path/to/module');
+```
+
+所依赖的模块可以是来自应用程序代码或第三方的库(library)。 resolver 帮助 webpack 从每个如 `require`/`import` 语句中，找到需要引入到 bundle 中的模块代码。 当打包模块时，`webpack` 使用 [enhanced-resolve](https://github.com/webpack/enhanced-resolve) 来解析文件路径。
+
+#### webpack 中的解析规则
+
+ 使用 `enhanced-resolve`，webpack 能够解析三种文件路径： 
+
+* 绝对路径
+
+```js
+import '/home/me/file';
+
+import 'C:\\Users\\me\\file';
+```
+
+由于我们已经取得文件的绝对路径，因此不需要进一步再做解析。
+
+* 相对路径
+
+```js
+import '../src/file1';
+import './file2';
+```
+
+在这种情况下，使用 `import` 或 `require` 的资源文件所在的目录，被认为是上下文目录(context directory)。在 `import/require` 中给定的相对路径，会拼接此上下文路径(context path)，以产生模块的绝对路径。
+
+* 模块路径
+
+```js
+import 'module';
+import 'module/lib/file';
+```
+
+模块将在 [`resolve.modules`](https://webpack.docschina.org/configuration/resolve/#resolve-modules) 中指定的所有目录内搜索。 你可以替换初始模块路径，此替换路径通过使用 [`resolve.alias`](https://webpack.docschina.org/configuration/resolve/#resolve-alias) 配置选项来创建一个别名。
+
+##### resolve.alias
+
+`object`
+
+配置模块如何解析。例如，当在 ES2015 中调用 `import 'lodash'`，`resolve` 选项能够对 webpack 查找 `'lodash'` 的方式去做修改（查看[`模块`](https://webpack.docschina.org/configuration/resolve/#resolve-modules)）。
+
+**webpack.config.js**
+
+```js
+module.exports = {
+  //...
+  resolve: {
+    // configuration options
+  }
+};
+```
+
+##### resolve.alias
+
+```
+object
+```
+
+创建 `import` 或 `require` 的别名，来确保模块引入变得更简单。例如，一些位于 `src/` 文件夹下的常用模块：
+
+**webpack.config.js**
+
+```js
+module.exports = {
+  //...
+  resolve: {
+    alias: {
+      Utilities: path.resolve(__dirname, 'src/utilities/'),
+      Templates: path.resolve(__dirname, 'src/templates/')
+    }
+  }
+};
+```
+
+现在，替换「在导入时使用相对路径」这种方式，就像这样：
+
+```js
+import Utility from '../../utilities/utility';
+```
+
+你可以这样使用别名：
+
+```js
+import Utility from 'Utilities/utility';
+```
+
+也可以在给定对象的键后的末尾添加 `$`，以表示精准匹配：
+
+**webpack.config.js**
+
+```js
+module.exports = {
+  //...
+  resolve: {
+    alias: {
+      xyz$: path.resolve(__dirname, 'path/to/file.js')
+    }
+  }
+};
+```
+
+这将产生以下结果：
+
+```js
+import Test1 from 'xyz'; // 精确匹配，所以 path/to/file.js 被解析和导入
+import Test2 from 'xyz/file.js'; // 非精确匹配，触发普通解析
+```
+
+其他情况
+
+<img src=" http://47.103.65.182/markdown/102.png " />
+
+##### mainFields
+
+` [string] `
+

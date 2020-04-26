@@ -502,3 +502,78 @@ getFileInfo('/getFileInfo',fileHash).then(res=>{
     //上传一部分==》缺失切片上传（等同与断点续传）
 })
 ```
+
+### js转换图片url为base64
+
+例子
+
+```js
+//一个具有URL的对象数组
+var imgsObj = [
+  {
+    "name": "招足球主播哈",
+    "avatar": "https://cdn.leisu.com/user/avatar/89b06a99916877db"
+  },
+  {
+    "name": "快劳夹单",
+    "avatar": "https://cdn.leisu.com/user/avatar/32a06b932b0025ea"
+  },
+  {
+    "name": "库位假",
+    "avatar": "https://cdn.leisu.com/user/avatar/f3d8275b33e7b90d"
+  }
+]
+var userInfo = []
+//每个路径都用创建一个image对象，并在onload方法中resolve
+var imgsPromise =  imgsObj.map(item=>(new Promise((resolve,reject)=>{
+        try {
+            const {name,avatar} = item
+            var img = new Image();
+            img.src = avatar
+            //污染画布什么的异常，用这个解决
+            img.setAttribute("crossOrigin",'Anonymous')
+            
+        } catch (error) {
+            reject(error)
+        }
+    	
+        img.onload = function(){
+            try {
+                //canvas 生成base64
+                var canvas = document.createElement("canvas");
+                canvas.width = img.width;
+                canvas.height =  img.height;
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                let imgBase64 = canvas.toDataURL();
+                // console.log('add',count)
+                userInfo.push({name,avatar:imgBase64})
+                resolve()
+                
+            } catch (error) {
+                reject(error)
+            }
+        }
+    }))
+)
+    
+//所有图片的promise状态确定完毕直至
+Promise.all(imgsPromise).then(()=>{
+    console.log(userInfo)
+    createAndDownloadFile('a.txt',JSON.stringify(userInfo))
+},()=>{
+    console.log("出现异常，不能生成文件")
+})
+
+//使用a标签生成文件
+function createAndDownloadFile(fileName, content) {
+    var aTag = document.createElement('a');
+    //产生了一个文件
+    var blob = new Blob([content]);
+    aTag.download = fileName;
+    aTag.href = URL.createObjectURL(blob);
+    aTag.click();
+    URL.revokeObjectURL(blob);
+}
+```
+
