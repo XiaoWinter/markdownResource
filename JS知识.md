@@ -537,7 +537,7 @@ var config = {
 
 ### 时间对象解析
 
-```
+```js
 function parseDate(date){
 
     let year = date.getFullYear()
@@ -558,5 +558,35 @@ function parseDate(date){
         timestamp,
     }
 }
+```
+
+### 数组乱序
+
+引用[云中桥](https://juejin.im/post/5d004ad95188257c6b518056)
+
+```js
+//乱序算法
+function shuffle(arr) {
+    let m = arr.length;
+    while (m > 1){
+        let index = Math.floor(Math.random() * m--);
+        [arr[m] , arr[index]] = [arr[index] , arr[m]]
+    }
+    return arr;
+}
+```
+
+
+
+
+
+### 获取Query参数
+
+```js
+ //获取query参数
+        function loadPageVar(sVar) {
+            return decodeURI(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURI(sVar).replace(
+                /[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
+        }
 ```
 
