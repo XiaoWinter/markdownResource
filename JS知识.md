@@ -582,11 +582,42 @@ function shuffle(arr) {
 
 ### 获取Query参数
 
+##### 方法一
+
 ```js
  //获取query参数
         function loadPageVar(sVar) {
             return decodeURI(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURI(sVar).replace(
                 /[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
         }
+```
+
+##### 方法二
+
+```js
+var url = "https://www.dogedoge.com/results?q=%E8%A2%AB%E5%AD%90"
+var paramsString = url.split("?")[1]
+var searchParams = new URLSearchParams(paramsString);
+//p=>["q", "被子"]
+for (let p of searchParams) {
+  console.log(p);
+}
+
+
+//URLSearchParams可用方法
+searchParams.has("topic") === true; // true
+searchParams.get("topic") === "api"; // true
+searchParams.getAll("topic"); // ["api"]
+searchParams.get("foo") === null; // true
+searchParams.append("topic", "webdev");
+searchParams.toString(); // "q=URLUtils.searchParams&topic=api&topic=webdev"
+searchParams.set("topic", "More webdev");
+searchParams.toString(); // "q=URLUtils.searchParams&topic=More+webdev"
+searchParams.delete("topic");
+searchParams.toString(); // "q=URLUtils.searchParams"
+
+//URLSearchParams查询方法
+searchParams.get("topic") === "api"; // true
+searchParams.getAll("topic"); // ["api"]
 ```
 
