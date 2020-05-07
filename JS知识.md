@@ -535,6 +535,26 @@ var config = {
 }
 ```
 
+### 模板替换
+
+```js
+   function substitute(data, template) { //vue中插值表达式的写法，/\{\{(.*)\}\}/
+            return data && typeof (data) == 'object' ? template.replace(/\{([^\{]*)\}/g, 				function (match, key) {
+                var key = key.split('.'),
+                    value = data;
+                var len = key.length;
+                for (var i = 0; i < len; i++) {
+                    value = value[key[i]];
+                    if (!value) break;
+                }
+              
+                return void 0 !== value ? '' + value : '';
+            }) : template.toString();
+        }
+```
+
+
+
 ### 时间对象解析
 
 ```js
@@ -649,5 +669,34 @@ function getBroswer(){
 }
 var abc = getBroswer();
 alert("broswer:"+abc.broswer+" version:"+abc.version);
+```
+
+
+
+### node获取IP
+
+```js
+//iptable['WLAN:1']
+
+module.exports = function(){
+    var os=require('os'),
+    iptable={},
+    ifaces=os.networkInterfaces();
+    // console.log(ifaces)
+    for (var dev in ifaces) {
+        ifaces[dev].forEach(function(details,alias){
+            if (details.family=='IPv4') {
+            iptable[dev+(alias?':'+alias:'')]=details.address;
+            }
+        });
+    }
+    return iptable['WLAN:1']
+}
+```
+
+### 安装sass
+
+```js
+npm i  node-sass -D  --sass_binary_site=https://npm.taobao.org/mirrors/node-sass/
 ```
 
