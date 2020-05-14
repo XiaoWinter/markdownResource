@@ -163,3 +163,31 @@ devServer: {
 
 ```
 
+## 安装Babel
+
+```shell
+npm install --save-dev @babel/core @babel/cli @babel/preset-env
+npm install --save @babel/polyfill
+```
+
+ babel.config.json 或者 .babelrc
+
+```json
+{
+  "presets": [
+    [
+      "@babel/env",
+      {
+        "targets": {
+          "edge": "17",
+          "firefox": "60",
+          "chrome": "67",
+          "safari": "11.1",
+        },
+        "useBuiltIns": "usage",
+      }
+    ]
+  ]
+}
+```
+

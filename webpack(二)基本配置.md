@@ -172,7 +172,8 @@ filename: "bundle.js"
 使用入口名称：
 
 ```js
-filename: "[name].bundle.js"
+filename: 
+
 ```
 
  使用内部 chunk id 
@@ -752,6 +753,14 @@ object
 ```
 
 创建 `import` 或 `require` 的别名，来确保模块引入变得更简单。例如，一些位于 `src/` 文件夹下的常用模块：
+
+##### resolve.extensions
+
+```js
+extensions: [".js", ".json"]
+```
+
+
 
 **webpack.config.js**
 

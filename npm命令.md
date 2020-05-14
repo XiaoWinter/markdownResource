@@ -123,7 +123,9 @@
 </tr>
 </tbody></table>
 
+##### npm ERR! Unexpected end of JSON input while parsing near" "
 
+`npm cache clean --force`
 
 <img src='http://47.103.65.182/images/DOAX-VenusVacation_190416_225803.jpg' />
 
