@@ -11,8 +11,12 @@ npm i -D webpack-cli
 #安装开发环境
 npm install --save-dev webpack-dev-server
 
+#基本配置
+npm i -D webpack-cli webpack html-webpack-plugin webpack-dev-server
+
+"node-sass": "^4.14.1",
 #安装sass环境
-npm i  node-sass -D  --sass_binary_site=https://npm.taobao.org/mirrors/node-sass/
+npm i  node-sass@4.14.1 -D  --sass_binary_site=https://npm.taobao.org/mirrors/node-sass/
 ```
 ```bash
 # 安装指定版本
@@ -118,7 +122,8 @@ npm i -D webpack-dev-server
 //package.json
 "scripts": {
     "start": "webpack-dev-server --open -hot",
-    "watch": "webpack --watch"
+    "watch": "webpack --watch",
+    "build": "webpack"
   },
 ```
 

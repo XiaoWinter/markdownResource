@@ -700,3 +700,11 @@ module.exports = function(){
 npm i  node-sass -D  --sass_binary_site=https://npm.taobao.org/mirrors/node-sass/
 ```
 
+### 数据写到文件
+
+```js
+//获取大数据
+let a = JSON.stringify(renderData)
+fs.writeFileSync(__dirname+'/1.txt',a,function(err){})
+```
+
