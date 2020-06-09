@@ -708,3 +708,215 @@ let a = JSON.stringify(renderData)
 fs.writeFileSync(__dirname+'/1.txt',a,function(err){})
 ```
 
+### script标签的使用
+
+<img src="http://47.103.65.182/markdown/103.jpg">
+
+
+
+### 画一个饼图
+
+```js
+    var canvas=document.getElementById('canvas');
+    var ctx=canvas.getContext('2d');
+    //1.创建数据包(信息)
+    var dataArr = [
+        {name:'北京', color:'yellow', value:0.3},
+        {name:'上海', color:'red', value:0.2},
+        {name:'广州', color:'green', value:0.1},
+        {name:'深圳', color:'purple', value:0.15},
+        {name:'天津', color:'blue', value:0.25}
+    ];
+     //2.定义圆心
+    var x0 = canvas.width * 0.5, y0 = canvas.height * 0.5;//显示在画布中间
+     //2.1定义半径
+    var radius = 150;
+     //2.2定义起始角度
+    var beginAngle = -90 *Math.PI/180;(定义初始角度为-90deg)
+     //3.遍历,绘制扇形
+    for (var i = 0; i < dataArr.length; i++) {
+        //3.1扇形角度
+        var tempAngle = dataArr[i].value * 360 *Math.PI/180;
+        //3.2结束角度
+        var endAngle = beginAngle + tempAngle;
+
+        //3.3开启路径
+        ctx.beginPath();
+        //3.4起点
+        ctx.moveTo(x0, y0);
+        //3.5绘制弧度
+        ctx.arc(x0, y0, radius, beginAngle, endAngle);
+        //3.6设置颜色
+        ctx.fillStyle = dataArr[i].color;
+        //3.7填充
+        ctx.fill();
+        //4.绘制文字
+        //4.1常量
+        var textAngle = beginAngle + tempAngle * 0.5; //角度
+        var text = dataArr[i].name + dataArr[i].value * 100 + '%';
+        console.log(text);
+        //4.2文字坐标
+        var textX = x0 + (radius + 30) * Math.cos(textAngle);
+        var textY = y0 + (radius + 30) * Math.sin(textAngle);
+        //4.3文字字号和字体
+        ctx.font = "20px '微软雅黑'";
+        //4.4判断文字是否在左边
+        if((textAngle > 90 *Math.PI/180) && (textAngle < 270 *Math.PI/180) ) {
+            ctx.textAlign = 'end';//文字的右侧在基线的左端
+        }
+        //4.5 绘制文字
+        ctx.fillText(text, textX, textY);
+        //5.更新起始角度, 将当前扇形的结束角度作为下一个扇形的起始角度
+        beginAngle = endAngle;
+    }
+```
+
+
+
+### 对象合并
+
+```js
+
+
+var getProto = Object.getPrototypeOf;//获取对象原型的方法
+
+var class2type = {};
+
+var toString = class2type.toString;//对象的toString方法
+
+var hasOwn = class2type.hasOwnProperty;
+
+var fnToString = hasOwn.toString;//hasOwnProperty的toString方法
+
+var ObjectFunctionString = fnToString.call( Object );//原始的Object的字符串表示
+
+// 在node端运行的方法，不考虑浏览器的情况
+function isFunction(obj){
+    return typeof obj === "function"
+}
+
+//防止原型被修改
+function isPlainObject( obj ) {
+    var proto, Ctor;
+
+    // Detect obvious negatives  明显错误
+    // Use toString instead of jQuery.type to catch host objects
+    if ( !obj || toString.call( obj ) !== "[object Object]" ) {
+        return false;
+    }
+
+    proto = getProto( obj );//得到对象的原型
+
+    // Objects with no prototype (e.g., `Object.create( null )`) are plain
+    if ( !proto ) {//原型为null说名obj为{}
+        return true;
+    }
+
+    // Objects with prototype are plain iff they were constructed by a global Object function
+    Ctor = hasOwn.call( proto, "constructor" ) && proto.constructor;//function.call(thisArg, arg1, arg2, ...)//指定this和参数，obj有原型
+    return typeof Ctor === "function" && fnToString.call( Ctor ) === ObjectFunctionString;//原型要和Object的一致
+}
+
+
+//防止对象里存在循环引用
+function isCycle(obj, parent) {
+    //表示调用的父级数组
+    var parentArr = parent || [obj];
+    for (var i in obj) {
+        if (typeof obj[i] === "object") {
+            //判断是否有循环引用
+            for (var j = 0; j < parentArr.length; j++) {
+                if(parentArr[j] === obj[i]) {
+                    // obj[i]="[cycle]"
+                    return true
+                }
+            }
+            return isCycle(obj[i], [...parentArr, obj[i]])
+        }
+    }
+    return false;
+}
+
+
+
+function extend() {
+        var options,
+            name,
+            src,
+            copy,
+            copyIsArray,
+            clone,
+		    target = arguments[ 0 ] || {},//方法的第一个参数，deep或者目标对象
+		    i = 1,
+		    length = arguments.length,//传入参数的长度
+		    deep = false;
+
+	// Handle a deep copy situation
+	if ( typeof target === "boolean" ) {//第一个参数为boolean型就是deep参数
+		deep = target;
+
+		// Skip the boolean and the target
+		target = arguments[ i ] || {};//获得目标对象
+		i++;
+	}
+
+	// Handle case when target is a string or something (possible in deep copy)
+	if ( typeof target !== "object" && !isFunction( target ) ) {
+		target = {};
+	}
+
+    // Extend jQuery itself if only one argument is passed
+    //这里进行改造，只传如一个参数，或者是deep,target的形式，就把target设置为{}
+	if ( i === length ) {
+		target = {};
+		i--;
+	}
+
+	for ( ; i < length; i++ ) {//开始读取需要合并的参数
+
+		// Only deal with non-null/undefined values
+		if ( ( options = arguments[ i ] ) != null ) {//非undefined和null的参数继续处理
+			// Extend the base object
+			for ( name in options ) {//获取到所有的key
+				copy = options[ name ];//暂存一下首层属性值
+
+				// Prevent Object.prototype pollution 防止Object原型污染
+				// Prevent never-ending loop 防止死循环
+				if ( name === "__proto__" || target === copy ||isCycle(options)) {//取到原型属性（可能浏览器的问题） 首层的循环引用，
+					continue;
+                }
+                
+
+				// Recurse if we're merging plain objects or arrays
+				if ( deep && copy && ( isPlainObject( copy ) ||//原型没有被修改
+					( copyIsArray = Array.isArray( copy ) ) ) ) {//或者是数祖
+					src = target[ name ];//开始往目标上放
+
+					// Ensure proper type for the source value
+					if ( copyIsArray && !Array.isArray( src ) ) {
+						clone = [];
+					} else if ( !copyIsArray && !isPlainObject( src ) ) {
+						clone = {};
+					} else {
+						clone = src;
+					}
+					copyIsArray = false;
+
+					// Never move original objects, clone them
+					target[ name ] = extend( deep, clone, copy );
+
+				// Don't bring in undefined values
+				} else if ( copy !== undefined ) {
+					target[ name ] = copy;//浅拷贝
+				}
+			}
+		}
+	}
+
+	// Return the modified object
+	return target;
+};
+
+module.exports = extend
+```
+
