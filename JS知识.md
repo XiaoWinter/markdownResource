@@ -920,3 +920,42 @@ function extend() {
 module.exports = extend
 ```
 
+### 原生替代Jquery插入ＤＯＭ的方法
+
+> Element.insertAdjacentHTML(position, text)
+> Element.insertAdjacentText(position, text) 
+
+
+
+- position: 这个参数指定了元素的插入位置，取值为以下4种：
+  - 'beforebegin': 元素自身的前面，效果类似于 `childNode.before(ele)`。
+  - 'afterbegin': 插入元素内部的第一个 **子节点** 之前，效果类似于 `ParentNode.prepend(ele)`。
+  - 'beforeend': 插入元素内部的最后一个 **子节点** 之后，效果类似于 `ParentNode.append(ele)`。
+  - 'afterend': 元素自身的后面，效果类似于 `childNode.after(ele)`。
+- text: 要插入的文本或者html字符串。
+
+```html
+// origin html
+<div id="outer">
+  <div></div>
+</div>
+
+const outer = document.getElementById('outer');
+
+outer.insertAdjacentText('beforebegin', 'beforebegin 被插入这里');
+outer.insertAdjacentText('afterbegin', 'afterbegin 被插入这里');
+outer.insertAdjacentText('beforeend', 'beforeend 被插入这里');
+outer.insertAdjacentText('afterend', 'afterend 被插入这里');
+
+// after inserted.
+beforebegin 被插入这里
+<div id="outer">
+  beforebegin 被插入这里
+  <div></div>
+  beforebegin 被插入这里
+</div>
+beforebegin 被插入这里
+```
+
+ 两个方法的区别在于 `insertAdjacentHTML` 方法会将字符串解析为 html，而 `insertAdjacentText` 不会做解析，因此在不需要解析的情况下（如添加纯文本）使用 `insertAdjacentText` 性能会更好。 
+
