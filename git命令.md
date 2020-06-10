@@ -162,3 +162,123 @@
 
 `git reset [--hard|--soft] HEAD~3`
 
+
+
+#### 标签操作
+
+ **查看本地分支标签** 
+
+```sh
+git tag
+
+或者
+
+git tag -l
+
+或者
+
+git tag --list
+```
+
+**查看远程所有标签**
+
+```sh
+git ls-remote --tags
+
+或者
+
+git ls-remote --tag
+```
+
+**给当前分支打标签**
+
+```sh
+git tag 《标签名》
+
+例如
+
+git tag v1.1.0
+```
+
+ 
+
+ **给特定的某个commit版本打标签，比如现在某次提交的id为 039bf8b** 
+
+```sh
+git tag v1.0.0 039bf8b
+
+或者可以添加注释
+
+git tag v1.0.0 -m "add tags information" 039bf8b
+
+或者
+
+git tag v1.0.0 039bf8b -m "add tags information"
+```
+
+ **删除本地某个标签** 
+
+```sh
+git tag --delete v1.0.0
+
+或者
+
+git tag -d v1.0.0
+
+或者
+
+git tag --d v1.0.0
+```
+
+ **删除远程的某个标签** 
+
+```sh
+git push -d origin v1.0.0
+
+或者
+
+git push --delete origin v1.0.0
+
+或者
+
+git push origin -d v1.0.0
+
+或者
+
+git push origin --delete v1.0.0
+
+或者
+
+git push origin :v1.0.0
+```
+
+ **将本地标签一次性推送到远程** 
+
+```sh
+git push origin --tags
+
+或者
+
+git push origin --tag
+
+或者
+
+git push --tags
+
+或者
+
+git push --tag
+```
+
+ **将本地某个特定标签推送到远程** 
+
+```sh
+git push origin v1.0.0
+```
+
+ **查看某一个标签的提交信息** 
+
+```sh
+git show v1.0.0
+```
+
