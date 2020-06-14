@@ -947,15 +947,74 @@ outer.insertAdjacentText('afterbegin', 'afterbegin 被插入这里');
 outer.insertAdjacentText('beforeend', 'beforeend 被插入这里');
 outer.insertAdjacentText('afterend', 'afterend 被插入这里');
 
-// after inserted.
-beforebegin 被插入这里
-<div id="outer">
-  beforebegin 被插入这里
-  <div></div>
-  beforebegin 被插入这里
-</div>
-beforebegin 被插入这里
+<!-- beforebegin -->
+<p>
+  <!-- afterbegin -->
+  foo
+  <!-- beforeend -->
+</p>
+<!-- afterend -->
 ```
 
  两个方法的区别在于 `insertAdjacentHTML` 方法会将字符串解析为 html，而 `insertAdjacentText` 不会做解析，因此在不需要解析的情况下（如添加纯文本）使用 `insertAdjacentText` 性能会更好。 
+
+
+
+### 在 iOS 下使用 iframe 的种种问题
+
+ [https://xiaoiver.github.io/coding/2018/05/20/%E5%9C%A8-iOS-%E4%B8%8B%E4%BD%BF%E7%94%A8-iframe-%E7%9A%84%E7%A7%8D%E7%A7%8D%E9%97%AE%E9%A2%98.html](https://xiaoiver.github.io/coding/2018/05/20/在-iOS-下使用-iframe-的种种问题.html) 
+
+
+
+### 解决IOS的overflow：scroll失去惯性
+
+```css
+-webkit-overflow-scrolling : touch;
+```
+
+
+
+### 1px IOS 滑动过解决方案
+
+```js
+
+// IOS 1像素 防止滚动解决方案
+export function scrollSet(el,scroll=true){
+
+    if(scroll){
+        el.scrollTop = 1;
+    }
+
+    el.addEventListener('scroll', function() {
+        let top = el.scrollTop;
+        let totalScroll = el.scrollHeight;
+        let currentScroll = top + el.offsetHeight;
+        if (top === 0) {
+            el.scrollTop = 1;
+        } else if (currentScroll === totalScroll) {
+            el.scrollTop = top - 1;
+        }
+    });
+
+}
+
+export function setH(){
+
+        let el = document.querySelector('#app')
+        let content_el = document.querySelector(".container")
+    
+        const containerH = el.offsetHeight;
+        console.log("setH",content_el.offsetHeight)
+        if(containerH >= content_el.offsetHeight){
+            content_el.style.height = containerH+100+'px'
+        }
+    
+        el.scrollTop = 1
+
+}
+```
+
+
+
+
 
