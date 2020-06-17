@@ -1016,5 +1016,39 @@ export function setH(){
 
 
 
+### node日志设计
 
+```js
+const log4js = require("log4js");
+
+const layout = {
+  type: 'pattern',
+  pattern: '[ %p %c ] [ %d{yyyy-MM-dd hh:mm:ss} ] [ file: %f ] [line %l:%o] %n -- %m',
+};
+
+log4js.configure({
+  appenders: {
+    out: { type: 'stdout',layout: layout},
+    dayFile: { type: 'dateFile', filename: path.join(__dirname,'log/day.log' ),keepFileExt:true }
+  },
+  categories: {
+    default: { appenders: [ 'out', 'dayFile' ], level: 'debug',enableCallStack: true }
+  }
+});
+
+log = log4js.getLogger(["out","dayFile"]);
+
+log.info("应用开始执行")
+//==================================================//
+[ INFO out,dayFile ] [ 2020-06-17 14:17:50 ] [ file: D:\ssrbeta\ssr_demo1\server.js ] [line 30:5] 
+ -- 应用开始执行
+```
+
+### [document.referrer](https://developer.mozilla.org/zh-CN/docs/Web/API/Document/referrer)
+
+ **`Document.referrer`**  通过 链接或历史操作 到当前页面 的页面的 [URI](http://www.w3.org/Addressing/#background)。  如果用户直接打开了这个页面（不是通过页面跳转，而是通过地址栏或者书签等打开的），则该属性为空字符串。 
+
+```
+var referrer = document.referrer;
+```
 
