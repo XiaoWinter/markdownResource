@@ -1100,6 +1100,32 @@ class myLog{
      */
     static categories = {};
 
+ 
+    /**
+     * 过滤器的自定义函数，决定返回的日志数据
+     * @param {*} msgLevel 消息的级别
+     * @param {*} filterLevel 过滤的级别
+     */
+    static _condition = (msgLevel,filterLevel)=>true;
+    
+    /**
+     * String: when condition equal msgLevel return true
+     * Function: depend the function's return 
+     * other: reset condition , alway return true 
+     * @param {String Function null} condition 
+     */
+    static setCondition(condition){
+        if(typeof condition === 'function'){
+            myLog._condition = condition
+        }else if(typeof condition === 'string'){
+            myLog._condition = (msgLevel,filterLevel)=>msgLevel === condition
+        }else{//重置
+            myLog._condition = (msgLevel,filterLevel)=>true;
+        }
+    }
+   
+
+
     /**
      * 每次必定有默认值
      * name categoryName
@@ -1153,7 +1179,7 @@ class myLog{
             return false
         }else if(filterCategory.close){
             return false
-        }else{
+        }else if(condition(myLog.levelMap[msgLevel],myLog.levelMap[filterCategory.level])){
             return true
         }
 
@@ -1283,14 +1309,8 @@ class myLog{
     }
     
 }
-window.my_logger = new myLog({name:"Leisu",level:"error"})
 
-my_logger.setFilterCategory({name:"Leisu",level:"info"})
 
-my_logger.debug("雷速体育PC启动")
-my_logger.track("雷速体育PC启动")
-my_logger.info("雷速体育PC启动")
-my_logger.warn("雷速体育PC启动")
-my_logger.error("雷速体育PC启动")
+
 ```
 
