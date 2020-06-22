@@ -44,32 +44,6 @@ class myLog{
      */
     static categories = {};
 
- 
-    /**
-     * 过滤器的自定义函数，决定返回的日志数据
-     * @param {*} msgLevel 消息的级别
-     * @param {*} filterLevel 过滤的级别
-     */
-    static _condition = (msgLevel,filterLevel)=>true;
-    
-    /**
-     * String: when condition equal msgLevel return true
-     * Function: depend the function's return 
-     * other: reset condition , alway return true 
-     * @param {String Function null} condition 
-     */
-    static setCondition(condition){
-        if(typeof condition === 'function'){
-            myLog._condition = condition
-        }else if(typeof condition === 'string'){
-            myLog._condition = (msgLevel,filterLevel)=>msgLevel === condition
-        }else{//重置
-            myLog._condition = (msgLevel,filterLevel)=>true;
-        }
-    }
-   
-
-
     /**
      * 每次必定有默认值
      * name categoryName
@@ -79,14 +53,36 @@ class myLog{
         //实例属性
         this.categoryName = name;
         //注册为静态属性，给过滤器用
-        myLog.categories[name] = {}
-        myLog.categories[name].level = level || "close"
-        myLog.categories[name].close = false
+        myLog.categories[name] = {};
+        myLog.categories[name].level = level || "close";
+        myLog.categories[name].close = false;
     }
-
+        /**
+     * 过滤器的自定义函数，决定返回的日志数据
+     * @param {*} msgLevel 消息的级别
+     * @param {*} filterLevel 过滤的级别
+     */
+    condition = (msgLevel,filterLevel)=>true;
+    
     
     /**
-     * 设置一众或单个category的level，默认设置全部
+     * String: when condition equal msgLevel return true
+     * Function: depend the function's return 
+     * other: reset condition , alway return true 
+     * @param {String Function null} condition 
+     */
+    setCondition(condition){
+        if(typeof condition === 'function'){
+            this.condition = condition
+        }else if(typeof condition === 'string'){
+            this.condition = (msgLevel,filterLevel)=>msgLevel === condition
+        }else{//重置
+            this.condition = (msgLevel,filterLevel)=>true;
+        }
+    }
+    
+    /**
+     * 设置一众或单个category的level，以及开关close 默认设置全部
      * @param {*} param0 
      */
     setFilterCategory({name,level,close}={}){
@@ -114,7 +110,7 @@ class myLog{
         })
     }
 
-    static filtering(categoryName,msgLevel){
+    filtering(categoryName,msgLevel){
         //1.检查category 是否在 filter里
         let filterCategory = myLog.categories[categoryName]
         if(!filterCategory){
@@ -123,7 +119,7 @@ class myLog{
             return false
         }else if(filterCategory.close){
             return false
-        }else if(condition(myLog.levelMap[msgLevel],myLog.levelMap[filterCategory.level])){
+        }else if(this.condition(msgLevel,filterCategory.level)){
             return true
         }
 
@@ -144,15 +140,20 @@ class myLog{
         level && (myLog.categories[this.categoryName].level = level)
     }
     /**
-     * 关闭其他，可设置自身
+     * 设置其他logger实例，
      * @param {*} level 
      */
-    closeOthers(level){
+    setOthers(operate="on"){
         for (const [categoryName,category] of Object.entries(myLog.categories)) {
-            if(this.categoryName !==categoryName){
-                category.close = false
-                level && (category.level = level)
-            } 
+
+            if(this.categoryName !== categoryName){
+                if(operate === 'on'){
+                    category.close = false
+                }else if(operate === 'off'){
+                    category.close = true
+                }
+            }
+
             myLog.categories[categoryName] = category
         }
     }
@@ -223,31 +224,31 @@ class myLog{
     //实例方法，记录输入
     track(...msgs){
 
-        if(myLog.filtering(this.categoryName,"track")){
+        if(this.filtering(this.categoryName,"track")){
             this._logout("track",msgs)
         }
     }
     debug(...msgs){
 
-        if(myLog.filtering(this.categoryName,"debug")){
+        if(this.filtering(this.categoryName,"debug")){
             this._logout("debug",msgs)
         }
     }
     info(...msgs){
 
-        if(myLog.filtering(this.categoryName,"info")){
+        if(this.filtering(this.categoryName,"info")){
             this._logout("info",msgs)
         }
     }
     warn(...msgs){
 
-        if(myLog.filtering(this.categoryName,"warn")){
+        if(this.filtering(this.categoryName,"warn")){
             this._logout("warn",msgs)
         }
     }
     error(...msgs){
 
-        if(myLog.filtering(this.categoryName,"error")){
+        if(this.filtering(this.categoryName,"error")){
             this._logout("error",msgs)
         }
     }
