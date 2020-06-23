@@ -85,7 +85,7 @@ class myLog{
      * 设置一众或单个category的level，以及开关close 默认设置全部
      * @param {*} param0 
      */
-    setFilterCategory({name,level,close}={}){
+    static setFilterCategory({name,level,close}={}){
         
         if(!name)return
 
@@ -95,7 +95,7 @@ class myLog{
         name.forEach(categoryName=>{
              
              if(myLog.categories[categoryName]){
-                myLog.categories[categoryName].level = level || "close"
+                level && (myLog.categories[categoryName].level = level)
                 close !== undefined && (myLog.categories[categoryName].close = close)
              }
              
@@ -136,8 +136,6 @@ class myLog{
     }
     closeSelf(){
         myLog.categories[this.categoryName].close = true
-
-        level && (myLog.categories[this.categoryName].level = level)
     }
     /**
      * 设置其他logger实例，
