@@ -1053,5 +1053,276 @@ var referrer = document.referrer;
 ```
 ### 日志框架
 
+```js
+class myLog{
+    static levelMap = {
+        close:Number.MIN_SAFE_INTEGER,
+        track:1,
+        debug:10,
+        info:20,
+        warn:30,
+        error:40,
+        open:Number.MAX_SAFE_INTEGER
+    };
 
+    static levelColor = {
+        track:{
+            color:"white",
+            bgColor:"#cc99ff"
+        },
+        debug:{
+            color:"white",
+            bgColor:"#a6a6a6"
+        },
+        info:{
+            color:"white",
+            bgColor:"#1aa3ff"
+        },
+        warn:{
+            color:"white",
+            bgColor:"#ffa366"
+        },
+        error:{
+            color:"white",
+            bgColor:"#ff6666"
+        },
+  
+    }
+
+    /**
+     * 是一个 filter 也是一个 lib
+     * {
+     *  defalut:{level:xxx,close},
+     *  web:{level:xxx},
+     *  ccc:{level:xxx}
+     * }
+     * 
+     */
+    static categories = {};
+
+    /**
+     * 每次必定有默认值
+     * name categoryName
+     * level  filter
+     */
+    constructor({name,level}={name:"default",level:"close"}) {
+        //实例属性
+        this.categoryName = name;
+        //注册为静态属性，给过滤器用
+        myLog.categories[name] = {};
+        myLog.categories[name].level = level || "close";
+        myLog.categories[name].close = false;
+    }
+        /**
+     * 过滤器的自定义函数，决定返回的日志数据
+     * @param {*} msgLevel 消息的级别
+     * @param {*} filterLevel 过滤的级别
+     */
+    condition = (msgLevel,filterLevel)=>true;
+    
+    
+    /**
+     * String: when condition equal msgLevel return true
+     * Function: depend the function's return 
+     * other: reset condition , alway return true 
+     * @param {String Function null} condition 
+     */
+    setCondition(condition){
+        if(typeof condition === 'function'){
+            this.condition = condition
+        }else if(typeof condition === 'string'){
+            this.condition = (msgLevel,filterLevel)=>msgLevel === condition
+        }else{//重置
+            this.condition = (msgLevel,filterLevel)=>true;
+        }
+    }
+    
+    /**
+     * 设置一众或单个category的level，以及开关close 默认设置全部
+     * @param {*} param0 
+     */
+    static setFilterCategory({name,level,close}={}){
+        
+        if(!name)return
+
+        if(!Array.isArray(name)){
+            name = [name]
+        }
+        name.forEach(categoryName=>{
+             
+             if(myLog.categories[categoryName]){
+                level && (myLog.categories[categoryName].level = level)
+                close !== undefined && (myLog.categories[categoryName].close = close)
+             }
+             
+        })
+    }
+    /**
+     * 关闭所有
+     */
+    static closeFilters(){
+        myLog.categories.forEach(categoryName=>{
+            myLog.categories[categoryName].close = true
+        })
+    }
+
+    filtering(categoryName,msgLevel){
+        //1.检查category 是否在 filter里
+        let filterCategory = myLog.categories[categoryName]
+        if(!filterCategory){
+            return false
+        }else if(myLog.levelMap[msgLevel] < myLog.levelMap[filterCategory.level]){
+            return false
+        }else if(filterCategory.close){
+            return false
+        }else if(this.condition(msgLevel,filterCategory.level)){
+            return true
+        }
+
+    }
+    /**
+     * 打开自身，可设置level
+     * @param {*} level 
+     */
+    openSelf(level){
+
+        myLog.categories[this.categoryName].close = false
+
+        level && (myLog.categories[this.categoryName].level = level)
+    }
+    closeSelf(){
+        myLog.categories[this.categoryName].close = true
+    }
+    /**
+     * 设置其他logger实例，
+     * @param {*} level 
+     */
+    setOthers(operate="on"){
+        for (const [categoryName,category] of Object.entries(myLog.categories)) {
+
+            if(this.categoryName !== categoryName){
+                if(operate === 'on'){
+                    category.close = false
+                }else if(operate === 'off'){
+                    category.close = true
+                }
+            }
+
+            myLog.categories[categoryName] = category
+        }
+    }
+    // 输出样式
+    _logout(level="",msgs){
+
+        const time = this.dateFormate(new Date())
+        const categoryName = this.categoryName
+
+        console.log(`%c${level.toUpperCase()} `, `color: ${myLog.levelColor[level].color}; font-style: italic; background-color:${myLog.levelColor[level].bgColor};padding: 2px`,`[${categoryName}] [ ${time} ]`,...msgs);
+    }
+    /**
+     * replace
+     * @param {*} date 
+     * @param {*} pattern 
+     */
+    dateFormate(date,pattern="YYYY-MM-DD hh:mm:ss.ts"){
+        const {
+                year,
+                month,
+                day,
+                hour,
+                minutes,
+                seconds,
+                milliseconds,
+                timestamp,
+            } = this.timeMate(date)
+
+        if(pattern){
+            return pattern.replace("YYYY",year)
+                            .replace("MM",month)
+                            .replace("DD",day)
+                            .replace("hh",hour)
+                            .replace("mm",minutes)
+                            .replace("ss",seconds)
+                            .replace("ts",milliseconds)
+        }else{
+            return timestamp
+        }
+    }
+    /**
+     * 时间元信息
+     * @param {*} date 
+     */
+    timeMate(date){
+
+        let year = date.getFullYear()
+        let month = (date.getMonth() + 1)<10 ? "0"+(date.getMonth() + 1):(date.getMonth() + 1)
+        let day = date.getDate()<10 ? "0"+date.getDate() : date.getDate()
+        let hour = date.getHours()<10 ? "0"+date.getHours() : date.getHours()
+        let minutes = date.getMinutes()<10 ? "0"+date.getMinutes():date.getMinutes()
+        let seconds = date.getSeconds()<10 ? "0"+date.getSeconds():date.getSeconds()
+        let milliseconds = date.getMilliseconds()
+        let timestamp = date.getTime()
+    
+            return {
+                year,
+                month,
+                day,
+                hour,
+                minutes,
+                seconds,
+                milliseconds,
+                timestamp,
+            }
+    }
+
+    //实例方法，记录输入
+    track(...msgs){
+
+        if(this.filtering(this.categoryName,"track")){
+            this._logout("track",msgs)
+        }
+    }
+    debug(...msgs){
+
+        if(this.filtering(this.categoryName,"debug")){
+            this._logout("debug",msgs)
+        }
+    }
+    info(...msgs){
+
+        if(this.filtering(this.categoryName,"info")){
+            this._logout("info",msgs)
+        }
+    }
+    warn(...msgs){
+
+        if(this.filtering(this.categoryName,"warn")){
+            this._logout("warn",msgs)
+        }
+    }
+    error(...msgs){
+
+        if(this.filtering(this.categoryName,"error")){
+            this._logout("error",msgs)
+        }
+    }
+    
+}
+
+```
+
+
+
+### then的返回值
+
+```
+当一个 Promise 完成（fulfilled）或者失败（rejected）时，返回函数将被异步调用（由当前的线程循环来调度完成）。具体的返回值依据以下规则返回。如果 then 中的回调函数：
+
+返回了一个值，那么 then 返回的 Promise 将会成为接受状态，并且将返回的值作为接受状态的回调函数的参数值。
+没有返回任何值，那么 then 返回的 Promise 将会成为接受状态，并且该接受状态的回调函数的参数值为 undefined。
+抛出一个错误，那么 then 返回的 Promise 将会成为拒绝状态，并且将抛出的错误作为拒绝状态的回调函数的参数值。
+返回一个已经是接受状态的 Promise，那么 then 返回的 Promise 也会成为接受状态，并且将那个 Promise 的接受状态的回调函数的参数值作为该被返回的Promise的接受状态回调函数的参数值。
+返回一个已经是拒绝状态的 Promise，那么 then 返回的 Promise 也会成为拒绝状态，并且将那个 Promise 的拒绝状态的回调函数的参数值作为该被返回的Promise的拒绝状态回调函数的参数值。
+返回一个未定状态（pending）的 Promise，那么 then 返回 Promise 的状态也是未定的，并且它的终态与那个 Promise 的终态相同；同时，它变为终态时调用的回调函数参数与那个 Promise 变为终态时的回调函数的参数是相同的。
+```
 
