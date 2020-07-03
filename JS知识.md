@@ -1318,11 +1318,81 @@ class myLog{
 ```
 当一个 Promise 完成（fulfilled）或者失败（rejected）时，返回函数将被异步调用（由当前的线程循环来调度完成）。具体的返回值依据以下规则返回。如果 then 中的回调函数：
 
-返回了一个值，那么 then 返回的 Promise 将会成为接受状态，并且将返回的值作为接受状态的回调函数的参数值。
-没有返回任何值，那么 then 返回的 Promise 将会成为接受状态，并且该接受状态的回调函数的参数值为 undefined。
-抛出一个错误，那么 then 返回的 Promise 将会成为拒绝状态，并且将抛出的错误作为拒绝状态的回调函数的参数值。
-返回一个已经是接受状态的 Promise，那么 then 返回的 Promise 也会成为接受状态，并且将那个 Promise 的接受状态的回调函数的参数值作为该被返回的Promise的接受状态回调函数的参数值。
-返回一个已经是拒绝状态的 Promise，那么 then 返回的 Promise 也会成为拒绝状态，并且将那个 Promise 的拒绝状态的回调函数的参数值作为该被返回的Promise的拒绝状态回调函数的参数值。
-返回一个未定状态（pending）的 Promise，那么 then 返回 Promise 的状态也是未定的，并且它的终态与那个 Promise 的终态相同；同时，它变为终态时调用的回调函数参数与那个 Promise 变为终态时的回调函数的参数是相同的。
+* 返回了一个值，那么 then 返回的 Promise 将会成为接受状态，并且将返回的值作为接受状态的回调函数的参数值。
+
+* 没有返回任何值，那么 then 返回的 Promise 将会成为接受状态，并且该接受状态的回调函数的参数值为 undefined。
+
+* 抛出一个错误，那么 then 返回的 Promise 将会成为拒绝状态，并且将抛出的错误作为拒绝状态的回调函数的参数值。
+
+* 返回一个已经是接受状态的 Promise，那么 then 返回的 Promise 也会成为接受状态，并且将那个 Promise 的接受状态的回调函数的参数值作为该被返回的Promise的接受状态回调函数的参数值。
+
+* 返回一个已经是拒绝状态的 Promise，那么 then 返回的 Promise 也会成为拒绝状态，并且将那个 Promise 的拒绝状态的回调函数的参数值作为该被返回的Promise的拒绝状态回调函数的参数值。
+
+* 返回一个未定状态（pending）的 Promise，那么 then 返回 Promise 的状态也是未定的，并且它的终态与那个 Promise 的终态相同；同时，它变为终态时调用的回调函数参数与那个 Promise 变为终态时的回调函数的参数是相同的。
+```
+
+### [document.cookie](https://developer.mozilla.org/zh-CN/docs/Web/API/Document/cookie)
+
+获取并设置与当前文档相关联的 [cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies)。若您需要一个通用的库，请查看[简单的cookie框架](https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie/Simple_document.cookie_framework)。
+
+```
+allCookies = document.cookie;
+```
+
+ 在上面的代码中，allCookies被赋值为一个字符串，该字符串包含所有的Cookie，每条cookie以"分号和空格(; )"分隔(即, `*key*=*value* `键值对)。 
+
+```
+document.cookie = newCookie;
+```
+
+```
+newCookie是一个键值对形式的字符串。需要注意的是，用这个方法一次只能对一个cookie进行设置或更新。
+```
+
+- 以下可选的cookie属性值可以跟在键值对后，用来具体化对cookie的设定/更新，使用分号以作分隔：
+
+  - `;path=*path*` (例如 '/', '/mydir') 如果没有定义，默认为当前文档位置的路径。
+
+  - `;domain=*domain*` (例如 'example.com'， 'subdomain.example.com') 如果没有定义，默认为当前文档位置的路径的域名部分。与早期规范相反的是，在域名前面加 . 符将会被忽视，因为浏览器也许会拒绝设置这样的cookie。如果指定了一个域，那么子域也包含在内。
+
+  - `;max-age=*max-age-in-seconds*` (例如一年为60*60*24*365)
+
+  - ```
+    ;expires=date-in-GMTString-format
+    ```
+
+     如果没有定义，cookie会在对话结束时过期
+
+    - 这个值的格式参见[Date.toUTCString()](https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Date/toUTCString) 
+
+  - `;secure` (cookie只通过https协议传输)
+
+- cookie的值字符串可以用[encodeURIComponent()](https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/encodeURIComponent)来保证它不包含任何逗号、分号或空格(cookie值中禁止使用这些值).
+
+```js
+document.cookie = "name=oeschger";
+document.cookie = "favorite_food=tripe";
+alert(document.cookie);
+// 显示: name=oeschger;favorite_food=tripe
+```
+
+```js
+document.cookie = "test1=Hello";
+document.cookie = "test2=World";
+
+var myCookie = document.cookie.replace(/(?:(?:^|.*;\s*)test2\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+
+alert(myCookie);
+// 显示: World
+```
+
+
+
+### 正则的?:问题
+
+```
+(?:  pattern)是非捕获型括号  匹配pattern，但不捕获匹配结果。
+(pattern )是捕获型括号。  匹配pattern，匹配pattern并捕获结果,自动获取组号
+(?<name> pattern )  匹配pattern，  匹配pattern并捕获结果，设置name为组名 
 ```
 
