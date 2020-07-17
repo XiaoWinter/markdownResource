@@ -1390,9 +1390,15 @@ alert(myCookie);
 
 ### 正则的?:问题
 
-```
+```jinja2
 (?:  pattern)是非捕获型括号  匹配pattern，但不捕获匹配结果。
 (pattern )是捕获型括号。  匹配pattern，匹配pattern并捕获结果,自动获取组号
 (?<name> pattern )  匹配pattern，  匹配pattern并捕获结果，设置name为组名 
+```
+
+### node环境判断
+
+```js
+typeof exports === 'object' && typeof module !== 'undefined'
 ```
 
