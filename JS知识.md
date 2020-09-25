@@ -1402,3 +1402,62 @@ alert(myCookie);
 typeof exports === 'object' && typeof module !== 'undefined'
 ```
 
+### 判断移动端
+
+```js
+let u = navigator.userAgent;
+let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1;   //判断是否是 android终端
+let isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);     //判断是否是 iOS终端
+```
+
+### 不使用;的风险
+
+关于分号的讨论from知乎 [JavaScript 语句后应该加分号么？](https://www.zhihu.com/question/20298345)
+
+j结论：看情况;倾向，不加分号，靠工具自动添加，
+
+出现问题的条件： 行首字符是否是` [  (  +  -  /  `五个符号之一 
+
+> 编译器（代码分析器）完全可以知道哪里应该有EOS。既然所有的分号其实可以由机器自行加上，那么我们自己还要手写所有分号的意义到底在哪里？！ ———— hax
+
+##### 相邻的括号将导致错误
+
+> TypeError: (intermediate value)(...) is not a function 
+
+```js
+(function(){
+    console.log(1)
+})()
+
+(function(){
+    console.log(2)
+})()
+```
+
+修改为
+
+```js
+!(function(){
+    console.log(1)
+})()
+
+!(function(){
+    console.log(2)
+})()
+```
+
+> TypeError: el.getBoundingClientRect(...) is not a function 
+
+```js
+//在不确定优先级时使用了括号，结果与前面的语句联动了
+function sticky(el,callback){
+    window.onscroll = ()=>{
+        var rect =  el.getBoundingClientRect()
+        (typeof callback == 'function') && callback(rect)
+//等同于 var rect =  el.getBoundingClientRect()(typeof callback == 'function') && callback(rect)
+    }
+}
+```
+
+
+
