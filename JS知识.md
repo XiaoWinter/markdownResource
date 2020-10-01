@@ -1449,6 +1449,16 @@ Most of the boilerplate in this example exists to provide encapsulation. If the 
 
 本例中的大多数样板文件都是为了提供封装而存在的。如果变量name和owner被声明为public，则不需要 [accessor and mutator methods](accessor and mutator methods)。为了减少样板文件的数量，开发了许多框架，例如用于Java的Lombok。与上面相同的代码是由Lombok使用Java注释自动生成的，这是一种元编程形式
 
+```java
+@AllArgsConstructor
+@Getter
+@Setter
+public class Pet {
+    private String name;
+    private Person owner;
+}
+```
+
 ##### accessor and mutator methods
 
 Accessor methods are used to read data values of an object. Mutator methods are used to modify the data of an object. Manager methods are used to initialize and destroy objects of a class, e.g. constructors and destructors.
