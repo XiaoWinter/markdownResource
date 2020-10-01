@@ -210,3 +210,32 @@ user-select:none;
 
 ```
 
+#### 苹果滚动
+
+```
+-webkit-overflow-scrolling: touch;
+```
+
+#### 去除滚动条
+
+```
+::-webkit-scrollbar{
+    display:none;
+}
+```
+
+#### 行显示省略号
+
+```
+overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;（行数）
+    -webkit-box-orient: vertical;
+    
+    
+       white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+```
+
