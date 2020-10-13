@@ -1524,6 +1524,38 @@ function sticky(el,callback){
 }
 ```
 
+### 合并数组
+
+**a = [1,2,3]**; **b=[4,5,6]**
+
+* contact: 
+
+```javascript
+ var c = a.contact(b)
+```
+
+* for:  
+
+```javascript
+for(var i in b){
+  a.push(b[i]);
+}
+```
+
+* apply
+
+```javascript
+a.push.apply(a,b);
+```
+
+* 扩展运算符
+
+```javascript
+var newA = [...a,...b]
+```
+
+
+
 
 
 
