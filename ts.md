@@ -18,61 +18,50 @@
 
 
 
-#### 基础
+##### TypeScript for JavaScript Programmers
 
-##### 原始数据类型
+TypeScript stands in an unusual relationship to JavaScript. 
 
-布尔值、数值、字符串、null、undefined、symbol
+TypeScript offers all of JavaScript’s features, and an additional layer on top of these: **TypeScript’s type system**.
 
-```js
-let isDone: boolean = false;
+For example, JavaScript provides language primitives like `string`, `number`, and `object`, but it doesn’t check that you’ve consistently assigned these. TypeScript does.
+
+This means that your existing working JavaScript code is also TypeScript code. The main benefit of TypeScript is that it can highlight unexpected behavior in your code, lowering the chance of bugs.
+
+###### Types by Inference（类型推断）
+
+TypeScript knows the JavaScript language and will generate types for you in many cases. For example in creating a variable and assigning it to a particular value, TypeScript will use the value as its type.
+
+
+
+```
+let helloWorld = "Hello World"; 
+
+//  ^ = let helloWorld: string
 ```
 
-```js
-//会报错
-let createdByNewBoolean: boolean = new Boolean(1);
-```
 
-```js
-//不会报错
-let createdByNewBoolean: Boolean = new Boolean(1);
-```
 
-```js
-//空值
-function alertName(): void {
-    alert('My name is Tom');
+### [Document](https://devdocs.io/typescript/)
+
+
+
+##### Type annotations(类型注解)
+
+Type annotations in TypeScript are lightweight ways  **to record** the intended（预期的;adj） contract（契约，约定;n） of the function or variable
+
+类型注解强调轻量级
+
+```javascript
+function greeter(person: string) {
+  return "Hello, " + person;
 }
+
+var user = [0, 1, 2];
+//you will see an error
+document.body.innerHTML = greeter(user);
 ```
 
+###### ts在干什么？
 
-
-##### 任意值
-
-> 任意值（Any）用来表示允许赋值为任意类型。
-
-
-
-如果是一个普通类型，在赋值过程中改变类型是不被允许的：但如果是 `any` 类型，则允许被赋值为任意类型。
-
-> any可以变为任意类型
-
-
-
-在任意值上访问任何属性都是允许的：也允许调用任何方法：
-
-> any可以进行任意操作
-
-
-
-变量如果在声明的时候，未指定其类型，那么它会被识别为任意值类型：
-
-
-
-##### 类型推论
-
-如果没有明确的指定类型，那么 TypeScript 会依照类型推论（Type Inference）的规则推断出一个类型。
-
-TypeScript 会在没有明确的指定类型的时候推测出一个类型，这就是类型推论。
-
-如果定义的时候没有赋值，不管之后有没有赋值，都会被推断成 `any` 类型而完全不被类型检查：
+TypeScript can offer static analysis **based on both** the structure of your code, and the type annotations you provide.
