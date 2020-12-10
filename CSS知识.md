@@ -234,7 +234,7 @@ overflow: hidden;
     -webkit-box-orient: vertical;
     
     
-       white-space: nowrap;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 ```

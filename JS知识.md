@@ -1554,7 +1554,46 @@ a.push.apply(a,b);
 var newA = [...a,...b]
 ```
 
+### 合并对象
 
+```js
+
+const a = {name:'张三'}
+const b = {age:18}
+
+//改变原对象
+Object.assign(a,b)
+
+//不改变原对象
+const person = Object.assign({},a,b)
+
+
+//ES6,后面会覆盖前面的属性
+const a = {name:'张三',age:18}
+const b = {name:'李四',sex:'female'}
+
+const person = {...a,...b}//{name: "李四", age: 18, sex: "female"}
+
+```
+
+
+
+### [vue nextTick运行时机](https://www.zhihu.com/search?type=content&q=nextTick%E7%9A%84%E6%97%B6%E6%9C%BA)
+
+[异步更新队列](https://cn.vuejs.org/v2/guide/reactivity.html#%E5%BC%82%E6%AD%A5%E6%9B%B4%E6%96%B0%E9%98%9F%E5%88%97)
+
+[MutationObserver](https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver)监视DOM树的变化
+
+```scheme
+**keyword**
+可能你还没有注意到，Vue 在更新 DOM 时是异步执行的。只要侦听到数据变化，Vue 将开启一个队列，并缓冲在同一事件循环中发生的所有数据变更。如果同一个 watcher 被多次触发，只会被推入到队列中一次。这种在缓冲时去除重复数据对于避免不必要的计算和 DOM 操作是非常重要的。然后，在下一个的事件循环“tick”中，Vue 刷新队列并执行实际 (已去重的) 工作。Vue 在内部对异步队列尝试使用原生的 Promise.then、MutationObserver 和 setImmediate，如果执行环境不支持，则会采用 setTimeout(fn, 0) 代替。
+```
+
+### 帧动画[requestanimationframe](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestAnimationFrame)
+
+```js
+window.requestAnimationFrame() 告诉浏览器——你希望执行一个动画，并且要求浏览器在下次重绘之前调用指定的回调函数更新动画。该方法需要传入一个回调函数作为参数，该回调函数会在浏览器下一次重绘之前执行
+```
 
 
 
