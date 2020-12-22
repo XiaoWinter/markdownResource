@@ -1639,6 +1639,84 @@ window.requestAnimationFrame() 告诉浏览器——你希望执行一个动画�
 
 
 
-=======
 感动是决定作品好坏的标准
->>>>>>> ea83d2f53ab57b05d669e522239b642ef59a80dd
+
+```js
+"" + 1 + 0 //10
+"" - 1 + 0 //-1
+true + false //1
+6 / "3" //2
+"2" * "3" //6
+4 + 5 + "px" //9px
+"$" + 4 + 5 //$45
+"4" - 2 //2
+"4px" - 2 //NaN
+7 / 0 //+infinety
+"  -9  " + 5 //  -9  5
+"  -9  " - 5 // -14
+null + 1 //1
+undefined + 1 //NaN
+" \t \n" - 2 //-2
+```
+
+
+
+### [可选链](https://zh.javascript.info/optional-chaining)
+
+如果可选链 `?.` 前面的部分是 `undefined` 或者 `null`，它会停止运算并返回该部分。
+
+```
+let user = null;
+
+alert( user?.address ); // undefined
+alert( user?.address.street ); // undefined
+```
+
+可选链 `?.` 不是一个运算符，而是一个特殊的语法结构。
+
+```
+let userAdmin = {
+  admin() {
+    alert("I am admin");
+  }
+};
+
+let userGuest = {};
+
+userAdmin.admin?.(); // I am admin
+
+userGuest.admin?.(); // 啥都没有（没有这样的方法）
+```
+
+```
+let user1 = {
+  firstName: "John"
+};
+
+let user2 = null; // 假设，我们不能授权此用户
+
+let key = "firstName";
+
+alert( user1?.[key] ); // John
+alert( user2?.[key] ); // undefined
+
+alert( user1?.[key]?.something?.not?.existing); // undefined
+```
+
+
+
+### [空值合并运算符](https://zh.javascript.info/nullish-coalescing-operator)
+
+空值合并运算符并不是什么全新的东西。它只是一种获得两者中的第一个“已定义的”值的不错的语法。
+
+```
+result = a ?? b
+result = (a !== null && a !== undefined) ? a : b;
+```
+
+```
+|| 返回第一个 真 值。
+?? 返回第一个 已定义的 值。
+换句话说，|| 无法区分 false、0、空字符串 "" 和 null/undefined。它们都一样 —— 假值（falsy values）。如果其中任何一个是 || 的第一个参数，那么我们将得到第二个参数作为结果。
+```
+
