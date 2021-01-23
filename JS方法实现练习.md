@@ -51,7 +51,7 @@ function instanceOf(obj , type){
 }
 ```
 
-### debounce
+### [debounce](https://zh.javascript.info/task/debounce)
 
 ```javascript
 function debounce(func,delay){
@@ -65,9 +65,10 @@ function debounce(func,delay){
 }
 ```
 
-### throttle
+### [throttle](https://zh.javascript.info/task/throttle)
 
 ```javascript
+// 流程 开始--立刻--> f(1)--3s-->f(2)--3s-->f(3)--3s-->f(4)
 function throttle(func, delay){
   let isrun,arg
   return function wrapper(){
@@ -80,8 +81,10 @@ function throttle(func, delay){
       isrun = true
 
       setTimeout(()=>{
+          // 很重要
           isrun = false
           if(arg){
+              // 很重要
               wrapper.apply(this, arg)
               arg = null
           }
@@ -89,5 +92,31 @@ function throttle(func, delay){
       
   }
 }
+
+// 测试
+
+function test(a) {
+  console.log(a)
+}
+
+function delayRun(fn, delay, ...args) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      fn(...args)
+      resolve()
+    }, delay)
+  })
+}
+
+let testThrottle = throttle(test, 1000)
+
+async function testExample() {
+  testThrottle(1)
+  testThrottle(2)
+  await delayRun(testThrottle, 5000, 3)
+  testThrottle(1)
+}
+
+testExample()
 ```
 
