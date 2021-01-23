@@ -83,6 +83,7 @@ function throttle(func, delay){
           isrun = false
           if(arg){
               wrapper.apply(this, arg)
+              arg = null
           }
       },delay)
       
