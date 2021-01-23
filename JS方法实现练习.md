@@ -14,7 +14,7 @@ function Person(){
 
 
 
-### `newInstance()`
+### new
 
 ```javascript
 function newInstance(Fn , ...arg){
@@ -24,7 +24,7 @@ function newInstance(Fn , ...arg){
 }
 ```
 
-### `instanceOf()`
+### instanceOf
 
 ```javascript
 function instanceOf(obj , type){
@@ -51,33 +51,42 @@ function instanceOf(obj , type){
 }
 ```
 
-
-
-### Pull&PullAll
+### debounce
 
 ```javascript
-Array.prototype.pull = function(...args){
-    const arr = []
-    args = Array.from(new Set(args))
-    for (let index = 0; index < this.length; index++) {
-        const element = this[index];
-        if(args.indexOf(element)!==-1){
-            //
-            this.splice(index,1)
-            arr.push(element)
-            index--
-        }
-    }
-    return arr
+function debounce(func,delay){
+  let isrun = false
+  return function(){
+    clearTimeout(isrun)
+    isrun = setTimeout(()=>{
+      func.apply(this,arguments)
+    },delay)
+  }
 }
+```
 
-Array.prototype.pullAll = function(array){
-    return this.pull(...array)
+### throttle
+
+```javascript
+function throttle(func, delay){
+  let isrun,arg
+  return function wrapper(){
+      if(isrun){
+        arg = arguments
+        return 
+      }
+      func.apply(this, arguments)
+
+      isrun = true
+
+      setTimeout(()=>{
+          isrun = false
+          if(arg){
+              wrapper.apply(this, arg)
+          }
+      },delay)
+      
+  }
 }
-
-var arr = [1,3,5,7,9,7];
-var arr2 = [1,5,9,2,2];
-//叠加两个数组，去掉重复的部分，并将重复的部分作为返回值
-console.log(arr.pull(...arr2))
 ```
 
