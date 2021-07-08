@@ -288,3 +288,9 @@ git show v1.0.0
 ipconfig/flushdns
 ```
 
+##### 部署的公钥私钥
+
+```
+ssh-keygen -f github-deploy-key
+```
+
