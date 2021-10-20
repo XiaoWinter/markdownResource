@@ -164,6 +164,10 @@
 
 
 
+##### 清理已删掉的分支
+
+`git fetch --prune`
+
 #### 标签操作
 
  **查看本地分支标签** 
@@ -287,6 +291,12 @@ git show v1.0.0
 ```
 ipconfig/flushdns
 ```
+
+```
+$ ssh -vT git@github.com
+```
+
+
 
 ##### 部署的公钥私钥
 
