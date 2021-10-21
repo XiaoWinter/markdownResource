@@ -1,4 +1,4 @@
-# [mbox](https://cn.mobx.js.org/)
+# [mbox入门](https://cn.mobx.js.org/)
 
 
 
@@ -12,7 +12,7 @@
 
 @action
 
-
+![](https://typora-huang-cong.oss-cn-shanghai.aliyuncs.com/action-state-view.png)
 
 runInAction：等价action,可看作游离action
 
@@ -128,7 +128,13 @@ export default class RootStore {
 }
 ```
 
+`Provider` (`mobx-react` 包)
 
+可以用来使用 React 的`context`机制来传递 store 给子组件。参见[`mobx-react` 文档](https://github.com/mobxjs/mobx-react#provider-experimental)。
+
+`inject` (`mobx-react` 包)
+
+相当于`Provider` 的高阶组件。可以用来从 React 的`context`中挑选 store 作为 prop 传递给目标组件。用法:
 
 ```tsx
 import {observer , inject} from 'mobx-react'
