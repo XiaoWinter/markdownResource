@@ -316,3 +316,19 @@ http://ping.chinaz.com/github.com
 ssh-keygen -f github-deploy-key
 ```
 
+
+
+
+
+git问题整理方法
+
+1.http://ping.chinaz.com/
+
+github.com
+
+github.global.ssl.Fastly.net
+
+assets-cdn.Github.com
+
+
+
