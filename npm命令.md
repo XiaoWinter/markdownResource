@@ -127,7 +127,7 @@
 
 `npm cache clean --force`
 
-<img src='http://47.103.65.182/images/DOAX-VenusVacation_190416_225803.jpg' />
+<img src='http://47.103.65.182/images/DOAX-VenuVacation_190416_225803.jpg' />
 
 <table>
 <thead>
