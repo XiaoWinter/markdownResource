@@ -328,7 +328,7 @@ github.com
 
 github.global.ssl.Fastly.net
 
-assets-cdn.Github.com
+assets-cdn.github.com
 
 
 
