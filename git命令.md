@@ -288,12 +288,24 @@ git show v1.0.0
 
 ##### 443问题解决
 
+刷新DNS
+
 ```
 ipconfig/flushdns
 ```
-
+测试ssh连接，刷新ssh连接设置
 ```
 $ ssh -vT git@github.com
+```
+使用了代理，git pull 错误
+```
+git config --global --add remote.origin.proxy ""
+```
+
+查看可用节点,修改HOST文件
+
+```
+http://ping.chinaz.com/github.com
 ```
 
 
