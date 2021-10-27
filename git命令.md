@@ -332,3 +332,17 @@ assets-cdn.github.com
 
 
 
+新建 github.bat 检测git关键域名的连通情况，根据情况[查找相应域名](http://ping.chinaz.com/)的可连接IP，修改HOST文件
+
+```bash
+ipconfig/flushdns
+ping github.global.ssl.Fastly.net
+ping assets-cdn.github.com
+ping github.com
+pause
+```
+
+
+
+
+
