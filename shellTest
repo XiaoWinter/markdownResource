@@ -1,0 +1,247 @@
+#!/bin/bash
+echo "Running"
+echo
+echo 定义变量
+pi=333
+
+echo $pi
+
+# for file in `ls /etc`
+#     echo $file
+
+for skill in Ada Coffe Action Java; do
+    echo "I am good at ${skill}Script"
+done
+
+
+your_name="tom"
+echo $your_name
+your_name="alibaba"
+echo $your_name
+
+
+myUrl="https://www.google.com"
+readonly myUrl
+# 报错
+# myUrl="https://www.daadong.com" 
+
+# 报错不能删除只读变量
+# unset myUrl
+
+
+echo
+echo 字符串
+mi=www
+unset mi
+# 不会输出mi
+echo $mi
+
+your_name="adong"
+str="Hello, I know you are \"$your_name\"! \n"
+echo -e $str
+
+your_name="adong"
+# 使用双引号拼接
+greeting="hello, "$your_name" !"
+greeting_1="hello, ${your_name} !"
+echo $greeting  $greeting_1
+# 使用单引号拼接
+greeting_2='hello, '$your_name' !'
+greeting_3='hello, ${your_name} !'
+echo $greeting_2  $greeting_3
+
+str=jj
+echo ${#str}
+
+string="github is a great site"
+echo ${string:0:6} # 输出 github
+
+string="github is a great site"
+echo `expr index "$string" io`  # 输出 4
+
+# 定义数组
+echo
+echo 定义数组
+
+array_name=(
+value0
+value1
+value2
+value3
+)
+
+# 获取所有
+echo ${array_name[@]}
+
+# 访问某个
+valuen=${array_name[0]}
+
+echo $valuen
+
+
+# 取得数组元素的个数
+length=${#array_name[@]}
+echo $length
+# 或者 获取数组的长度
+length=${#array_name[*]}
+echo $length
+# 取得数组单个元素的长度
+lengthn=${#array_name[n]}
+echo $lengthn
+
+echo
+echo 注释
+
+:<<EOF
+注释内容...
+注释内容...
+注释内容...
+EOF
+
+# :<<'
+# 注释内容...
+# 注释内容...
+# 注释内容...
+# '
+
+# :<<!
+# 注释内容...
+# 注释内容...
+# 注释内容...
+# !
+
+echo
+echo "Shell 传递参数实例！";
+echo "执行的文件名：$0";
+echo "第一个参数为：$1";
+echo "第二个参数为：$2";
+echo "第三个参数为：$3";
+echo "所有参数为：$*";
+echo "所有参数为：$@";
+echo "参数个数为：$#";
+echo "进程ID为：$$";
+echo "最后进程ID为：$!";
+echo "最后退出状态为：$?";
+echo "shell选项为：$-";
+
+
+
+echo
+# $* 与 $@的区别 执行 ./test 1 2 3 4 进行参数打印
+echo \$* 与 \$@的区别
+
+echo "-- \$* 演示 ---"
+for i in "$*"; do
+    echo $i
+done
+
+echo "-- \$@ 演示 ---"
+for i in "$@"; do
+    echo $i
+done
+
+echo
+echo expr表达式
+
+val=`expr 2 + 2`
+echo "两数之和为 : $val"
+
+
+a=10
+b=20
+
+echo
+# 算数运算符
+echo 算数运算符:
+
+
+echo `expr $a + $b`
+echo `expr $a - $b`
+echo `expr $a \* $b`
+echo `expr $a / $b`
+echo `expr $a % $b`
+echo `expr $a == $b`
+echo `expr $a != $b`
+
+
+if [ $a == $b ]
+then
+   echo "a 等于 b"
+fi
+
+if [ $a != $b ]
+then
+   echo "a 不等于 b"
+fi
+
+
+echo
+# 关系运算符
+echo 关系运算符:
+
+if [ $a -eq $b ]
+then
+   echo "$a -eq $b : a 等于 b"
+else
+   echo "$a -eq $b: a 不等于 b"
+fi
+
+if [ $a -ne $b ]
+then
+   echo "$a -ne $b: a 不等于 b"
+else
+   echo "$a -ne $b : a 等于 b"
+fi
+
+if [ $a -gt $b ]
+then
+   echo "$a -gt $b: a 大于 b"
+else
+   echo "$a -gt $b: a 不大于 b"
+fi
+
+if [ $a -lt $b ]
+then
+   echo "$a -lt $b: a 小于 b"
+else
+   echo "$a -lt $b: a 不小于 b"
+fi
+
+if [ $a -ge $b ]
+then
+   echo "$a -ge $b: a 大于或等于 b"
+else
+   echo "$a -ge $b: a 小于 b"
+fi
+
+if [ $a -le $b ]
+then
+   echo "$a -le $b: a 小于或等于 b"
+else
+   echo "$a -le $b: a 大于 b"
+fi
+
+echo
+# 布尔运算符
+echo 布尔运算符:
+
+if [ $a != $b ]
+then
+   echo "$a != $b : a 不等于 b"
+else
+   echo "$a == $b: a 等于 b"
+fi
+
+if [ $a -lt 100 -a $b -gt 15 ]
+then
+   echo "$a 小于 100 且 $b 大于 15 : 返回 true"
+else
+   echo "$a 小于 100 且 $b 大于 15 : 返回 false"
+fi
+
+if [ $a -lt 100 -o $b -gt 100 ]
+then
+   echo "$a 小于 100 或 $b 大于 100 : 返回 true"
+else
+   echo "$a 小于 100 或 $b 大于 100 : 返回 false"
+fi
