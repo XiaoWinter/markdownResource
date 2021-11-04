@@ -833,13 +833,199 @@ echo `date`
 
 ### :heavy_check_mark: Shell printf 命令
 
+|      |      |
+| ---- | ---- |
+|      |      |
+|      |      |
+|      |      |
+
+
+
+
+
 
 
 ### :heavy_check_mark: Shell test 命令
 
 
 
+##### 数值测试
+
+| 参数 | **说明**       |
+| ---- | -------------- |
+| -eq  | 等于则为真     |
+| -ne  | 不等于则为真   |
+| -gt  | 大于则为真     |
+| -ge  | 大于等于则为真 |
+| -lt  | 小于则为真     |
+| -le  | 小于等于则为真 |
+
+```shell
+num1=100
+num2=100
+if test $[num1] -eq $[num2]
+then
+    echo '两个数相等！'
+else
+    echo '两个数不相等！'
+fi
+```
+
+##### 字符串测试
+
+| **参数**  | **说明**                 |
+| --------- | ------------------------ |
+| =         | 等于则为真               |
+| !=        | 不相等则为真             |
+| -z 字符串 | 字符串的长度为零则为真   |
+| -n 字符串 | 字符串的长度不为零则为真 |
+
+```sh
+num1="ru1noob"
+num2="runoob"
+if test $num1 = $num2
+then
+    echo '两个字符串相等!'
+else
+    echo '两个字符串不相等!'
+fi
+```
+
+##### 文件测试
+
+| **参数**  | **说明**                             |
+| --------- | ------------------------------------ |
+| -e 文件名 | 如果文件存在则为真                   |
+| -r 文件名 | 如果文件存在且可读则为真             |
+| -w 文件名 | 如果文件存在且可写则为真             |
+| -x 文件名 | 如果文件存在且可执行则为真           |
+| -s 文件名 | 如果文件存在且至少有一个字符则为真   |
+| -d 文件名 | 如果文件存在且为目录则为真           |
+| -f 文件名 | 如果文件存在且为普通文件则为真       |
+| -c 文件名 | 如果文件存在且为字符型特殊文件则为真 |
+| -b 文件名 | 如果文件存在且为块特殊文件则为真     |
+
+
+
 ### :heavy_check_mark: Shell 流程控制
+
+sh 的流程控制不可为空
+
+##### if else fi
+
+语法
+
+```sh
+if condition
+then
+    command1 
+    command2
+    ...
+    commandN
+else
+    command
+fi
+```
+
+写成一行（适用于终端命令提示符）：
+
+```sh
+if [ $(ps -ef | grep -c "ssh") -gt 1 ]; then echo "true"; fi
+```
+
+##### if else-if else
+
+```sh
+if condition1
+then
+    command1
+elif condition2 
+then 
+    command2
+else
+    commandN
+fi
+```
+
+测试
+
+```sh
+a=10
+b=20
+if [ $a == $b ]
+then
+   echo "a 等于 b"
+elif [ $a -gt $b ]
+then
+   echo "a 大于 b"
+elif [ $a -lt $b ]
+then
+   echo "a 小于 b"
+else
+   echo "没有符合的条件"
+fi
+```
+
+
+
+if else 语句经常与 test 命令结合使用
+
+```sh
+num1=$[2*3]
+num2=$[1+5]
+if test $[num1] -eq $[num2]
+then
+    echo '两个数字相等!'
+else
+    echo '两个数字不相等!'
+fi
+```
+
+
+
+
+
+##### for 循环
+
+格式
+
+```sh
+for var in item1 item2 ... itemN
+do
+    command1
+    command2
+    ...
+    commandN
+done
+```
+
+写成一行
+
+```sh
+for var in item1 item2 ... itemN; do command1; command2… done;
+```
+
+当变量值在列表里，for 循环即执行一次所有命令，使用变量名获取列表中的当前取值。命令可为任何有效的 shell 命令和语句。in 列表可以包含替换、字符串和文件名。
+
+in列表是可选的，如果不用它，for循环使用命令行的位置参数。
+
+```sh
+echo
+for i in 1 2 3 4 5
+do
+    echo "The value is: $i"
+done
+
+echo
+for str in This is a string
+do
+    echo $str
+done
+```
+
+
+
+
 
 
 
