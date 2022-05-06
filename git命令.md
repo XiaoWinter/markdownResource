@@ -53,6 +53,10 @@
 
 `git branch -m oldbranchname newbranchname`
 
+**查看分支创建来源分支**
+
+`git reflog show --date=iso s09-bugfix-31052`
+
 ##### 根据远程分支生成的本地分支(拉取远程分支)
 
 `git checkout -b branchName  origin/branchName`
@@ -108,6 +112,8 @@
 ##### 取消对文件的跟踪，并保留在本地
 
 `git rm --cached filename`
+
+
 
 #### 底层命令
 
