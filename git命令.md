@@ -49,6 +49,10 @@
 
 `git branch -D branchName`
 
+##### 拉取远程仓库
+
+`git checkout -q --track origin/xxx`
+
 ##### 重命名本地分支
 
 `git branch -m oldbranchname newbranchname`
