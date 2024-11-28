@@ -265,7 +265,7 @@ https://www.ruanyifeng.com/blog/2010/02/url_encoding.html
 
 #### 浮点数
 
-<img src="http://47.103.65.182/markdown/095.png" />
+![095](https://typora-huang-cong.oss-cn-shanghai.aliyuncs.com/095.png)
 
 #### [IEEE 754 是什么](https://mp.weixin.qq.com/s/mf1mH-aGWgcC6v2R8ijE8A)
 
@@ -275,7 +275,7 @@ https://www.ruanyifeng.com/blog/2010/02/url_encoding.html
 
 #### [为什么 js 的连续整数区间在[-2^53^, 2^53^]](https://blog.csdn.net/seizef/article/details/5571783)
 
-<img src="http://47.103.65.182/markdown/094.png" />
+![094](https://typora-huang-cong.oss-cn-shanghai.aliyuncs.com/094.png)
 
 js 可以取到的连续的整数范围，并不是可以表示的最大整数范围，连续的整数范围是取决于尾数的精度
 
@@ -385,7 +385,7 @@ HTTP 传输是基于`请求-应答`的模式进行的，报文必须是一发一
 
 这样一个`sanyuan.com`域名下可以分出非常多的二级域名，而它们都指向同样的一台服务器，能够并发的长连接数更多了，事实上也更好地解决了队头阻塞的问题。
 
-<img src="http://47.103.65.182/markdown/099.png">
+![099](https://typora-huang-cong.oss-cn-shanghai.aliyuncs.com/099.png)
 
 ### 为什么产生代理缓存？
 
@@ -405,7 +405,7 @@ HTTP 传输是基于`请求-应答`的模式进行的，报文必须是一发一
 
 在沙箱当中的渲染进程是没有办法发送网络请求的，那怎么办？只能通过网络进程来发送。那这样就涉及到进程间通信(IPC，Inter Process Communication)了。接下来我们看看 chromium 当中进程间通信是如何完成的，在 chromium 源码中调用顺序如下:
 
-<img src=" https://user-gold-cdn.xitu.io/2020/3/22/170ffd924eaecb41?imageslim ">
+![image-20241128233420489](https://typora-huang-cong.oss-cn-shanghai.aliyuncs.com/image-20241128233420489.png)
 
 在服务端处理完数据后，将响应返回，主进程检查到跨域，且没有 cors(后面会详细说)响应头，将响应体全部丢掉，并不会发送给渲染进程。这就达到了拦截数据的目的。
 
@@ -467,11 +467,11 @@ HPACK 算法是专门为 HTTP/2 服务的，它主要的亮点有两个：
 
 另外值得一说的是 HTTP/2 的服务器推送(Server Push)。在 HTTP/2 当中，服务器已经不再是完全被动地接收请求，响应请求，它也能新建 stream 来给客户端发送消息，当 TCP 连接建立之后，比如浏览器请求一个 HTML 文件，服务器就可以在返回 HTML 的基础上，将 HTML 中引用到的其他资源文件一起返回给客户端，减少客户端的等待。
 
-<img src=" https://user-gold-cdn.xitu.io/2020/3/22/170ffdc6783132a5?imageView2/0/w/1280/h/960/format/webp/ignore-error/1 ">
+![image-20241128233504913](https://typora-huang-cong.oss-cn-shanghai.aliyuncs.com/image-20241128233504913.png)
 
 ### 帧结构
 
-<img src=" https://user-gold-cdn.xitu.io/2020/3/22/170ffdc9e9c25e93?imageView2/0/w/1280/h/960/format/webp/ignore-error/1 ">
+![image-20241128233520356](https://typora-huang-cong.oss-cn-shanghai.aliyuncs.com/image-20241128233520356.png)
 
 ### blob 和 stream 的区别
 
@@ -687,7 +687,7 @@ fs.writeFileSync(__dirname + "/1.txt", a, function (err) {});
 
 ### script 标签的使用
 
-<img src="http://47.103.65.182/markdown/103.jpg">
+![103](https://typora-huang-cong.oss-cn-shanghai.aliyuncs.com/103.jpg)
 
 ### 画一个饼图
 

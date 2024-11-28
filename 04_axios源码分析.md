@@ -45,7 +45,7 @@ function createInstance(defaultConfig) {
 var axios = createInstance(defaults);
 ```
 
-![](http://47.103.65.182/markdown/027.png)
+![027](https://typora-huang-cong.oss-cn-shanghai.aliyuncs.com/027.png)
 
 ### 2). axios为什么能有多种发请求的方法?
     axios函数对应的是Axios.prototype.request方法通过bind(Axiox的实例)产生的函数
@@ -121,7 +121,7 @@ axios.create = function create(instanceConfig) {
 
 ### 4). axios运行的整体流程
 
-![](http://47.103.65.182/markdown/028.jpg)
+![028](https://typora-huang-cong.oss-cn-shanghai.aliyuncs.com/028.jpg)
 
 ### 5). Axios.prototype.request()都做了什么?
 
@@ -287,7 +287,7 @@ module.exports = function xhrAdapter(config) {
 
 
 
-![](http://47.103.65.182/markdown/029.jpg)
+![029](https://typora-huang-cong.oss-cn-shanghai.aliyuncs.com/029.jpg)
 
 添加拦截器（请求拦截器，响应拦截器）
 

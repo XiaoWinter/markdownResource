@@ -632,7 +632,7 @@ res.vary('User-Agent').render('docs')
 ```
 #### Node.Response
 
-<img src="http://47.103.65.182/markdown/101.png">
+![101](https://typora-huang-cong.oss-cn-shanghai.aliyuncs.com/101.png)
 
 ### Request
 
@@ -802,4 +802,4 @@ console.dir(req.xhr)
 
 #### Node.Request
 
-<img src="http://47.103.65.182/markdown/100.png">
+![100](https://typora-huang-cong.oss-cn-shanghai.aliyuncs.com/100.png)

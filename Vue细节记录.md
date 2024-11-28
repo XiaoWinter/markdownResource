@@ -379,7 +379,7 @@ Vue.config.xxxx
 
 vue对象改变——>页面改变
 
-![](http://47.103.65.182/markdown/008.png)
+![008](https://typora-huang-cong.oss-cn-shanghai.aliyuncs.com/008.png)
 
 
 
@@ -739,7 +739,7 @@ export default{
 
 组件对象的爷爷类是Vue的prototype,所有组件对象的爷爷类是同一个人
 
-![](http://47.103.65.182/markdown/010.png)
+![010](https://typora-huang-cong.oss-cn-shanghai.aliyuncs.com/010.png)
 
 
 
@@ -1355,15 +1355,15 @@ yarn serve
 
 
 
-![](http://47.103.65.182/markdown/011.png)
+![011](https://typora-huang-cong.oss-cn-shanghai.aliyuncs.com/011.png)
 
-![](http://47.103.65.182/markdown/013.png)
+![013](https://typora-huang-cong.oss-cn-shanghai.aliyuncs.com/013.png)
 
 ##### 编写静态页面
 
 编写组件写上一点样式
 
-![](http://47.103.65.182/markdown/012.png)
+![012](https://typora-huang-cong.oss-cn-shanghai.aliyuncs.com/012.png)
 
 
 
@@ -1612,7 +1612,7 @@ const routes = [
 
 原理：路由的params参数和query参数被存到了Vue原型对象的$route属性上了
 
-![](http://47.103.65.182/markdown/014.png)
+![014](https://typora-huang-cong.oss-cn-shanghai.aliyuncs.com/014.png)
 
 ```vue
 <template>
@@ -1857,7 +1857,7 @@ methods:{
 
 
 
-![](http://47.103.65.182/markdown/015.png)
+![015](https://typora-huang-cong.oss-cn-shanghai.aliyuncs.com/015.png)
 
 #### $Router和$Route的区别
 
@@ -2031,7 +2031,7 @@ const router = new VueRouter({
 
 ##### 导行解析流程
 
-![](http://47.103.65.182/markdown/026.png)
+![026](https://typora-huang-cong.oss-cn-shanghai.aliyuncs.com/026.png)
 
 
 

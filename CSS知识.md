@@ -77,7 +77,7 @@ background-size:100%
 
 
 
-![](http://47.103.65.182/markdown/030.png)
+![030](https://typora-huang-cong.oss-cn-shanghai.aliyuncs.com/030.png)
 
 ```less
 .topic-box-scroll{//container
@@ -104,7 +104,7 @@ if(navigator.userAgent.includes("Android")||navigator.userAgent.includes("iPhone
 
 #### white-space的用法
 
-![](http://47.103.65.182/markdown/032.png)
+![032](https://typora-huang-cong.oss-cn-shanghai.aliyuncs.com/032.png)
 
 ### 不换行
 
